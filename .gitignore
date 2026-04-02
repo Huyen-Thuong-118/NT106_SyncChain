@@ -1,2 +1,10 @@
 serviceAccountKey.json
 node_modules/
+
+# Bỏ qua cơ sở dữ liệu SQLite
+*.db
+database/*.db
+
+# Bỏ qua các file chứa Key bảo mật
+serviceAccountKey.json
+.env
