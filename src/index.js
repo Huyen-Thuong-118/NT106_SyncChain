@@ -1,17 +1,32 @@
+
+const express = require('express'); // Framework web server
+const session = require('express-session');  // Quản lý phiên đăng nhập
+const db = require('./database'); // Kết nối database           
+const auth = require('./auth'); // Module xác thực (Đăng nhập, đăng ký, quên mật khẩu, đăng xuất)
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 
-const DB_FILE = './database/SyncChain.db';
-const SQL_SCHEMA_FILE = './TaoBang.sql';
+const app = express(); // Tạo ứng dụng Express (web server)
+const PORT = 3000; // Định nghĩa cổng lắng nghe là 3000
 
-const db = new sqlite3.Database(DB_FILE, (err) => {
-  if (err) {
-    console.error('Lỗi kết nối SQLite:', err.message);
-    process.exit(1);
-  }
-  console.log('✅ Đã kết nối SQLite:', DB_FILE);
-  initDatabase();
-});
+// Middleware
+app.use(express.json()); // Đọc dữ liệu JSON từ client (API request)
+app.use(express.urlencoded({ extended: true })); // Đọc dữ liệu form HTML (từ login/register)
+app.use(express.static('public')); // Phục vụ file tĩnh (HTML, CSS, JS trong thư mục public)
+
+// Cấu hình session 
+app.use(session({
+    secret: 'syncchain_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
+}));
+// 
+
+// Gắn router xác thực 
+app.use('/api/auth', auth.router);
+//
+
 
 function initDatabase() {
   const sql = fs.readFileSync(SQL_SCHEMA_FILE, 'utf8');
@@ -203,3 +218,11 @@ setTimeout(() => {
     }, 1000);
     
 }, 1000);
+
+// ==========================================
+// KHỞI ĐỘNG SERVER
+// ==========================================
+app.listen(PORT, () => {
+    console.log(`🚀 Server chạy tại: http://localhost:${PORT}`);
+    console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
+});
