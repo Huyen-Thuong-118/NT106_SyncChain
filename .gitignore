@@ -8,3 +8,17 @@ database/*.db
 # Bỏ qua các file chứa Key bảo mật
 serviceAccountKey.json
 .env
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.pdb
+
+# Build
+bin/
+obj/
+
+# Logs
+*.log
