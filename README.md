@@ -37,6 +37,24 @@
    * Nhập địa chỉ IP của Server (Nhập `127.0.0.1` nếu chạy trên cùng 1 máy) và Port tương ứng.
    * Nhấn "Kết nối" và bắt đầu sử dụng.
 
+6. **Cây thư mục**
+   NT106_SyncChain/
+   ├── server/                 # Toàn bộ logic Node.js hiện tại chuyển vào đây
+   │   ├── src/
+   │   │   ├── controllers/    # Xử lý logic API
+   │   │   ├── routes/         # Định nghĩa các endpoint
+   │   │   ├── models/         # Định nghĩa Schema/Query
+   │   │   └── server.js
+   │   ├── database/           # Chứa file .db và các file Migration/Seed
+   │   └── package.json
+   ├── client/                 # Tạo mới - Project C# WinForms
+   │   ├── RetailOps.sln
+   │   ├── Models/             # Map dữ liệu JSON từ API về Class C#
+   │   └── Services/           # Nơi chứa code HttpClient gọi lên Server
+   ├── docs/                   # Tài liệu đồ án, sơ đồ Sequence, Class Diagram
+   ├── .gitignore              # Cập nhật để chặn cả bin/obj của C# và node_modules
+   └── README.md
+
 
 ## 👥 Thành viên thực hiện
 * **Nguyễn Đỗ Ngọc Huyền Thương** - 24521750 - [Vai trò: Code Server/Code UI...]
