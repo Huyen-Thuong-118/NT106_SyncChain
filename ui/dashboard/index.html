@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SyncChain Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>SyncChain</h2>
+        <p>RETAILOPS MANAGEMENT</p>
+      </div>
+
+      <div class="menu-title">QUẢN LÝ CHÍNH</div>
+
+      <nav class="menu">
+        <a class="active" href="#">
+          <i class="fa-solid fa-table-cells-large"></i>
+          Bảng điều khiển
+        </a>
+        <a href="#">
+          <i class="fa-regular fa-user"></i>
+          Người dùng
+        </a>
+        <a href="#">
+          <i class="fa-solid fa-box"></i>
+          Sản phẩm
+        </a>
+        <a href="#">
+          <i class="fa-solid fa-cart-shopping"></i>
+          Đơn hàng
+        </a>
+      </nav>
+
+      <div class="menu-title">HẬU CẦN & BÁO CÁO</div>
+
+      <nav class="menu">
+        <a href="#">
+          <i class="fa-solid fa-truck"></i>
+          Đơn nhập hàng
+        </a>
+        <a href="#">
+          <i class="fa-solid fa-chart-simple"></i>
+          Thống kê
+        </a>
+        <a href="#">
+          <i class="fa-solid fa-gear"></i>
+          Cài đặt
+        </a>
+      </nav>
+
+      <div class="upgrade-box">
+        <i class="fa-solid fa-headset"></i>
+        <div>
+          <strong>Hỗ trợ 24/7</strong>
+          <span>Nâng cấp gói Pro</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="Tìm kiếm sản phẩm, đơn hàng..." />
+        </div>
+
+        <div class="top-actions">
+          <i class="fa-regular fa-bell notification"></i>
+          <i class="fa-regular fa-circle-question"></i>
+
+          <div class="admin-info">
+            <strong>Admin</strong>
+            <span>Quản trị viên</span>
+          </div>
+
+          <div class="avatar">
+            <img src="https://i.imgur.com/6VBx3io.png" alt="admin" />
+          </div>
+        </div>
+      </header>
+
+      <section class="welcome">
+        <div>
+          <h1>Chào buổi sáng, Quản trị viên</h1>
+          <p>Dưới đây là diễn biến hoạt động bán hàng trong 24h qua.</p>
+        </div>
+
+        <div class="welcome-actions">
+          <button class="light-btn">
+            <i class="fa-regular fa-calendar"></i>
+            7 NGÀY QUA
+          </button>
+          <button class="dark-btn">
+            <i class="fa-solid fa-download"></i>
+            XUẤT BÁO CÁO
+          </button>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="stat-card">
+          <div class="icon blue">
+            <i class="fa-solid fa-box-archive"></i>
+          </div>
+          <span class="percent green">+12%</span>
+          <p>TỔNG SẢN PHẨM</p>
+          <h3>1,284</h3>
+        </div>
+
+        <div class="stat-card">
+          <div class="icon blue">
+            <i class="fa-solid fa-cart-shopping"></i>
+          </div>
+          <span class="percent green">+5.4%</span>
+          <p>TỔNG ĐƠN HÀNG</p>
+          <h3>452</h3>
+        </div>
+
+        <div class="stat-card">
+          <div class="icon orange">
+            <i class="fa-solid fa-clipboard-list"></i>
+          </div>
+          <p>ĐƠN CHỜ XỬ LÝ</p>
+          <h3>28</h3>
+        </div>
+
+        <div class="stat-card">
+          <div class="icon red">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <p>SẮP HẾT HÀNG</p>
+          <h3>14</h3>
+        </div>
+
+        <div class="stat-card">
+          <div class="icon purple">
+            <i class="fa-solid fa-truck-fast"></i>
+          </div>
+          <p>NHẬP CHỜ DUYỆT</p>
+          <h3>08</h3>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="chart-card">
+          <div class="card-head">
+            <div>
+              <h3>Xu hướng đơn hàng</h3>
+              <p>Thống kê số lượng đơn trong 7 ngày gần nhất</p>
+            </div>
+
+            <div class="legend">
+              <span><b class="dot dark"></b> Hoàn thành</span>
+              <span><b class="dot light"></b> Đang xử lý</span>
+            </div>
+          </div>
+
+          <div class="fake-chart">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+
+            <div class="days">
+              <span>THỨ 2</span>
+              <span>THỨ 3</span>
+              <span>THỨ 4</span>
+              <span>THỨ 5</span>
+              <span>THỨ 6</span>
+              <span>THỨ 7</span>
+              <span>CN</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="inventory-card">
+          <h3>Phân bổ tồn kho</h3>
+          <p>Theo danh mục sản phẩm</p>
+
+          <div class="donut">
+            <div class="donut-inner">
+              <strong>75%</strong>
+              <span>ĐIỆN TỬ</span>
+            </div>
+          </div>
+
+          <ul>
+            <li>
+              <span><b></b> Điện tử</span>
+              <strong>1,240 SP</strong>
+            </li>
+            <li>
+              <span><b></b> Thời trang</span>
+              <strong>450 SP</strong>
+            </li>
+            <li>
+              <span><b></b> Đồ gia dụng</span>
+              <strong>290 SP</strong>
+            </li>
+          </ul>
+        </div>
+
+        <div class="alert-card">
+          <div class="section-title">
+            <h3><i class="fa-regular fa-circle-exclamation"></i> Cảnh báo tồn kho thấp</h3>
+            <a href="#">XEM TẤT CẢ</a>
+          </div>
+
+          <div class="product">
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100" />
+            <div>
+              <strong>Đồng hồ thông minh S3</strong>
+              <span>Mã: WTC-0012</span>
+            </div>
+            <p>Chỉ còn 02 <small>Hạn mức: 10</small></p>
+          </div>
+
+          <div class="product">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100" />
+            <div>
+              <strong>Tai nghe Studio Pro</strong>
+              <span>Mã: AUD-0982</span>
+            </div>
+            <p>Chỉ còn 05 <small>Hạn mức: 20</small></p>
+          </div>
+
+          <div class="product">
+            <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=100" />
+            <div>
+              <strong>Đồng hồ Classic Gen 2</strong>
+              <span>Mã: WTC-0045</span>
+            </div>
+            <p>Còn 08 <small>Hạn mức: 15</small></p>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="section-title">
+            <h3>Hoạt động gần đây</h3>
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </div>
+
+          <div class="activity">
+            <i class="fa-solid fa-check green-bg"></i>
+            <div>
+              <p>Hệ thống đã hoàn tất đơn hàng <b>#ORD-5621</b></p>
+              <span>5 PHÚT TRƯỚC</span>
+            </div>
+          </div>
+
+          <div class="activity">
+            <i class="fa-solid fa-truck blue-bg"></i>
+            <div>
+              <p>Nguyễn Văn A đã tạo phiếu nhập hàng <b>#IMP-0023</b></p>
+              <span>28 PHÚT TRƯỚC</span>
+            </div>
+          </div>
+
+          <div class="activity">
+            <i class="fa-solid fa-user-plus orange-bg"></i>
+            <div>
+              <p>Quản trị viên đã thêm nhân viên mới Trần Thị B</p>
+              <span>2 GIỜ TRƯỚC</span>
+            </div>
+          </div>
+
+          <div class="activity">
+            <i class="fa-solid fa-xmark red-bg"></i>
+            <div>
+              <p>Đơn hàng <b>#ORD-5602</b> đã bị hủy bởi khách hàng</p>
+              <span>4 GIỜ TRƯỚC</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <button class="float-btn">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    </main>
+
+  </div>
+</body>
+</html>
