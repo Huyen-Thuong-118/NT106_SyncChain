@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý đơn hàng</title>
+  <link rel="stylesheet" href="order.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="header">
+      <div>
+        <h1>QUẢN LÝ ĐƠN HÀNG</h1>
+        <p>Theo dõi và xử lý các giao dịch bán lẻ trong hệ thống.</p>
+      </div>
+
+      <button>+ Tạo đơn hàng mới</button>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="icon blue">▣</div>
+        <span class="up">+12%</span>
+        <p>TỔNG ĐƠN HÀNG</p>
+        <h2>1,284</h2>
+      </div>
+
+      <div class="stat">
+        <div class="icon orange">▣</div>
+        <span class="warn">Cần xử lý</span>
+        <p>ĐƠN CHỜ</p>
+        <h2>42</h2>
+      </div>
+
+      <div class="stat">
+        <div class="icon green">✓</div>
+        <span class="green-text">Tháng này</span>
+        <p>HOÀN TẤT</p>
+        <h2>856</h2>
+      </div>
+
+      <div class="stat">
+        <div class="icon red">⊗</div>
+        <span class="down">-2%</span>
+        <p>HỦY ĐƠN</p>
+        <h2>18</h2>
+      </div>
+    </section>
+
+    <section class="table-card">
+      <div class="filter">
+        <div class="tabs">
+          <button class="active">Tất cả</button>
+          <button>Đã xử lý</button>
+          <button>Đang xử lý</button>
+          <button>Hoàn tất</button>
+          <button>Hủy</button>
+        </div>
+
+        <div class="date-filter">
+          <button>▣ 30 ngày qua ▾</button>
+          <button>≡</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>MÃ ĐƠN</th>
+            <th>KHÁCH HÀNG</th>
+            <th>NGÀY TẠO</th>
+            <th>TỔNG TIỀN</th>
+            <th>TRẠNG THÁI</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td class="code">#ORD-2023-8942</td>
+            <td>
+              <div class="customer">
+                <span>NL</span>
+                <div>
+                  <strong>Nguyễn Văn Lâm</strong>
+                  <p>lam.nv@gmail.com</p>
+                </div>
+              </div>
+            </td>
+            <td>14/10/2023<br><small>10:24 AM</small></td>
+            <td><strong>1,450,000 đ</strong></td>
+            <td><span class="badge blue">Đã xử lý</span></td>
+            <td><button class="detail">Xem chi tiết</button></td>
+          </tr>
+
+          <tr>
+            <td class="code">#ORD-2023-8941</td>
+            <td>
+              <div class="customer">
+                <span>TH</span>
+                <div>
+                  <strong>Trần Thị Hoa</strong>
+                  <p>hoa.tran@gmail.com</p>
+                </div>
+              </div>
+            </td>
+            <td>14/10/2023<br><small>09:15 AM</small></td>
+            <td><strong>890,000 đ</strong></td>
+            <td><span class="badge orange">Đang xử lý</span></td>
+            <td><button class="detail">Xem chi tiết</button></td>
+          </tr>
+
+          <tr>
+            <td class="code">#ORD-2023-8939</td>
+            <td>
+              <div class="customer">
+                <span>PH</span>
+                <div>
+                  <strong>Phạm Hoàng Nam</strong>
+                  <p>nam.pham@gmail.com</p>
+                </div>
+              </div>
+            </td>
+            <td>13/10/2023<br><small>04:45 PM</small></td>
+            <td><strong>5,200,000 đ</strong></td>
+            <td><span class="badge green">Hoàn tất</span></td>
+            <td><button class="detail">Xem chi tiết</button></td>
+          </tr>
+
+          <tr>
+            <td class="code">#ORD-2023-8938</td>
+            <td>
+              <div class="customer">
+                <span>LM</span>
+                <div>
+                  <strong>Lê Minh</strong>
+                  <p>leminh.cm@gmail.com</p>
+                </div>
+              </div>
+            </td>
+            <td>13/10/2023<br><small>02:30 PM</small></td>
+            <td><strong>120,000 đ</strong></td>
+            <td><span class="badge red">Hủy</span></td>
+            <td><button class="detail">Xem chi tiết</button></td>
+          </tr>
+
+          <tr>
+            <td class="code">#ORD-2023-8935</td>
+            <td>
+              <div class="customer">
+                <span>QT</span>
+                <div>
+                  <strong>Quách Tỉnh</strong>
+                  <p>tinh.quach@gmail.com</p>
+                </div>
+              </div>
+            </td>
+            <td>13/10/2023<br><small>11:10 AM</small></td>
+            <td><strong>2,780,000 đ</strong></td>
+            <td><span class="badge green">Hoàn tất</span></td>
+            <td><button class="detail">Xem chi tiết</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="table-footer">
+        <p>Hiển thị 1 - 5 trong số 1,284 đơn hàng</p>
+        <div class="pages">
+          <span>‹</span>
+          <button class="active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <span>...</span>
+          <button>267</button>
+          <span>›</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="bottom">
+      <div class="report">
+        <h2>Báo cáo hiệu suất đơn hàng quý III</h2>
+        <p>
+          Dữ liệu đơn hàng của bạn đã tăng 24% so với cùng kỳ năm ngoái.
+          Kiểm tra phân tích chi tiết để có chiến lược kinh doanh tốt hơn.
+        </p>
+        <button>Xem báo cáo chi tiết</button>
+      </div>
+
+      <div class="tip">
+        <h4>MẸO NHỎ</h4>
+        <h3>Tối ưu hóa kho hàng</h3>
+        <p>
+          Các đơn hàng “Đang xử lý” thường mất trung bình 4 giờ để hoàn thiện.
+          Bạn có thể giảm thời gian này bằng cách sử dụng nhân viên tự động.
+        </p>
+        <a href="#">Tìm hiểu thêm →</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

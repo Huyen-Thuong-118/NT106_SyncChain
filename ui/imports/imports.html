@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đơn nhập hàng</title>
+  <link rel="stylesheet" href="imports.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="header">
+      <div>
+        <h1>ĐƠN NHẬP HÀNG</h1>
+        <p>Quản lý các phiếu nhập kho và nhà cung cấp.</p>
+      </div>
+
+      <button class="btn-primary">+ Tạo phiếu nhập</button>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="icon blue">📦</div>
+        <p>TỔNG PHIẾU NHẬP</p>
+        <h2>328</h2>
+      </div>
+
+      <div class="stat">
+        <div class="icon orange">⏳</div>
+        <p>CHỜ DUYỆT</p>
+        <h2>08</h2>
+      </div>
+
+      <div class="stat">
+        <div class="icon green">✓</div>
+        <p>ĐÃ NHẬP KHO</p>
+        <h2>276</h2>
+      </div>
+
+      <div class="stat">
+        <div class="icon purple">🏢</div>
+        <p>NHÀ CUNG CẤP</p>
+        <h2>32</h2>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="left-card">
+        <div class="card-head">
+          <div>
+            <h3>Danh sách phiếu nhập</h3>
+            <p>Theo dõi trạng thái nhập hàng gần đây</p>
+          </div>
+
+          <button class="filter-btn">Bộ lọc ▾</button>
+        </div>
+
+        <div class="import-item">
+          <div class="import-icon blue">IN</div>
+          <div class="import-info">
+            <strong>#IMP-2023-0023</strong>
+            <p>Công ty TNHH TechWorld</p>
+          </div>
+          <div class="import-date">
+            <span>15/10/2023</span>
+            <small>12 sản phẩm</small>
+          </div>
+          <div class="import-money">24,500,000 đ</div>
+          <span class="badge orange">Chờ duyệt</span>
+          <button class="more">⋯</button>
+        </div>
+
+        <div class="import-item">
+          <div class="import-icon green">IN</div>
+          <div class="import-info">
+            <strong>#IMP-2023-0022</strong>
+            <p>Kho phụ kiện Sài Gòn</p>
+          </div>
+          <div class="import-date">
+            <span>14/10/2023</span>
+            <small>08 sản phẩm</small>
+          </div>
+          <div class="import-money">8,900,000 đ</div>
+          <span class="badge green">Đã nhập</span>
+          <button class="more">⋯</button>
+        </div>
+
+        <div class="import-item">
+          <div class="import-icon blue">IN</div>
+          <div class="import-info">
+            <strong>#IMP-2023-0021</strong>
+            <p>Global Mobile Parts</p>
+          </div>
+          <div class="import-date">
+            <span>13/10/2023</span>
+            <small>20 sản phẩm</small>
+          </div>
+          <div class="import-money">42,700,000 đ</div>
+          <span class="badge blue">Đang xử lý</span>
+          <button class="more">⋯</button>
+        </div>
+
+        <div class="import-item">
+          <div class="import-icon red">IN</div>
+          <div class="import-info">
+            <strong>#IMP-2023-0020</strong>
+            <p>Smart Home Việt Nam</p>
+          </div>
+          <div class="import-date">
+            <span>12/10/2023</span>
+            <small>05 sản phẩm</small>
+          </div>
+          <div class="import-money">5,200,000 đ</div>
+          <span class="badge red">Từ chối</span>
+          <button class="more">⋯</button>
+        </div>
+      </div>
+
+      <aside class="right-card">
+        <h3>Tạo nhanh phiếu nhập</h3>
+        <p>Nhập thông tin cơ bản để tạo phiếu mới.</p>
+
+        <label>Nhà cung cấp</label>
+        <select>
+          <option>Chọn nhà cung cấp</option>
+          <option>Công ty TNHH TechWorld</option>
+        </select>
+
+        <label>Ngày nhập dự kiến</label>
+        <input type="date" />
+
+        <label>Ghi chú</label>
+        <textarea placeholder="Nhập ghi chú..."></textarea>
+
+        <button class="submit">Tạo phiếu</button>
+      </aside>
+    </section>
+
+    <section class="bottom">
+      <div class="supplier">
+        <h3>Nhà cung cấp nổi bật</h3>
+
+        <div class="supplier-row">
+          <div class="avatar blue">T</div>
+          <div>
+            <strong>TechWorld</strong>
+            <p>48 phiếu nhập</p>
+          </div>
+          <span>124,5tr</span>
+        </div>
+
+        <div class="supplier-row">
+          <div class="avatar green">S</div>
+          <div>
+            <strong>Saigon Accessories</strong>
+            <p>36 phiếu nhập</p>
+          </div>
+          <span>89,2tr</span>
+        </div>
+
+        <div class="supplier-row">
+          <div class="avatar purple">G</div>
+          <div>
+            <strong>Global Parts</strong>
+            <p>22 phiếu nhập</p>
+          </div>
+          <span>76,8tr</span>
+        </div>
+      </div>
+
+      <div class="note">
+        <h3>Lưu ý nhập hàng</h3>
+        <p>
+          Các phiếu nhập cần được duyệt trước khi cập nhật số lượng tồn kho.
+          Hãy kiểm tra kỹ số lượng, đơn giá và thông tin nhà cung cấp.
+        </p>
+        <button>Xem quy trình nhập kho</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
