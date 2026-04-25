@@ -3,13 +3,13 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              NavigationPage.HasNavigationBar="False">
-    <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="20">
+    <ScrollView Background="{StaticResource AppPageBackgroundBrush}">
+        <VerticalStackLayout Padding="30" Spacing="24">
             <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
-                <Button Text="← Quay lại" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBackClicked" />
+                <Button Text="← Quay lại danh sách" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBackClicked" />
                 <VerticalStackLayout Grid.Column="1">
-                    <Label Text="Đơn hàng #ORD-2023-8942" Style="{StaticResource PageTitleLabel}" />
-                    <Label Text="Tạo lúc 14/10/2023 - 10:24" Style="{StaticResource CaptionLabel}" />
+                    <Label Text="ĐƠN HÀNG #ORD-2023-8942" Style="{StaticResource PageTitleLabel}" />
+                    <Label Text="Được tạo vào 14/10/2023 lúc 10:24 AM" Style="{StaticResource CaptionLabel}" />
                 </VerticalStackLayout>
                 <Button Grid.Column="2" Text="In hóa đơn" Style="{StaticResource SecondaryButtonStyle}" />
                 <Button Grid.Column="3" Text="Cập nhật trạng thái" Style="{StaticResource PrimaryButtonStyle}" />
@@ -25,10 +25,10 @@
                             </Grid>
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid ColumnDefinitions="60,*,Auto,Auto" ColumnSpacing="14">
-                                        <Border BackgroundColor="#DFF4F1" StrokeThickness="0" WidthRequest="54" HeightRequest="54">
+                                    <Grid ColumnDefinitions="72,*,Auto,Auto" ColumnSpacing="14">
+                                        <Border BackgroundColor="#E8EDF4" StrokeThickness="0" WidthRequest="62" HeightRequest="62">
                                             <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="16" />
+                                                <RoundRectangle CornerRadius="18" />
                                             </Border.StrokeShape>
                                             <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" />
                                         </Border>
@@ -49,8 +49,8 @@
                             <Label Text="Lịch sử xử lý" Style="{StaticResource SectionTitleLabel}" />
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid ColumnDefinitions="18,*" ColumnSpacing="12">
-                                        <BoxView Color="{Binding Accent}" WidthRequest="10" HeightRequest="10" CornerRadius="5" VerticalOptions="Start" Margin="4,6,0,0" />
+                                    <Grid ColumnDefinitions="22,*" ColumnSpacing="12">
+                                        <BoxView Color="{Binding Accent}" WidthRequest="12" HeightRequest="12" CornerRadius="6" VerticalOptions="Start" Margin="4,6,0,0" />
                                         <VerticalStackLayout Grid.Column="1" Spacing="2">
                                             <Label Text="{Binding Title}" FontAttributes="Bold" />
                                             <Label Text="{Binding Time}" Style="{StaticResource CaptionLabel}" />
@@ -66,10 +66,18 @@
                     <Border Style="{StaticResource CardBorderStyle}">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Thông tin khách hàng" Style="{StaticResource SectionTitleLabel}" />
-                            <Label Text="Nguyễn Văn Lâm" FontAttributes="Bold" />
-                            <Label Text="lam.nv@gmail.com" />
-                            <Label Text="0901 234 567" />
-                            <Label Text="12 Nguyễn Huệ, Quận 1, TP.HCM" Style="{StaticResource CaptionLabel}" />
+                            <Grid ColumnDefinitions="50,*" ColumnSpacing="12">
+                                <Border BackgroundColor="#E8F1FF" StrokeThickness="0" WidthRequest="42" HeightRequest="42">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+                                    <Label Text="NL" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" />
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                    <Label Text="Nguyễn Văn Lâm" FontAttributes="Bold" />
+                                    <Label Text="lam.nv@gmail.com" Style="{StaticResource CaptionLabel}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="Số điện thoại" Style="{StaticResource CaptionLabel}" /><Label Grid.Column="1" Text="0901 234 567" FontAttributes="Bold" /></Grid>
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="Địa chỉ giao hàng" Style="{StaticResource CaptionLabel}" /><Label Grid.Column="1" Text="12 Nguyễn Huệ, Quận 1, TP.HCM" FontAttributes="Bold" HorizontalTextAlignment="End" /></Grid>
                         </VerticalStackLayout>
                     </Border>
 
@@ -85,9 +93,8 @@
 
                     <Border Style="{StaticResource CardBorderStyle}">
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="Realtime tracking bridge" Style="{StaticResource SectionTitleLabel}" />
-                            <Label Text="Tracking code: SHP-778829" FontAttributes="Bold" />
-                            <Label Text="Sẵn vùng hiển thị trạng thái realtime từ shipping provider và xác nhận nhận hàng kép (khách + đơn vị vận chuyển)." Style="{StaticResource CaptionLabel}" />
+                            <Label Text="Ghi chú đơn hàng" Style="{StaticResource SectionTitleLabel}" />
+                            <Label Text="Khách yêu cầu giao trong giờ hành chính. Kiểm tra kỹ sản phẩm trước khi đóng gói." Style="{StaticResource CaptionLabel}" FontSize="13" />
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>

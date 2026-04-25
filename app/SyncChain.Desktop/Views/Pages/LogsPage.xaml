@@ -3,21 +3,35 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              NavigationPage.HasNavigationBar="False">
-    <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="20">
+    <ScrollView Background="{StaticResource AppPageBackgroundBrush}">
+        <VerticalStackLayout Padding="30" Spacing="24">
             <Grid ColumnDefinitions="*,Auto">
                 <VerticalStackLayout>
-                    <Label Text="Nhật ký hoạt động" Style="{StaticResource PageTitleLabel}" />
-                    <Label Text="Audit trail cho đăng nhập, đơn hàng, tồn kho và phân quyền." Style="{StaticResource CaptionLabel}" />
+                    <Label Text="NHẬT KÝ HOẠT ĐỘNG" Style="{StaticResource PageTitleLabel}" />
+                    <Label Text="Theo dõi các thao tác quan trọng trong hệ thống." Style="{StaticResource CaptionLabel}" FontSize="14" />
                 </VerticalStackLayout>
                 <Button Grid.Column="1" Text="Xuất nhật ký" Style="{StaticResource PrimaryButtonStyle}" />
             </Grid>
 
-            <Grid ColumnDefinitions="2*,Auto,Auto,Auto" ColumnSpacing="12">
-                <Entry Placeholder="Tìm theo người dùng hoặc hành động..." />
-                <Button Grid.Column="1" Text="Vai trò" Style="{StaticResource SecondaryButtonStyle}" />
-                <Button Grid.Column="2" Text="Loại hoạt động" Style="{StaticResource SecondaryButtonStyle}" />
-                <Button Grid.Column="3" Text="30 ngày qua" Style="{StaticResource SecondaryButtonStyle}" />
+            <Border Style="{StaticResource CardBorderStyle}">
+                <Grid ColumnDefinitions="2*,Auto,Auto,Auto" ColumnSpacing="12">
+                    <Border BackgroundColor="White" Stroke="{StaticResource BorderColor}" StrokeThickness="1" Padding="14,0">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" HeightRequest="42">
+                            <Label Text="⌕" VerticalTextAlignment="Center" TextColor="{StaticResource MutedColor}" />
+                            <Entry Grid.Column="1" Placeholder="Tìm kiếm theo người dùng, hành động..." BackgroundColor="Transparent" />
+                        </Grid>
+                    </Border>
+                    <Button Grid.Column="1" Text="Tất cả vai trò ▾" Style="{StaticResource SecondaryButtonStyle}" />
+                    <Button Grid.Column="2" Text="Loại hoạt động ▾" Style="{StaticResource SecondaryButtonStyle}" />
+                    <Button Grid.Column="3" Text="30 ngày qua ▾" Style="{StaticResource SecondaryButtonStyle}" />
+                </Grid>
+            </Border>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="18">
+                <Border Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="HOẠT ĐỘNG HÔM NAY" Style="{StaticResource CaptionLabel}" /><Label Text="128" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="THAY ĐỔI DỮ LIỆU" Style="{StaticResource CaptionLabel}" /><Label Text="42" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
+                <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="CẢNH BÁO" Style="{StaticResource CaptionLabel}" /><Label Text="06" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
             </Grid>
 
             <Border Style="{StaticResource CardBorderStyle}">
@@ -36,17 +50,28 @@
                                     <Label Text="{Binding Description}" Style="{StaticResource CaptionLabel}" />
                                     <Label Text="{Binding Time}" Style="{StaticResource CaptionLabel}" />
                                 </VerticalStackLayout>
-                                <Border Grid.Column="2" BackgroundColor="#E2E8F0" StrokeThickness="0" Padding="10,4" HorizontalOptions="End" VerticalOptions="Start">
+                                <Border Grid.Column="2" BackgroundColor="{Binding Accent}" StrokeThickness="0" Padding="10,4" HorizontalOptions="End" VerticalOptions="Start">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="999" />
                                     </Border.StrokeShape>
-                                    <Label Text="{Binding Tag}" />
+                                    <Label Text="{Binding Tag}" TextColor="White" />
                                 </Border>
                             </Grid>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
             </Border>
+
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Text="Hiển thị 1 - 5 trong số 2,481 hoạt động" Style="{StaticResource CaptionLabel}" />
+                <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                    <Button Text="‹" Style="{StaticResource SecondaryButtonStyle}" Padding="14,8" />
+                    <Button Text="1" Style="{StaticResource PrimaryButtonStyle}" Padding="14,8" />
+                    <Button Text="2" Style="{StaticResource SecondaryButtonStyle}" Padding="14,8" />
+                    <Button Text="3" Style="{StaticResource SecondaryButtonStyle}" Padding="14,8" />
+                    <Button Text="›" Style="{StaticResource SecondaryButtonStyle}" Padding="14,8" />
+                </HorizontalStackLayout>
+            </Grid>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

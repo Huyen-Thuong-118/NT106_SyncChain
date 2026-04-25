@@ -3,11 +3,14 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              NavigationPage.HasNavigationBar="False">
-    <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="20">
+    <ScrollView Background="{StaticResource AppPageBackgroundBrush}">
+        <VerticalStackLayout Padding="30" Spacing="24">
             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                 <Button Text="← Quay lại đơn hàng" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBackClicked" />
-                <Label Grid.Column="1" Text="Tạo đơn hàng mới" Style="{StaticResource PageTitleLabel}" VerticalTextAlignment="Center" />
+                <VerticalStackLayout Grid.Column="1">
+                    <Label Text="TẠO ĐƠN HÀNG MỚI" Style="{StaticResource PageTitleLabel}" />
+                    <Label Text="Nhập thông tin khách hàng và sản phẩm cần bán." Style="{StaticResource CaptionLabel}" />
+                </VerticalStackLayout>
                 <Button Grid.Column="2" Text="Lưu nháp" Style="{StaticResource SecondaryButtonStyle}" />
             </Grid>
 
@@ -17,9 +20,9 @@
                         <VerticalStackLayout Spacing="12">
                             <Label Text="Thông tin khách hàng" Style="{StaticResource SectionTitleLabel}" />
                             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
-                                <Entry Placeholder="Họ và tên" />
-                                <Entry Grid.Column="1" Placeholder="Số điện thoại" />
-                                <Entry Grid.Row="1" Placeholder="Email" />
+                                <Entry Placeholder="Nguyễn Văn A" />
+                                <Entry Grid.Column="1" Placeholder="0901 234 567" />
+                                <Entry Grid.Row="1" Placeholder="email@gmail.com" />
                                 <Picker Grid.Row="1" Grid.Column="1" Title="Kênh bán">
                                     <Picker.Items>
                                         <x:String>Cửa hàng trực tiếp</x:String>
@@ -28,7 +31,8 @@
                                     </Picker.Items>
                                 </Picker>
                             </Grid>
-                            <Editor Placeholder="Địa chỉ giao hàng..." HeightRequest="110" />
+                            <Label Text="ĐỊA CHỈ GIAO HÀNG" Style="{StaticResource CaptionLabel}" />
+                            <Editor Placeholder="Nhập địa chỉ giao hàng..." HeightRequest="110" />
                         </VerticalStackLayout>
                     </Border>
 
@@ -40,8 +44,8 @@
                             </Grid>
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid ColumnDefinitions="60,*,Auto,Auto,Auto" ColumnSpacing="14">
-                                        <Border BackgroundColor="#DFF4F1" StrokeThickness="0" WidthRequest="54" HeightRequest="54">
+                                    <Grid ColumnDefinitions="72,*,Auto,Auto,Auto" ColumnSpacing="14">
+                                        <Border BackgroundColor="#E8EDF4" StrokeThickness="0" WidthRequest="60" HeightRequest="60">
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="16" />
                                             </Border.StrokeShape>
@@ -51,7 +55,11 @@
                                             <Label Text="{Binding Name}" FontAttributes="Bold" />
                                             <Label Text="{Binding Variant}" Style="{StaticResource CaptionLabel}" />
                                         </VerticalStackLayout>
-                                        <Label Grid.Column="2" Text="{Binding Quantity}" VerticalTextAlignment="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Center">
+                                            <Button Text="-" Style="{StaticResource SecondaryButtonStyle}" Padding="10,6" />
+                                            <Label Text="{Binding Quantity}" VerticalTextAlignment="Center" />
+                                            <Button Text="+" Style="{StaticResource SecondaryButtonStyle}" Padding="10,6" />
+                                        </HorizontalStackLayout>
                                         <Label Grid.Column="3" Text="{Binding Price}" VerticalTextAlignment="Center" FontAttributes="Bold" />
                                         <Button Grid.Column="4" Text="×" Style="{StaticResource SecondaryButtonStyle}" />
                                     </Grid>
@@ -75,7 +83,10 @@
                             <Grid ColumnDefinitions="*,Auto"><Label Text="Tạm tính" /><Label Grid.Column="1" Text="1,340,000 đ" FontAttributes="Bold" /></Grid>
                             <Grid ColumnDefinitions="*,Auto"><Label Text="Phí vận chuyển" /><Label Grid.Column="1" Text="30,000 đ" FontAttributes="Bold" /></Grid>
                             <Grid ColumnDefinitions="*,Auto"><Label Text="Giảm giá" /><Label Grid.Column="1" Text="-0 đ" FontAttributes="Bold" /></Grid>
-                            <Entry Placeholder="Mã giảm giá" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Entry Placeholder="Mã giảm giá" />
+                                <Button Grid.Column="1" Text="Áp dụng" Style="{StaticResource SecondaryButtonStyle}" />
+                            </Grid>
                             <Grid ColumnDefinitions="*,Auto"><Label Text="Tổng cộng" FontAttributes="Bold" /><Label Grid.Column="1" Text="1,370,000 đ" FontSize="22" FontAttributes="Bold" /></Grid>
                             <Button Text="Tạo đơn hàng" Style="{StaticResource PrimaryButtonStyle}" />
                         </VerticalStackLayout>
@@ -94,7 +105,6 @@
                                     </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
-                            <Label Text="Bridge đã chừa sẵn cho xác nhận giao dịch realtime và callback từ cổng thanh toán." Style="{StaticResource CaptionLabel}" />
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>

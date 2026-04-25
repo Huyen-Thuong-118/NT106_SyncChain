@@ -9,7 +9,16 @@
     Shell.BackgroundColor="{StaticResource SidebarColor}"
     Shell.ForegroundColor="White"
     Shell.TitleColor="White"
-    Shell.UnselectedColor="#A5B4C7">
+    Shell.UnselectedColor="{StaticResource SidebarMutedColor}">
+
+    <Shell.FlyoutHeader>
+        <Grid Padding="22,26,22,18">
+            <VerticalStackLayout Spacing="4">
+                <Label Text="SyncChain" TextColor="White" FontSize="22" FontAttributes="Bold" />
+                <Label Text="RETAILOPS MANAGEMENT" TextColor="{StaticResource SidebarMutedColor}" FontSize="10" CharacterSpacing="1.8" />
+            </VerticalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
 
     <FlyoutItem Title="Bảng điều khiển" Route="dashboard">
         <ShellContent ContentTemplate="{DataTemplate pages:DashboardPage}" />

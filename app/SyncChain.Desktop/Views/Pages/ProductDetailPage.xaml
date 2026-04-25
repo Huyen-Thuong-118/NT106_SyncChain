@@ -3,11 +3,11 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              NavigationPage.HasNavigationBar="False">
-    <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="20">
+    <ScrollView Background="{StaticResource AppPageBackgroundBrush}">
+        <VerticalStackLayout Padding="30" Spacing="24">
             <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
-                <Button Text="← Quay lại" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBackClicked" />
-                <Label Grid.Column="1" Text="Chi tiết sản phẩm" Style="{StaticResource PageTitleLabel}" VerticalTextAlignment="Center" />
+                <Button Text="← Quay lại sản phẩm" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBackClicked" />
+                <Label Grid.Column="1" />
                 <Button Grid.Column="2" Text="Nhân bản" Style="{StaticResource SecondaryButtonStyle}" />
                 <Button Grid.Column="3" Text="Chỉnh sửa" Style="{StaticResource PrimaryButtonStyle}" />
             </Grid>
@@ -15,69 +15,130 @@
             <Grid ColumnDefinitions="0.95*,1.05*" ColumnSpacing="18">
                 <Border Style="{StaticResource CardBorderStyle}">
                     <VerticalStackLayout Spacing="16">
-                        <Border BackgroundColor="#DFF4F1" StrokeThickness="0" HeightRequest="260">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="24" />
-                            </Border.StrokeShape>
-                            <Grid>
-                                <Label Text="S3" HorizontalOptions="Center" VerticalOptions="Center" FontSize="56" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" />
-                                <Border BackgroundColor="{StaticResource AccentColor}" StrokeThickness="0" Padding="12,6" HorizontalOptions="End" VerticalOptions="Start" Margin="16">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="999" />
-                                    </Border.StrokeShape>
-                                    <Label Text="Sắp hết hàng" TextColor="White" />
-                                </Border>
-                            </Grid>
-                        </Border>
+                        <Grid HeightRequest="320">
+                            <Border BackgroundColor="#E8EDF4" StrokeThickness="0">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="22" /></Border.StrokeShape>
+                                <Label Text="S3" HorizontalOptions="Center" VerticalOptions="Center" FontSize="72" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" />
+                            </Border>
+                            <Border BackgroundColor="{StaticResource WarningColor}" StrokeThickness="0" Padding="12,6" HorizontalOptions="End" VerticalOptions="Start" Margin="18">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="999" /></Border.StrokeShape>
+                                <Label Text="Sắp hết hàng" TextColor="White" />
+                            </Border>
+                        </Grid>
                         <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
-                            <Border Style="{StaticResource CardBorderStyle}" Padding="10"><Label Text="Front" HorizontalOptions="Center" /></Border>
-                            <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Padding="10"><Label Text="Angle" HorizontalOptions="Center" /></Border>
-                            <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}" Padding="10"><Label Text="Detail" HorizontalOptions="Center" /></Border>
+                            <Border BackgroundColor="#E8EDF4" StrokeThickness="0" HeightRequest="88"><Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape><Label Text="S3" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" /></Border>
+                            <Border Grid.Column="1" BackgroundColor="#E8EDF4" StrokeThickness="0" HeightRequest="88"><Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape><Label Text="ANG" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" /></Border>
+                            <Border Grid.Column="2" BackgroundColor="#E8EDF4" StrokeThickness="0" HeightRequest="88"><Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape><Label Text="DET" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" /></Border>
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
 
                 <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
-                    <VerticalStackLayout Spacing="14">
+                    <VerticalStackLayout Spacing="18">
                         <Label Text="WTC-0012" Style="{StaticResource CaptionLabel}" />
                         <Label Text="Đồng hồ thông minh S3" Style="{StaticResource PageTitleLabel}" />
-                        <Label Text="Thiết bị đeo thông minh hỗ trợ theo dõi sức khỏe, thông báo điện thoại và phù hợp cho cả kênh bán lẻ lẫn distributor bundle." />
+                        <Label Text="Thiết bị đeo thông minh hỗ trợ theo dõi sức khỏe, đo nhịp tim, đếm bước chân và nhận thông báo từ điện thoại." FontSize="14" TextColor="{StaticResource TextSecondaryColor}" />
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                            <Border Style="{StaticResource CardBorderStyle}" Padding="14">
+                            <Border BackgroundColor="#F4F6F8" StrokeThickness="0" Padding="18">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
                                 <VerticalStackLayout>
                                     <Label Text="Giá bán" Style="{StaticResource CaptionLabel}" />
                                     <Label Text="890,000 đ" FontSize="24" FontAttributes="Bold" />
                                 </VerticalStackLayout>
                             </Border>
-                            <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Padding="14">
+                            <Border Grid.Column="1" BackgroundColor="#F4F6F8" StrokeThickness="0" Padding="18">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
                                 <VerticalStackLayout>
                                     <Label Text="Giá nhập" Style="{StaticResource CaptionLabel}" />
                                     <Label Text="620,000 đ" FontSize="24" FontAttributes="Bold" />
                                 </VerticalStackLayout>
                             </Border>
                         </Grid>
-                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
-                            <VerticalStackLayout><Label Text="Tồn kho" Style="{StaticResource CaptionLabel}" /><Label Text="02" FontAttributes="Bold" /></VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1"><Label Text="Hạn mức cảnh báo" Style="{StaticResource CaptionLabel}" /><Label Text="10" FontAttributes="Bold" /></VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="2"><Label Text="Đã bán" Style="{StaticResource CaptionLabel}" /><Label Text="342" FontAttributes="Bold" /></VerticalStackLayout>
+
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="18">
+                            <VerticalStackLayout>
+                                <Label Text="Tồn kho hiện tại" Style="{StaticResource CaptionLabel}" />
+                                <Label Text="02" FontAttributes="Bold" FontSize="22" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Hạn mức cảnh báo" Style="{StaticResource CaptionLabel}" />
+                                <Label Text="10" FontAttributes="Bold" FontSize="22" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2">
+                                <Label Text="Đã bán" Style="{StaticResource CaptionLabel}" />
+                                <Label Text="342" FontAttributes="Bold" FontSize="22" />
+                            </VerticalStackLayout>
                         </Grid>
-                        <Button Text="Nhập thêm hàng" Style="{StaticResource PrimaryButtonStyle}" />
-                        <Button Text="Ngừng bán" Style="{StaticResource SecondaryButtonStyle}" />
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                            <Label Text="Trạng thái" Style="{StaticResource CaptionLabel}" VerticalTextAlignment="Center" />
+                            <Label Grid.Column="1" Text="Đang bán" FontAttributes="Bold" VerticalTextAlignment="Center" />
+                        </Grid>
+
+                        <HorizontalStackLayout Spacing="12">
+                            <Button Text="Nhập thêm hàng" Style="{StaticResource PrimaryButtonStyle}" />
+                            <Button Text="Ngừng bán" BackgroundColor="{StaticResource DangerColor}" TextColor="White" CornerRadius="10" Padding="20,12" FontAttributes="Bold" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="18">
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="Thông tin sản phẩm" Style="{StaticResource SectionTitleLabel}" />
+                        <Grid ColumnDefinitions="*,Auto"><Label Text="Danh mục" TextColor="{StaticResource TextSecondaryColor}" /><Label Grid.Column="1" Text="Điện tử" FontAttributes="Bold" /></Grid>
+                        <Grid ColumnDefinitions="*,Auto"><Label Text="Thương hiệu" TextColor="{StaticResource TextSecondaryColor}" /><Label Grid.Column="1" Text="SyncWatch" FontAttributes="Bold" /></Grid>
+                        <Grid ColumnDefinitions="*,Auto"><Label Text="Đơn vị tính" TextColor="{StaticResource TextSecondaryColor}" /><Label Grid.Column="1" Text="Cái" FontAttributes="Bold" /></Grid>
+                        <Grid ColumnDefinitions="*,Auto"><Label Text="Ngày tạo" TextColor="{StaticResource TextSecondaryColor}" /><Label Grid.Column="1" Text="12/08/2023" FontAttributes="Bold" /></Grid>
+                        <Grid ColumnDefinitions="*,Auto"><Label Text="Cập nhật gần nhất" TextColor="{StaticResource TextSecondaryColor}" /><Label Grid.Column="1" Text="14/10/2023" FontAttributes="Bold" /></Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="Hiệu suất bán hàng" Style="{StaticResource SectionTitleLabel}" />
+                        <Grid ColumnDefinitions="*,*,*">
+                            <VerticalStackLayout><Label Text="342" FontAttributes="Bold" FontSize="24" /><Label Text="Đã bán" Style="{StaticResource CaptionLabel}" /></VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1"><Label Text="304,3tr" FontAttributes="Bold" FontSize="24" /><Label Text="Doanh thu" Style="{StaticResource CaptionLabel}" /></VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2"><Label Text="92%" FontAttributes="Bold" FontSize="24" /><Label Text="Đánh giá tốt" Style="{StaticResource CaptionLabel}" /></VerticalStackLayout>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Mức tiêu thụ" />
+                            <Label Grid.Column="1" Text="78%" FontAttributes="Bold" />
+                        </Grid>
+                        <Border BackgroundColor="#E5E7EB" StrokeThickness="0" HeightRequest="10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="5" />
+                            </Border.StrokeShape>
+                            <Grid>
+                                <Border BackgroundColor="{StaticResource PrimaryColor}" StrokeThickness="0" HorizontalOptions="Start" WidthRequest="260">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="5" /></Border.StrokeShape>
+                                </Border>
+                            </Grid>
+                        </Border>
+                        <Label Text="Sản phẩm đang bán tốt nhưng tồn kho thấp. Nên tạo phiếu nhập mới." Style="{StaticResource CaptionLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
             </Grid>
 
             <Border Style="{StaticResource CardBorderStyle}">
                 <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding Events}">
-                    <Label Text="Lịch sử nhập / xuất kho" Style="{StaticResource SectionTitleLabel}" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Lịch sử nhập / xuất kho" Style="{StaticResource SectionTitleLabel}" />
+                        <Button Grid.Column="1" Text="Xem tất cả" Style="{StaticResource SecondaryButtonStyle}" />
+                    </Grid>
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="Auto,Auto,Auto,*,*" ColumnSpacing="16">
+                            <Grid ColumnDefinitions="*,Auto,Auto,*,*" ColumnSpacing="18">
                                 <Label Text="{Binding Date}" />
-                                <Label Grid.Column="1" Text="{Binding Type}" TextColor="{Binding Accent}" />
+                                <Border Grid.Column="1" BackgroundColor="{Binding Accent}" StrokeThickness="0" Padding="10,4">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="999" /></Border.StrokeShape>
+                                    <Label Text="{Binding Type}" TextColor="White" FontSize="12" />
+                                </Border>
                                 <Label Grid.Column="2" Text="{Binding Quantity}" FontAttributes="Bold" />
                                 <Label Grid.Column="3" Text="{Binding Actor}" />
-                                <Label Grid.Column="4" Text="{Binding Note}" Style="{StaticResource CaptionLabel}" />
+                                <Label Grid.Column="4" Text="{Binding Note}" />
                             </Grid>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>

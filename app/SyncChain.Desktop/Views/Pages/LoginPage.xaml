@@ -4,69 +4,208 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="Đăng nhập"
              NavigationPage.HasNavigationBar="False">
-    <Grid Padding="24" ColumnDefinitions="1.15*,1*" ColumnSpacing="22">
-        <Border Grid.Column="0" BackgroundColor="{StaticResource SidebarColor}" StrokeThickness="0" Padding="28">
-            <VerticalStackLayout Spacing="26">
-                <HorizontalStackLayout Spacing="12">
-                    <Border BackgroundColor="{StaticResource SidebarAccentColor}" StrokeThickness="0" Padding="10" WidthRequest="46" HeightRequest="46">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="14" />
-                        </Border.StrokeShape>
-                        <Label Text="SC" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold" />
-                    </Border>
-                    <VerticalStackLayout Spacing="2">
-                        <Label Text="SyncChain" TextColor="White" FontSize="20" FontAttributes="Bold" />
-                        <Label Text="SUPPLY CHAIN DESKTOP" TextColor="#A5F3FC" FontSize="12" />
-                    </VerticalStackLayout>
-                </HorizontalStackLayout>
+    <Grid Padding="24">
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#06080D" Offset="0.00" />
+                <GradientStop Color="#0A1222" Offset="0.38" />
+                <GradientStop Color="#101A31" Offset="0.72" />
+                <GradientStop Color="#05070B" Offset="1.00" />
+            </LinearGradientBrush>
+        </Grid.Background>
 
-                <VerticalStackLayout Spacing="14" VerticalOptions="CenterAndExpand">
-                    <Label Text="TVT Logistic" TextColor="White" FontSize="42" FontAttributes="Bold" />
-                    <BoxView HeightRequest="4" WidthRequest="120" Color="{StaticResource SidebarAccentColor}" />
-                    <Label Text="Bản dựng MAUI cho distributor và customer flow: kiểm tra tồn, khóa tồn, tạo đơn, thanh toán, vận chuyển và theo dõi thời gian thực." TextColor="#D5E3F0" FontSize="16" />
-                </VerticalStackLayout>
-
-                <Border BackgroundColor="#13213D" StrokeThickness="0" Padding="18">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="22" />
-                    </Border.StrokeShape>
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Các bridge đã chuẩn bị" TextColor="White" FontAttributes="Bold" />
-                        <Label Text="• Email xác thực đăng ký&#10;• Realtime tracking / payment&#10;• Phân quyền + passkey cho thao tác nhạy cảm" TextColor="#B8C7DA" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <Label Text="v1.0.0 frontend prototype" TextColor="#94A3B8" />
-            </VerticalStackLayout>
+        <Border Background="#17356A"
+                Opacity="0.28"
+                WidthRequest="440"
+                HeightRequest="440"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"
+                TranslationX="-120">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="220" />
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#3B82F6"
+                        Opacity="0.55"
+                        Radius="120"
+                        Offset="0,0" />
+            </Border.Shadow>
         </Border>
 
-        <ScrollView Grid.Column="1">
-            <VerticalStackLayout Padding="26" Spacing="18" VerticalOptions="Center">
-                <Label Text="Login" Style="{StaticResource PageTitleLabel}" />
-                <Label Text="AUTHENTICATION PROTOCOL REQUIRED" Style="{StaticResource CaptionLabel}" />
+        <Border Background="#0EA5E9"
+                Opacity="0.10"
+                WidthRequest="260"
+                HeightRequest="260"
+                HorizontalOptions="End"
+                VerticalOptions="Start"
+                TranslationX="80"
+                TranslationY="-40">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="130" />
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#38BDF8"
+                        Opacity="0.35"
+                        Radius="90"
+                        Offset="0,0" />
+            </Border.Shadow>
+        </Border>
 
-                <Label Text="USERNAME" Style="{StaticResource CaptionLabel}" />
-                <Entry Placeholder="enterprise_id" />
+        <Border BackgroundColor="{StaticResource SurfaceColor}"
+                StrokeThickness="0"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                MaximumWidthRequest="1080"
+                MinimumHeightRequest="620">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="26" />
+            </Border.StrokeShape>
 
-                <Label Text="PASSWORD" Style="{StaticResource CaptionLabel}" />
-                <Entry Placeholder="••••••••" IsPassword="True" />
+            <Grid ColumnDefinitions="1.02*,0.98*">
+                <Grid BackgroundColor="{StaticResource SidebarColor}"
+                      Padding="36,28"
+                      RowDefinitions="Auto,*,Auto">
+                    <HorizontalStackLayout Spacing="12">
+                        <Border BackgroundColor="{StaticResource SidebarAccentColor}"
+                                StrokeThickness="0"
+                                WidthRequest="42"
+                                HeightRequest="42">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            <Label Text="∿"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   TextColor="White"
+                                   FontSize="20"
+                                   FontAttributes="Bold" />
+                        </Border>
 
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                    <CheckBox IsChecked="True" />
-                    <Label Grid.Column="1" Text="Remember me / lưu phiên tạm" VerticalTextAlignment="Center" />
+                        <Label Text="SUPPLY CHAIN"
+                               VerticalTextAlignment="Center"
+                               TextColor="White"
+                               FontAttributes="Bold"
+                               CharacterSpacing="1.8" />
+                    </HorizontalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="1"
+                                         VerticalOptions="Center"
+                                         HorizontalOptions="Center"
+                                         Spacing="18">
+                        <Label Text="TVT Logistic"
+                               TextColor="White"
+                               FontSize="40"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" />
+
+                        <BoxView HeightRequest="4"
+                                 WidthRequest="116"
+                                 Color="White"
+                                 HorizontalOptions="Center" />
+
+                        <Label Text="Architectural logistics management for high-precision supply chain operations."
+                               TextColor="#D7E6FF"
+                               FontSize="16"
+                               MaximumWidthRequest="360"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+
+                    <HorizontalStackLayout Grid.Row="2" Spacing="10">
+                        <Label Text="v1.0.0" TextColor="{StaticResource SidebarMutedColor}" />
+                        <Label Text="•" TextColor="{StaticResource SidebarMutedColor}" />
+                    </HorizontalStackLayout>
                 </Grid>
 
-                <Button Text="ACCESS DASHBOARD" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnLoginClicked" />
-                <Button Text="Đăng ký tài khoản mới" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnRegisterClicked" />
+                <ScrollView Grid.Column="1">
+                    <Grid Padding="40,36">
+                        <VerticalStackLayout Spacing="18"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center"
+                                             MaximumWidthRequest="420">
+                            <Label Text="Login" Style="{StaticResource PageTitleLabel}" />
+                            <Label Text="AUTHENTICATION PROTOCOL REQUIRED" Style="{StaticResource CaptionLabel}" />
 
-                <Border Style="{StaticResource CardBorderStyle}">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Demo users" Style="{StaticResource SectionTitleLabel}" />
-                        <Label Text="Admin: toàn quyền distributor flow, passkey ở thao tác sản phẩm và phân quyền." />
-                        <Label Text="Customer: đặt hàng, thanh toán, theo dõi vận đơn và nhận thông báo mail." />
-                    </VerticalStackLayout>
-                </Border>
-            </VerticalStackLayout>
-        </ScrollView>
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="USERNAME" Style="{StaticResource CaptionLabel}" />
+                                <Border BackgroundColor="White"
+                                        Stroke="{StaticResource BorderColor}"
+                                        StrokeThickness="1"
+                                        Padding="14,0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10" />
+                                    </Border.StrokeShape>
+                                    <Grid ColumnDefinitions="Auto,*"
+                                          ColumnSpacing="12"
+                                          HeightRequest="46">
+                                        <Label Text="◦"
+                                               VerticalTextAlignment="Center"
+                                               TextColor="{StaticResource MutedColor}" />
+                                        <Entry Grid.Column="1"
+                                               Placeholder="enterprise_id"
+                                               BackgroundColor="Transparent" />
+                                    </Grid>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="PASSWORD" Style="{StaticResource CaptionLabel}" />
+                                <Border BackgroundColor="White"
+                                        Stroke="{StaticResource BorderColor}"
+                                        StrokeThickness="1"
+                                        Padding="14,0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10" />
+                                    </Border.StrokeShape>
+                                    <Grid ColumnDefinitions="Auto,*"
+                                          ColumnSpacing="12"
+                                          HeightRequest="46">
+                                        <Label Text="□"
+                                               VerticalTextAlignment="Center"
+                                               TextColor="{StaticResource MutedColor}" />
+                                        <Entry Grid.Column="1"
+                                               Placeholder="••••••••"
+                                               IsPassword="True"
+                                               BackgroundColor="Transparent" />
+                                    </Grid>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <CheckBox IsChecked="True" />
+                                <Label Grid.Column="1"
+                                       Text="Remember Me"
+                                       VerticalTextAlignment="Center" />
+                                <Label Grid.Column="2"
+                                       Text="Forgot Password?"
+                                       TextColor="{StaticResource PrimaryColor}"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="End" />
+                            </Grid>
+
+                            <Button Text="ACCESS DASHBOARD"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    Clicked="OnLoginClicked" />
+
+                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
+                                <Label Text="Don't have an account?" />
+                                <Label Text="Sign Up"
+                                       TextColor="{StaticResource PrimaryColor}"
+                                       FontAttributes="Bold">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnRegisterClicked" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </HorizontalStackLayout>
+
+                            <Label Text="2026 - TVT Logistic"
+                                   HorizontalOptions="Center"
+                                   Style="{StaticResource CaptionLabel}"
+                                   Margin="0,8,0,0" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </ScrollView>
+            </Grid>
+        </Border>
     </Grid>
 </ContentPage>
