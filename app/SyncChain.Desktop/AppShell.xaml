@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="SyncChain.Desktop.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:SyncChain.Desktop.Views.Pages"
+    FlyoutBackgroundColor="{StaticResource SidebarColor}"
+    FlyoutBehavior="Flyout"
+    Shell.BackgroundColor="{StaticResource SidebarColor}"
+    Shell.ForegroundColor="White"
+    Shell.TitleColor="White"
+    Shell.UnselectedColor="#A5B4C7">
+
+    <FlyoutItem Title="Bảng điều khiển" Route="dashboard">
+        <ShellContent ContentTemplate="{DataTemplate pages:DashboardPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Sản phẩm" Route="products">
+        <ShellContent ContentTemplate="{DataTemplate pages:ProductsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Đơn hàng" Route="orders">
+        <ShellContent ContentTemplate="{DataTemplate pages:OrdersPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Tạo đơn hàng" Route="create-order">
+        <ShellContent ContentTemplate="{DataTemplate pages:CreateOrderPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Nhập hàng" Route="imports">
+        <ShellContent ContentTemplate="{DataTemplate pages:ImportsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Nhật ký" Route="logs">
+        <ShellContent ContentTemplate="{DataTemplate pages:LogsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Tin nhắn" Route="chat">
+        <ShellContent ContentTemplate="{DataTemplate pages:ChatPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Người dùng &amp; phân quyền" Route="access">
+        <ShellContent ContentTemplate="{DataTemplate pages:UserAccessPage}" />
+    </FlyoutItem>
+</Shell>

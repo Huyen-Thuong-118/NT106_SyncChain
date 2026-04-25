@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.CreateOrderPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             NavigationPage.HasNavigationBar="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                <Button Text="← Quay lại đơn hàng" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBackClicked" />
+                <Label Grid.Column="1" Text="Tạo đơn hàng mới" Style="{StaticResource PageTitleLabel}" VerticalTextAlignment="Center" />
+                <Button Grid.Column="2" Text="Lưu nháp" Style="{StaticResource SecondaryButtonStyle}" />
+            </Grid>
+
+            <Grid ColumnDefinitions="1.25*,0.75*" ColumnSpacing="18">
+                <VerticalStackLayout Spacing="18">
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Thông tin khách hàng" Style="{StaticResource SectionTitleLabel}" />
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                                <Entry Placeholder="Họ và tên" />
+                                <Entry Grid.Column="1" Placeholder="Số điện thoại" />
+                                <Entry Grid.Row="1" Placeholder="Email" />
+                                <Picker Grid.Row="1" Grid.Column="1" Title="Kênh bán">
+                                    <Picker.Items>
+                                        <x:String>Cửa hàng trực tiếp</x:String>
+                                        <x:String>Online</x:String>
+                                        <x:String>Facebook</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                            </Grid>
+                            <Editor Placeholder="Địa chỉ giao hàng..." HeightRequest="110" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding Lines}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Sản phẩm" Style="{StaticResource SectionTitleLabel}" />
+                                <Button Grid.Column="1" Text="+ Thêm sản phẩm" Style="{StaticResource SecondaryButtonStyle}" />
+                            </Grid>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="60,*,Auto,Auto,Auto" ColumnSpacing="14">
+                                        <Border BackgroundColor="#DFF4F1" StrokeThickness="0" WidthRequest="54" HeightRequest="54">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="16" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1">
+                                            <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                            <Label Text="{Binding Variant}" Style="{StaticResource CaptionLabel}" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="2" Text="{Binding Quantity}" VerticalTextAlignment="Center" />
+                                        <Label Grid.Column="3" Text="{Binding Price}" VerticalTextAlignment="Center" FontAttributes="Bold" />
+                                        <Button Grid.Column="4" Text="×" Style="{StaticResource SecondaryButtonStyle}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Ghi chú đơn hàng" Style="{StaticResource SectionTitleLabel}" />
+                            <Editor Placeholder="Nhập ghi chú cho đơn hàng..." HeightRequest="120" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1" Spacing="18">
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Tóm tắt đơn hàng" Style="{StaticResource SectionTitleLabel}" />
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="Tạm tính" /><Label Grid.Column="1" Text="1,340,000 đ" FontAttributes="Bold" /></Grid>
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="Phí vận chuyển" /><Label Grid.Column="1" Text="30,000 đ" FontAttributes="Bold" /></Grid>
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="Giảm giá" /><Label Grid.Column="1" Text="-0 đ" FontAttributes="Bold" /></Grid>
+                            <Entry Placeholder="Mã giảm giá" />
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="Tổng cộng" FontAttributes="Bold" /><Label Grid.Column="1" Text="1,370,000 đ" FontSize="22" FontAttributes="Bold" /></Grid>
+                            <Button Text="Tạo đơn hàng" Style="{StaticResource PrimaryButtonStyle}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Payments}">
+                            <Label Text="Thanh toán" Style="{StaticResource SectionTitleLabel}" />
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Stroke="{StaticResource BorderColor}" BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=SelectedPayment}" Padding="12">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="16" />
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding Name}" />
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                            <Label Text="Bridge đã chừa sẵn cho xác nhận giao dịch realtime và callback từ cổng thanh toán." Style="{StaticResource CaptionLabel}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

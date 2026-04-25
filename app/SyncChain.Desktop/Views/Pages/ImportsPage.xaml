@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.ImportsPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             NavigationPage.HasNavigationBar="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20">
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout>
+                    <Label Text="Đơn nhập hàng" Style="{StaticResource PageTitleLabel}" />
+                    <Label Text="Luồng distributor nhập từ nhà máy và cập nhật tồn kho." Style="{StaticResource CaptionLabel}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="+ Tạo phiếu nhập" Style="{StaticResource PrimaryButtonStyle}" />
+            </Grid>
+
+            <Grid ColumnDefinitions="1.15*,0.85*" ColumnSpacing="18">
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding Imports}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Danh sách phiếu nhập" Style="{StaticResource SectionTitleLabel}" />
+                            <Button Grid.Column="1" Text="Bộ lọc" Style="{StaticResource SecondaryButtonStyle}" />
+                        </Grid>
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Border BackgroundColor="#F8FAFC" Stroke="{StaticResource BorderColor}" StrokeThickness="1" Padding="14">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="18" />
+                                    </Border.StrokeShape>
+                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="14">
+                                        <VerticalStackLayout>
+                                            <Label Text="{Binding Code}" FontAttributes="Bold" />
+                                            <Label Text="{Binding Supplier}" />
+                                            <Label Text="{Binding ProductCount}" Style="{StaticResource CaptionLabel}" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="1" Text="{Binding Date}" VerticalTextAlignment="Center" />
+                                        <Label Grid.Column="2" Text="{Binding Amount}" VerticalTextAlignment="Center" FontAttributes="Bold" />
+                                        <Border Grid.Column="3" BackgroundColor="{Binding StatusColor}" StrokeThickness="0" Padding="10,4">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="999" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Status}" TextColor="White" />
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </Border>
+
+                <VerticalStackLayout Grid.Column="1" Spacing="18">
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Tạo nhanh phiếu nhập" Style="{StaticResource SectionTitleLabel}" />
+                            <Picker Title="Nhà cung cấp">
+                                <Picker.Items>
+                                    <x:String>Công ty TNHH TechWorld</x:String>
+                                    <x:String>Kho phụ kiện Sài Gòn</x:String>
+                                    <x:String>Global Mobile Parts</x:String>
+                                </Picker.Items>
+                            </Picker>
+                            <DatePicker />
+                            <Editor Placeholder="Ghi chú..." HeightRequest="120" />
+                            <Button Text="Tạo phiếu" Style="{StaticResource PrimaryButtonStyle}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Suppliers}">
+                            <Label Text="Nhà cung cấp nổi bật" Style="{StaticResource SectionTitleLabel}" />
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="46,*,Auto" ColumnSpacing="12">
+                                        <Border BackgroundColor="{Binding Accent}" StrokeThickness="0" WidthRequest="42" HeightRequest="42">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="14" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Initial}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1">
+                                            <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                            <Label Text="{Binding Orders}" Style="{StaticResource CaptionLabel}" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="2" Text="{Binding Amount}" VerticalTextAlignment="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

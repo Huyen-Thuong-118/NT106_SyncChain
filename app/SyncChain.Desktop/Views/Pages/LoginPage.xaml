@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.LoginPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Đăng nhập"
+             NavigationPage.HasNavigationBar="False">
+    <Grid Padding="24" ColumnDefinitions="1.15*,1*" ColumnSpacing="22">
+        <Border Grid.Column="0" BackgroundColor="{StaticResource SidebarColor}" StrokeThickness="0" Padding="28">
+            <VerticalStackLayout Spacing="26">
+                <HorizontalStackLayout Spacing="12">
+                    <Border BackgroundColor="{StaticResource SidebarAccentColor}" StrokeThickness="0" Padding="10" WidthRequest="46" HeightRequest="46">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+                        <Label Text="SC" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold" />
+                    </Border>
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="SyncChain" TextColor="White" FontSize="20" FontAttributes="Bold" />
+                        <Label Text="SUPPLY CHAIN DESKTOP" TextColor="#A5F3FC" FontSize="12" />
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+
+                <VerticalStackLayout Spacing="14" VerticalOptions="CenterAndExpand">
+                    <Label Text="TVT Logistic" TextColor="White" FontSize="42" FontAttributes="Bold" />
+                    <BoxView HeightRequest="4" WidthRequest="120" Color="{StaticResource SidebarAccentColor}" />
+                    <Label Text="Bản dựng MAUI cho distributor và customer flow: kiểm tra tồn, khóa tồn, tạo đơn, thanh toán, vận chuyển và theo dõi thời gian thực." TextColor="#D5E3F0" FontSize="16" />
+                </VerticalStackLayout>
+
+                <Border BackgroundColor="#13213D" StrokeThickness="0" Padding="18">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="22" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Các bridge đã chuẩn bị" TextColor="White" FontAttributes="Bold" />
+                        <Label Text="• Email xác thực đăng ký&#10;• Realtime tracking / payment&#10;• Phân quyền + passkey cho thao tác nhạy cảm" TextColor="#B8C7DA" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="v1.0.0 frontend prototype" TextColor="#94A3B8" />
+            </VerticalStackLayout>
+        </Border>
+
+        <ScrollView Grid.Column="1">
+            <VerticalStackLayout Padding="26" Spacing="18" VerticalOptions="Center">
+                <Label Text="Login" Style="{StaticResource PageTitleLabel}" />
+                <Label Text="AUTHENTICATION PROTOCOL REQUIRED" Style="{StaticResource CaptionLabel}" />
+
+                <Label Text="USERNAME" Style="{StaticResource CaptionLabel}" />
+                <Entry Placeholder="enterprise_id" />
+
+                <Label Text="PASSWORD" Style="{StaticResource CaptionLabel}" />
+                <Entry Placeholder="••••••••" IsPassword="True" />
+
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <CheckBox IsChecked="True" />
+                    <Label Grid.Column="1" Text="Remember me / lưu phiên tạm" VerticalTextAlignment="Center" />
+                </Grid>
+
+                <Button Text="ACCESS DASHBOARD" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnLoginClicked" />
+                <Button Text="Đăng ký tài khoản mới" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnRegisterClicked" />
+
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Demo users" Style="{StaticResource SectionTitleLabel}" />
+                        <Label Text="Admin: toàn quyền distributor flow, passkey ở thao tác sản phẩm và phân quyền." />
+                        <Label Text="Customer: đặt hàng, thanh toán, theo dõi vận đơn và nhận thông báo mail." />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

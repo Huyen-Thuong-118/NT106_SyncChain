@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.ChatPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             NavigationPage.HasNavigationBar="False">
+    <Grid Padding="24" ColumnDefinitions="0.8*,1.2*" ColumnSpacing="18">
+        <Border Style="{StaticResource CardBorderStyle}">
+            <VerticalStackLayout Spacing="14">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Tin nhắn nội bộ" Style="{StaticResource PageTitleLabel}" />
+                    <Button Grid.Column="1" Text="+ Tin mới" Style="{StaticResource PrimaryButtonStyle}" />
+                </Grid>
+                <Entry Placeholder="Tìm kiếm..." />
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Threads}" Spacing="12">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="{Binding IsActive, Converter={StaticResource BoolToColorConverter}, ConverterParameter=ActiveThread}" Stroke="{StaticResource BorderColor}" StrokeThickness="1" Padding="12">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="18" />
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="12">
+                                    <Border BackgroundColor="#DFF4F1" StrokeThickness="0" WidthRequest="44" HeightRequest="44">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="14" />
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                        <Label Text="{Binding Preview}" Style="{StaticResource CaptionLabel}" />
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2" Text="{Binding Time}" Style="{StaticResource CaptionLabel}" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+
+        <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+            <Grid RowDefinitions="Auto,*,Auto" RowSpacing="16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label Text="Lê Minh Tuấn" Style="{StaticResource SectionTitleLabel}" />
+                        <Label Text="Đang hoạt động" Style="{StaticResource CaptionLabel}" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="⋯" Style="{StaticResource SecondaryButtonStyle}" />
+                </Grid>
+
+                <VerticalStackLayout Grid.Row="1" BindableLayout.ItemsSource="{Binding Messages}" Spacing="12">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border HorizontalOptions="{Binding IsOutgoing, Converter={StaticResource BoolToLayoutConverter}}" BackgroundColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageBubble}" StrokeThickness="0" Padding="14" MaximumWidthRequest="420">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="{Binding Content}" TextColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageText}" />
+                                    <Label Text="{Binding Time}" FontSize="12" TextColor="{StaticResource MutedColor}" HorizontalTextAlignment="End" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <Entry Placeholder="Nhập tin nhắn..." />
+                    <Button Grid.Column="1" Text="Gửi" Style="{StaticResource PrimaryButtonStyle}" />
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.ProductsPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             NavigationPage.HasNavigationBar="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20">
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout>
+                    <Label Text="Quản lý sản phẩm" Style="{StaticResource PageTitleLabel}" />
+                    <Label Text="Chuyển từ `ui/product/products.html` sang card layout MAUI." Style="{StaticResource CaptionLabel}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="+ Thêm sản phẩm" Style="{StaticResource PrimaryButtonStyle}" />
+            </Grid>
+
+            <Grid ColumnDefinitions="2*,Auto,Auto,Auto" ColumnSpacing="12">
+                <Entry Placeholder="Tìm kiếm sản phẩm..." />
+                <Button Grid.Column="1" Text="Danh mục" Style="{StaticResource SecondaryButtonStyle}" />
+                <Button Grid.Column="2" Text="Trạng thái" Style="{StaticResource SecondaryButtonStyle}" />
+                <Button Grid.Column="3" Text="Sắp xếp" Style="{StaticResource SecondaryButtonStyle}" />
+            </Grid>
+
+            <FlexLayout Wrap="Wrap" Direction="Row" BindableLayout.ItemsSource="{Binding Products}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,16,16" WidthRequest="300">
+                            <VerticalStackLayout Spacing="14">
+                                <Grid ColumnDefinitions="72,*" ColumnSpacing="14">
+                                    <Border BackgroundColor="#DFF4F1" StrokeThickness="0" WidthRequest="72" HeightRequest="72">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="24" />
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                        <Label Text="{Binding Code}" Style="{StaticResource CaptionLabel}" />
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="18" />
+                                        <Border BackgroundColor="{Binding BadgeColor}" StrokeThickness="0" Padding="10,4" HorizontalOptions="Start">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="999" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding BadgeText}" TextColor="White" FontSize="12" />
+                                        </Border>
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <Label Text="{Binding Description}" Style="{StaticResource CaptionLabel}" />
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                    <VerticalStackLayout>
+                                        <Label Text="Giá bán" Style="{StaticResource CaptionLabel}" />
+                                        <Label Text="{Binding Price}" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1">
+                                        <Label Text="Tồn kho" Style="{StaticResource CaptionLabel}" />
+                                        <Label Text="{Binding Stock}" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <Button Text="Xem chi tiết" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnOpenDetailClicked" CommandParameter="{Binding .}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

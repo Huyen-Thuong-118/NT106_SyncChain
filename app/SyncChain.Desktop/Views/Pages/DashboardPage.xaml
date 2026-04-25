@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.DashboardPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             NavigationPage.HasNavigationBar="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                <VerticalStackLayout>
+                    <Label Text="Chào buổi sáng, Quản trị viên" Style="{StaticResource PageTitleLabel}" />
+                    <Label Text="Tổng quan distributor flow, customer flow và các điểm nối realtime." Style="{StaticResource CaptionLabel}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="7 ngày qua" Style="{StaticResource SecondaryButtonStyle}" />
+                <Button Grid.Column="2" Text="Xuất báo cáo" Style="{StaticResource PrimaryButtonStyle}" />
+            </Grid>
+
+            <FlexLayout Wrap="Wrap" Direction="Row" JustifyContent="Start" BindableLayout.ItemsSource="{Binding Stats}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,16,16" WidthRequest="210">
+                            <VerticalStackLayout Spacing="10">
+                                <Border BackgroundColor="{Binding Accent}" StrokeThickness="0" WidthRequest="42" HeightRequest="42" Padding="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="14" />
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding Icon}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold" />
+                                </Border>
+                                <Label Text="{Binding Title}" Style="{StaticResource CaptionLabel}" />
+                                <Label Text="{Binding Value}" FontSize="30" FontAttributes="Bold" />
+                                <Label Text="{Binding Subtitle}" Style="{StaticResource CaptionLabel}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+
+            <Grid ColumnDefinitions="1.2*,0.8*" ColumnSpacing="18">
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="Bản đồ luồng chính" Style="{StaticResource SectionTitleLabel}" />
+                        <Label Text="Đại lý đặt hàng → kiểm tra tồn kho → khóa tồn kho → tạo đơn → thanh toán online/COD → xác nhận đơn → thông báo khách → xuất mã đơn → gửi vận chuyển → tracking realtime → xác nhận nhận hàng." />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <Border Style="{StaticResource CardBorderStyle}" Padding="14">
+                                <VerticalStackLayout Spacing="8">
+                                    <Label Text="Nhà phân phối" FontAttributes="Bold" />
+                                    <Label Text="Nhập hàng từ nhà máy, lưu kho, xuất cho khách lẻ, duyệt cảnh báo tồn và lỗi đơn." Style="{StaticResource CaptionLabel}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Padding="14">
+                                <VerticalStackLayout Spacing="8">
+                                    <Label Text="Khách hàng" FontAttributes="Bold" />
+                                    <Label Text="Đặt hàng, nhận mail tức thời, thanh toán, theo dõi vận đơn và xác nhận đã nhận." Style="{StaticResource CaptionLabel}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Cảnh báo tồn kho thấp" Style="{StaticResource SectionTitleLabel}" />
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Alerts}" Spacing="12">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Stroke="{Binding Accent}" StrokeThickness="1" BackgroundColor="#F8FAFC" Padding="12">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="16" />
+                                        </Border.StrokeShape>
+                                        <VerticalStackLayout>
+                                            <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                            <Label Text="{Binding Code}" Style="{StaticResource CaptionLabel}" />
+                                            <Label Text="{Binding StockText}" TextColor="{Binding Accent}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="18">
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Bridge / cầu nối chờ tích hợp" Style="{StaticResource SectionTitleLabel}" />
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Bridges}" Spacing="12">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Stroke="{Binding Accent}" StrokeThickness="1" Padding="14">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="16" />
+                                        </Border.StrokeShape>
+                                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                            <Label Text="{Binding Title}" FontAttributes="Bold" />
+                                            <Label Grid.Column="1" Text="{Binding Status}" TextColor="{Binding Accent}" />
+                                            <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Description}" Style="{StaticResource CaptionLabel}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Hoạt động gần đây" Style="{StaticResource SectionTitleLabel}" />
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Activities}" Spacing="12">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="48,*" ColumnSpacing="12">
+                                        <Border BackgroundColor="{Binding Accent}" StrokeThickness="0" WidthRequest="42" HeightRequest="42">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="14" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Icon}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding Title}" />
+                                            <Label Text="{Binding Time}" Style="{StaticResource CaptionLabel}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.UserAccessPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             NavigationPage.HasNavigationBar="False">
+    <Grid Padding="24">
+        <Grid RowDefinitions="Auto,Auto,*" RowSpacing="18">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                <VerticalStackLayout>
+                    <Label Text="Người dùng và phân quyền" Style="{StaticResource PageTitleLabel}" />
+                    <Label Text="Chuyển từ users modal HTML sang trang quản trị với role, passkey và lịch sử." Style="{StaticResource CaptionLabel}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="Xem lịch sử đăng nhập" Style="{StaticResource SecondaryButtonStyle}" />
+                <Button Grid.Column="2" Text="Đăng xuất" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnLogoutClicked" />
+            </Grid>
+
+            <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*" ColumnSpacing="16">
+                <Border Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="Người dùng hoạt động" Style="{StaticResource CaptionLabel}" /><Label Text="32" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="Admin" Style="{StaticResource CaptionLabel}" /><Label Text="03" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
+                <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="Manager" Style="{StaticResource CaptionLabel}" /><Label Text="09" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
+                <Border Grid.Column="3" Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="Passkey required" Style="{StaticResource CaptionLabel}" /><Label Text="Yes" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
+            </Grid>
+
+            <Grid Grid.Row="2" BackgroundColor="#64748B33">
+                <Border Style="{StaticResource CardBorderStyle}" WidthRequest="760" HorizontalOptions="Center" VerticalOptions="Center">
+                    <VerticalStackLayout Spacing="16">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="Thêm người dùng mới" Style="{StaticResource SectionTitleLabel}" />
+                                <Label Text="Cung cấp thông tin tài khoản cho nhân viên mới." Style="{StaticResource CaptionLabel}" />
+                            </VerticalStackLayout>
+                            <Button Grid.Column="1" Text="×" Style="{StaticResource SecondaryButtonStyle}" />
+                        </Grid>
+
+                        <Entry Placeholder="Họ và tên" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <Entry Placeholder="Email công việc" />
+                            <Entry Grid.Column="1" Placeholder="Mật khẩu tạm thời" IsPassword="True" Text="12345678" />
+                        </Grid>
+
+                        <Label Text="Vai trò hệ thống" Style="{StaticResource CaptionLabel}" />
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Roles}" Spacing="12">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=SelectedRole}" Stroke="{StaticResource BorderColor}" StrokeThickness="1" Padding="14" WidthRequest="220">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="18" />
+                                        </Border.StrokeShape>
+                                        <VerticalStackLayout Spacing="8">
+                                            <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                            <Label Text="{Binding Description}" Style="{StaticResource CaptionLabel}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+
+                        <Border BackgroundColor="#FFF7ED" Stroke="#FDBA74" StrokeThickness="1" Padding="14">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+                            <Label Text="Gợi ý bridge: khi thêm/xóa sản phẩm hoặc đổi role, màn hình đã chừa chỗ để gọi passkey challenge / xác nhận lại quyền." />
+                        </Border>
+
+                        <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="12" HorizontalOptions="End">
+                            <Button Text="Hủy bỏ" Style="{StaticResource SecondaryButtonStyle}" />
+                            <Button Grid.Column="1" Text="Tạo tài khoản" Style="{StaticResource PrimaryButtonStyle}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

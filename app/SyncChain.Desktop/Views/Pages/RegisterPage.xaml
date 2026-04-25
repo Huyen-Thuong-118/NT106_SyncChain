@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.RegisterPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Đăng ký"
+             NavigationPage.HasNavigationBar="False">
+    <Grid Padding="24" ColumnDefinitions="1.1*,1*" ColumnSpacing="22">
+        <Border Grid.Column="0" BackgroundColor="#102A43" StrokeThickness="0" Padding="28">
+            <VerticalStackLayout Spacing="24">
+                <Label Text="Architectural Precision in Every Shipment." TextColor="White" FontSize="38" FontAttributes="Bold" />
+                <Label Text="Giao diện này chuyển từ mẫu HTML register, giữ vai trò đăng ký distributor/customer và cầu nối email xác thực." TextColor="#D8E6F3" FontSize="16" />
+                <Border BackgroundColor="#1B3A5B" StrokeThickness="0" Padding="18">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Luồng kích hoạt dự kiến" TextColor="White" FontAttributes="Bold" />
+                        <Label Text="1. Gửi email xác nhận&#10;2. Chọn vai trò distributor hoặc customer&#10;3. Bắt buộc đổi mật khẩu ở lần đăng nhập đầu" TextColor="#D8E6F3" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </Border>
+
+        <ScrollView Grid.Column="1">
+            <VerticalStackLayout Padding="26" Spacing="14">
+                <Label Text="Register" Style="{StaticResource PageTitleLabel}" />
+                <Label Text="Tạo tài khoản mới và gắn nhánh nghiệp vụ phù hợp." Style="{StaticResource CaptionLabel}" />
+                <Entry Placeholder="Họ và tên" />
+                <Entry Placeholder="Email công việc" />
+                <Entry Placeholder="Username" />
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Entry Placeholder="Mật khẩu" IsPassword="True" />
+                    <Entry Grid.Column="1" Placeholder="Xác nhận mật khẩu" IsPassword="True" />
+                </Grid>
+                <Picker Title="Vai trò tài khoản">
+                    <Picker.Items>
+                        <x:String>Distributor / Nhà phân phối</x:String>
+                        <x:String>Customer / Khách hàng</x:String>
+                        <x:String>Staff / Nội bộ vận hành</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <CheckBox IsChecked="True" />
+                    <Label Grid.Column="1" Text="Tôi đồng ý với chính sách bảo mật, gửi email xác thực và audit lịch sử hoạt động." VerticalTextAlignment="Center" />
+                </Grid>
+                <Button Text="SIGN UP" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnRegisterClicked" />
+                <Button Text="Quay lại đăng nhập" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBackClicked" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
