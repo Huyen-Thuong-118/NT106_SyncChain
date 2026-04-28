@@ -1,0 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+
+public class DonHang
+{
+    [Key]
+    public int MaDonHang { get; set; }
+
+    public int MaNguoiDung { get; set; }
+
+    public decimal TongTien { get; set; }
+
+    public DateTime NgayTao { get; set; } = DateTime.Now;
+
+    public string TrangThai { get; set; } = "pending";
+
+    public List<ChiTietDonHang> ChiTietDonHang { get; set; } = new();
+}
