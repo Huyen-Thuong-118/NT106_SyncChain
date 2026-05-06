@@ -20,6 +20,14 @@ public partial class App : Application
 		}
 	}
 
+	public static void ShowCustomerShell()
+	{
+		if (Current?.Windows.Count > 0)
+		{
+			Current.Windows[0].Page = new CustomerShell();
+		}
+	}
+
 	public static void ShowLogin()
 	{
 		if (Current?.Windows.Count > 0)
