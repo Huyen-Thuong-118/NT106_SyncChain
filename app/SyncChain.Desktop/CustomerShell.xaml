@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="SyncChain.Desktop.CustomerShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:SyncChain.Desktop.Views.Pages"
+    FlyoutBackgroundColor="{StaticResource SidebarColor}"
+    FlyoutBehavior="Flyout"
+    Shell.BackgroundColor="{StaticResource SidebarColor}"
+    Shell.ForegroundColor="White"
+    Shell.TitleColor="White"
+    Shell.UnselectedColor="{StaticResource SidebarMutedColor}">
+
+    <Shell.FlyoutHeader>
+        <Grid Padding="22,26,22,18">
+            <VerticalStackLayout Spacing="4">
+                <Label Text="SyncChain" TextColor="White" FontSize="22" FontAttributes="Bold" />
+                <Label Text="CUSTOMER PORTAL" TextColor="{StaticResource SidebarMutedColor}" FontSize="10" CharacterSpacing="1.8" />
+            </VerticalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Border BackgroundColor="{StaticResource SidebarAccentColor}"
+                    StrokeThickness="0"
+                    Margin="14,4"
+                    Padding="14,12">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Label Text="{Binding Title}"
+                       TextColor="White"
+                       FontSize="14"
+                       FontAttributes="Bold" />
+            </Border>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <FlyoutItem Title="Trang khách hàng" Route="customer-home">
+        <ShellContent ContentTemplate="{DataTemplate pages:CustomerHomePage}" />
+    </FlyoutItem>
+</Shell>

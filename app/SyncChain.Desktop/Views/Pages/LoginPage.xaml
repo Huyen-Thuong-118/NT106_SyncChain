@@ -187,6 +187,10 @@
                                     Style="{StaticResource PrimaryButtonStyle}"
                                     Clicked="OnLoginClicked" />
 
+                            <Button Text="ACCESS CUSTOMER PORTAL"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Clicked="OnCustomerLoginClicked" />
+
                             <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
                                 <Label Text="Don't have an account?" />
                                 <Label Text="Sign Up"

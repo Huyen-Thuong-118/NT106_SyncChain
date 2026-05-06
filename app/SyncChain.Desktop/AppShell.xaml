@@ -20,35 +20,35 @@
         </Grid>
     </Shell.FlyoutHeader>
 
-    <FlyoutItem Title="Bảng điều khiển" Route="dashboard">
+    <FlyoutItem Title="Báº£ng Ä‘iá»u khiá»ƒn" Route="dashboard">
         <ShellContent ContentTemplate="{DataTemplate pages:DashboardPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Sản phẩm" Route="products">
+    <FlyoutItem Title="Sáº£n pháº©m" Route="products">
         <ShellContent ContentTemplate="{DataTemplate pages:ProductsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Đơn hàng" Route="orders">
+    <FlyoutItem Title="ÄÆ¡n hÃ ng" Route="orders">
         <ShellContent ContentTemplate="{DataTemplate pages:OrdersPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Tạo đơn hàng" Route="create-order">
+    <FlyoutItem Title="Táº¡o Ä‘Æ¡n hÃ ng" Route="create-order">
         <ShellContent ContentTemplate="{DataTemplate pages:CreateOrderPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Nhập hàng" Route="imports">
+    <FlyoutItem Title="Nháº­p hÃ ng" Route="imports">
         <ShellContent ContentTemplate="{DataTemplate pages:ImportsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Nhật ký" Route="logs">
+    <FlyoutItem Title="Nháº­t kÃ½" Route="logs">
         <ShellContent ContentTemplate="{DataTemplate pages:LogsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Tin nhắn" Route="chat">
+    <FlyoutItem Title="Tin nháº¯n" Route="chat">
         <ShellContent ContentTemplate="{DataTemplate pages:ChatPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Người dùng &amp; phân quyền" Route="access">
+    <FlyoutItem Title="NgÆ°á»i dÃ¹ng &amp; phÃ¢n quyá»n" Route="access">
         <ShellContent ContentTemplate="{DataTemplate pages:UserAccessPage}" />
     </FlyoutItem>
 </Shell>
