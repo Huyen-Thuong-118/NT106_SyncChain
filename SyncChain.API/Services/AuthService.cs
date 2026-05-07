@@ -1,11 +1,10 @@
-using SyncChain.API.Data;
-using SyncChain.API.Models;
-using SyncChain.API.DTOs;
-using BCrypt.Net;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using SyncChain.API.Data;
+using SyncChain.API.DTOs;
+using SyncChain.API.Models;
 
 namespace SyncChain.API.Services;
 
@@ -20,109 +19,171 @@ public class AuthService
         _config = config;
     }
 
-    // 🔐 REGISTER
+    // Tạo tài khoản customer sau khi kiểm tra email và mật khẩu.
     public string Register(RegisterDTO dto)
     {
-        if (_db.NguoiDung.Any(x => x.Email == dto.Email))
-            throw new Exception("Email đã tồn tại");
+        var email = dto.Email.Trim().ToLowerInvariant();
+        var password = dto.Password.Trim();
 
-        if (dto.Password.Length < 6)
-            throw new Exception("Mật khẩu phải >= 6 ký tự");
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            throw new Exception("Thieu email hoac mat khau");
 
-        string hash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+        if (_db.NguoiDung.Any(x => x.Email == email))
+            throw new Exception("Email da ton tai");
+
+        if (password.Length < 6)
+            throw new Exception("Mat khau phai >= 6 ky tu");
 
         var role = _db.PhanQuyen.FirstOrDefault(x => x.TenVaiTro == "customer");
         if (role == null)
-            throw new Exception("Chưa có role customer trong DB");
+            throw new Exception("Chua co role customer trong DB");
 
         var user = new NguoiDung
         {
-            Email = dto.Email,
-            TenDangNhap = dto.Email,
-            MatKhauHash = hash,
-            MaVaiTro = role.MaVaiTro
+            Email = email,
+            TenDangNhap = email,
+            MatKhauHash = BCrypt.Net.BCrypt.HashPassword(password),
+            MaVaiTro = role.MaVaiTro,
+            IsActive = true
         };
 
         _db.NguoiDung.Add(user);
         _db.SaveChanges();
 
-        return "Đăng ký thành công";
+        return "Dang ky thanh cong";
     }
 
-    // 🔐 LOGIN
-   public object Login(LoginDTO dto)
-{
-    if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
-        throw new Exception("Thiếu email hoặc mật khẩu");
-
-    var email = dto.Email.Trim().ToLower();
-    var password = dto.Password.Trim();
-
-    var user = _db.NguoiDung.FirstOrDefault(x => x.Email == email);
-
-    if (user == null)
+    // Xác thực đăng nhập, kiểm tra trạng thái và sinh JWT.
+    public object Login(LoginDTO dto)
     {
-        Console.WriteLine($"LOGIN FAIL: {dto.Email}");
-        throw new Exception("Sai thông tin đăng nhập");
+        if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
+            throw new Exception("Thieu email hoac mat khau");
+
+        var email = dto.Email.Trim().ToLowerInvariant();
+        var password = dto.Password.Trim();
+
+        var user = _db.NguoiDung.FirstOrDefault(x => x.Email == email);
+
+        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.MatKhauHash))
+        {
+            Console.WriteLine($"LOGIN FAIL: {dto.Email}");
+            throw new Exception("Sai thong tin dang nhap");
+        }
+
+        if (!user.IsActive)
+        {
+            Console.WriteLine($"LOGIN BLOCKED: {dto.Email}");
+            throw new Exception("Tai khoan bi khoa");
+        }
+
+        // Chuyển mã vai trò trong DB sang tên role dùng trong policy.
+        var roleName = user.MaVaiTro switch
+        {
+            1 => "customer",
+            2 => "staff",
+            3 => "manager",
+            4 => "admin",
+            _ => "unknown"
+        };
+
+        var jwtSettings = _config.GetSection("Jwt");
+
+        // Gắn user id và role vào token để các API khác phân quyền.
+        var claims = new[]
+        {
+            new Claim("user_id", user.MaNguoiDung.ToString()),
+            new Claim(ClaimTypes.Role, roleName)
+        };
+
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtSettings["Key"]!)
+        );
+
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: jwtSettings["Issuer"],
+            audience: jwtSettings["Audience"],
+            claims: claims,
+            expires: DateTime.Now.AddHours(2),
+            signingCredentials: creds
+        );
+
+        Console.WriteLine($"LOGIN SUCCESS: {user.Email}");
+
+        return new
+        {
+            token = new JwtSecurityTokenHandler().WriteToken(token),
+            user = new
+            {
+                user.MaNguoiDung,
+                user.TenDangNhap,
+                user.Email,
+                role = roleName
+            }
+        };
     }
 
-    bool isValid = BCrypt.Net.BCrypt.Verify(password, user.MatKhauHash);
-
-    if (!isValid)
+    // Trả thông tin hồ sơ theo user id trong token.
+    public object GetProfile(int userId)
     {
-        Console.WriteLine($"LOGIN FAIL: {dto.Email}");
-        throw new Exception("Sai thông tin đăng nhập");
-    }
+        var user = _db.NguoiDung.FirstOrDefault(x => x.MaNguoiDung == userId)
+            ?? throw new Exception("Khong tim thay tai khoan");
 
-    if (!user.IsActive)
-    {
-        Console.WriteLine($"LOGIN BLOCKED: {dto.Email}");
-        throw new Exception("Tài khoản bị khóa");
-    }
+        var roleName = user.MaVaiTro switch
+        {
+            1 => "customer",
+            2 => "staff",
+            3 => "manager",
+            4 => "admin",
+            _ => "unknown"
+        };
 
-    // 🔥 map role
-    string roleName = user.MaVaiTro switch
-    {
-        1 => "customer",
-        2 => "staff",
-        3 => "manager",
-        4 => "admin",
-        _ => "unknown"
-    };
-
-    var jwtSettings = _config.GetSection("Jwt");
-
-    var claims = new[]
-    {
-        new Claim("user_id", user.MaNguoiDung.ToString()),
-        new Claim(ClaimTypes.Role, roleName)
-    };
-
-    var key = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes(jwtSettings["Key"]!)
-    );
-
-    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-    var token = new JwtSecurityToken(
-        issuer: jwtSettings["Issuer"],
-        audience: jwtSettings["Audience"],
-        claims: claims,
-        expires: DateTime.Now.AddHours(2),
-        signingCredentials: creds
-    );
-
-    Console.WriteLine($"LOGIN SUCCESS: {user.Email}");
-
-    return new
-    {
-        token = new JwtSecurityTokenHandler().WriteToken(token),
-        user = new
+        return new
         {
             user.MaNguoiDung,
+            user.TenDangNhap,
             user.Email,
-            role = roleName
-        }
-    };
-}
+            role = roleName,
+            user.IsActive
+        };
+    }
+
+    // Cập nhật tên hiển thị rồi trả lại hồ sơ mới.
+    public object UpdateProfile(int userId, UpdateProfileDTO dto)
+    {
+        var username = dto.Username.Trim();
+        if (string.IsNullOrWhiteSpace(username))
+            throw new Exception("Ten hien thi khong duoc de trong");
+
+        var user = _db.NguoiDung.FirstOrDefault(x => x.MaNguoiDung == userId)
+            ?? throw new Exception("Khong tim thay tai khoan");
+
+        user.TenDangNhap = username;
+        _db.SaveChanges();
+
+        return GetProfile(userId);
+    }
+
+    // Đổi mật khẩu sau khi kiểm tra mật khẩu hiện tại.
+    public void ChangePassword(int userId, ChangePasswordDTO dto)
+    {
+        var currentPassword = dto.CurrentPassword.Trim();
+        var newPassword = dto.NewPassword.Trim();
+
+        if (string.IsNullOrWhiteSpace(currentPassword) || string.IsNullOrWhiteSpace(newPassword))
+            throw new Exception("Vui long nhap du mat khau hien tai va mat khau moi");
+
+        if (newPassword.Length < 6)
+            throw new Exception("Mat khau moi phai >= 6 ky tu");
+
+        var user = _db.NguoiDung.FirstOrDefault(x => x.MaNguoiDung == userId)
+            ?? throw new Exception("Khong tim thay tai khoan");
+
+        if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.MatKhauHash))
+            throw new Exception("Mat khau hien tai khong dung");
+
+        user.MatKhauHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        _db.SaveChanges();
+    }
 }

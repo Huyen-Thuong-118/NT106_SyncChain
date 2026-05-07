@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using SyncChain.API.Models;
 
+// Entity lưu từng dòng sản phẩm trong đơn hàng.
 public class ChiTietDonHang
 {
     [Key]

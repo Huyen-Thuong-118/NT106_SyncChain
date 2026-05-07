@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+// Entity lưu đơn hàng của người dùng.
 public class DonHang
 {
     [Key]

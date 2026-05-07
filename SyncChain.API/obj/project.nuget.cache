@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZRZ1TpBO3r4=",
+  "dgSpecHash": "+DisZXw4wMU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\KhanhVy\\D\\uit\\LTMCB\\DOAN\\NT106_SyncChain\\SyncChain.API\\SyncChain.API.csproj",
+  "projectFilePath": "C:\\Users\\KhanhVy\\D\\uit\\LTMCB\\DA\\NT106_SyncChain\\SyncChain.API\\SyncChain.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\KhanhVy\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\KhanhVy\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

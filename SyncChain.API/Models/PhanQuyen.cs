@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace SyncChain.API.Models;
+
+// Entity lưu vai trò phân quyền.
 public class PhanQuyen
 {
     [Key]

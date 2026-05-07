@@ -1,5 +1,7 @@
 namespace SyncChain.API.Models;
 using System.ComponentModel.DataAnnotations;
+
+// Entity lưu tài khoản người dùng.
 public class NguoiDung
 {
     [Key]

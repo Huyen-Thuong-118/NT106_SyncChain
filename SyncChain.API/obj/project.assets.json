@@ -2388,11 +2388,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\KhanhVy\\D\\uit\\LTMCB\\DOAN\\NT106_SyncChain\\SyncChain.API\\SyncChain.API.csproj",
+      "projectUniqueName": "C:\\Users\\KhanhVy\\D\\uit\\LTMCB\\DA\\NT106_SyncChain\\SyncChain.API\\SyncChain.API.csproj",
       "projectName": "SyncChain.API",
-      "projectPath": "C:\\Users\\KhanhVy\\D\\uit\\LTMCB\\DOAN\\NT106_SyncChain\\SyncChain.API\\SyncChain.API.csproj",
+      "projectPath": "C:\\Users\\KhanhVy\\D\\uit\\LTMCB\\DA\\NT106_SyncChain\\SyncChain.API\\SyncChain.API.csproj",
       "packagesPath": "C:\\Users\\KhanhVy\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\KhanhVy\\D\\uit\\LTMCB\\DOAN\\NT106_SyncChain\\SyncChain.API\\obj\\",
+      "outputPath": "C:\\Users\\KhanhVy\\D\\uit\\LTMCB\\DA\\NT106_SyncChain\\SyncChain.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

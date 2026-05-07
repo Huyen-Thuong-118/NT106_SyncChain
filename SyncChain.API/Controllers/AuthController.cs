@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SyncChain.API.DTOs;
 using SyncChain.API.Services;
 
@@ -16,7 +16,7 @@ public class AuthController : ControllerBase
         _auth = auth;
     }
 
-    // 🔐 REGISTER (chỉ customer)
+    // Đăng ký tài khoản khách hàng mới.
     [HttpPost("register")]
     public IActionResult Register([FromBody] RegisterDTO dto)
     {
@@ -31,7 +31,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    // 🔐 LOGIN (trả JWT)
+    // Đăng nhập và trả JWT cho ứng dụng client.
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginDTO dto)
     {
@@ -46,21 +46,59 @@ public class AuthController : ControllerBase
         }
     }
 
-    // 🔐 PROFILE (cần token)
+    // Lấy thông tin hồ sơ từ user id trong token.
     [Authorize]
     [HttpGet("profile")]
     public IActionResult Profile()
     {
-        var userId = User.FindFirst("user_id")?.Value;
-
-        // nếu bạn đã chuyển sang ClaimTypes.Role
-        var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
-
-        return Ok(new
+        try
         {
-            message = "Đã đăng nhập",
-            userId,
-            role
-        });
+            return Ok(_auth.GetProfile(GetCurrentUserId()));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    // Cập nhật tên hiển thị của tài khoản hiện tại.
+    [Authorize]
+    [HttpPut("profile")]
+    public IActionResult UpdateProfile([FromBody] UpdateProfileDTO dto)
+    {
+        try
+        {
+            return Ok(_auth.UpdateProfile(GetCurrentUserId(), dto));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    // Đổi mật khẩu sau khi xác thực mật khẩu cũ.
+    [Authorize]
+    [HttpPut("change-password")]
+    public IActionResult ChangePassword([FromBody] ChangePasswordDTO dto)
+    {
+        try
+        {
+            _auth.ChangePassword(GetCurrentUserId(), dto);
+            return Ok("Da doi mat khau");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    // Đọc mã người dùng từ claim trong JWT.
+    private int GetCurrentUserId()
+    {
+        var value = User.FindFirst("user_id")?.Value;
+        if (!int.TryParse(value, out var userId))
+            throw new Exception("Token khong hop le");
+
+        return userId;
     }
 }

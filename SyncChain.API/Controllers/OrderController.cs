@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using SyncChain.API.Services;
-using SyncChain.API.DTOs;
-using SyncChain.API.Data; 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SyncChain.API.Data;
+using SyncChain.API.DTOs;
+using SyncChain.API.Services;
 
 namespace SyncChain.API.Controllers;
 
@@ -12,81 +13,131 @@ namespace SyncChain.API.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly OrderService _service;
-    private readonly AppDbContext _db; 
+    private readonly AppDbContext _db;
 
     public OrderController(OrderService service, AppDbContext db)
     {
         _service = service;
-        _db = db; 
+        _db = db;
     }
 
-    // 🔥 TẠO ĐƠN
-    [Authorize]
+    // Tạo đơn hàng mới cho người dùng hiện tại.
+    [Authorize(Policy = "OrderWrite")]
     [HttpPost]
     public IActionResult CreateOrder(CreateOrderDTO dto)
     {
-        var claim = User.FindFirst("user_id");
+        var userId = GetUserId();
+        if (userId == null)
+            return Unauthorized("Token khong hop le");
 
-        if (claim == null)
-            return Unauthorized("Token không hợp lệ");
-
-        var userId = int.Parse(claim.Value);
-
-        var result = _service.CreateOrder(userId, dto);
+        var result = _service.CreateOrder(userId.Value, dto);
 
         return Ok(result);
     }
 
+    // Lấy danh sách đơn, lọc theo role của người dùng.
     [Authorize]
     [HttpGet]
     public IActionResult GetOrders()
     {
-        var claim = User.FindFirst("user_id");
-
-        if (claim == null)
+        var userId = GetUserId();
+        if (userId == null)
             return Unauthorized();
 
-        var userId = int.Parse(claim.Value);
-        var role = User.FindFirst("role")?.Value;
+        var role = GetRole();
 
-        // 🔥 admin xem tất cả
-        if (role == "4")
+        if (IsInternalRole(role))
         {
-            return Ok(_db.DonHang.ToList());
+            return Ok(_db.DonHang
+                .OrderByDescending(x => x.NgayTao)
+                .Select(x => new
+                {
+                    x.MaDonHang,
+                    x.MaNguoiDung,
+                    x.TongTien,
+                    x.NgayTao,
+                    x.TrangThai
+                })
+                .ToList());
         }
 
-        // 🔥 user chỉ xem đơn của mình
         var orders = _db.DonHang
-            .Where(x => x.MaNguoiDung == userId)
+            .Where(x => x.MaNguoiDung == userId.Value)
+            .OrderByDescending(x => x.NgayTao)
+            .Select(x => new
+            {
+                x.MaDonHang,
+                x.MaNguoiDung,
+                x.TongTien,
+                x.NgayTao,
+                x.TrangThai
+            })
             .ToList();
 
         return Ok(orders);
     }
 
+    // Lấy chi tiết đơn và kiểm tra quyền xem.
     [Authorize]
     [HttpGet("{id}")]
     public IActionResult GetOrderDetail(int id)
     {
+        var userId = GetUserId();
+        if (userId == null)
+            return Unauthorized();
+
+        var order = _db.DonHang.Find(id);
+        if (order == null)
+            return NotFound();
+
+        if (!IsInternalRole(GetRole()) && order.MaNguoiDung != userId.Value)
+            return Forbid();
+
         var details = _db.ChiTietDonHang
+            .Include(x => x.SanPham)
             .Where(x => x.MaDonHang == id)
+            .Select(x => new
+            {
+                x.MaSanPham,
+                x.SoLuong,
+                x.DonGia,
+                SanPham = new
+                {
+                    x.SanPham.MaSanPham,
+                    x.SanPham.TenSanPham,
+                    x.SanPham.GiaBan,
+                    x.SanPham.SoLuongTon,
+                    x.SanPham.MucTonThap,
+                    x.SanPham.TrangThai
+                }
+            })
             .ToList();
 
         return Ok(details);
     }
 
-    [Authorize]
+    // Lấy toàn bộ đơn cho nhân sự nội bộ quản lý.
+    [Authorize(Policy = "OrderManage")]
     [HttpGet("full")]
     public IActionResult GetFullOrders()
     {
         var orders = _db.DonHang
-            .Include(o => o.ChiTietDonHang) // 🔥 load luôn items
             .OrderByDescending(o => o.NgayTao)
+            .Select(x => new
+            {
+                x.MaDonHang,
+                x.MaNguoiDung,
+                x.TongTien,
+                x.NgayTao,
+                x.TrangThai
+            })
             .ToList();
 
         return Ok(orders);
     }
 
-    [Authorize]
+    // Cập nhật trạng thái xử lý đơn hàng.
+    [Authorize(Policy = "OrderManage")]
     [HttpPut("{id}/status")]
     public IActionResult UpdateStatus(int id, string status)
     {
@@ -98,18 +149,33 @@ public class OrderController : ControllerBase
         var validStatus = new[] { "pending", "processing", "done", "cancel" };
 
         if (!validStatus.Contains(status))
-            return BadRequest("Trạng thái không hợp lệ");
+            return BadRequest("Trang thai khong hop le");
 
         if (order.TrangThai == "done")
-        return BadRequest("Đơn đã hoàn thành");
+            return BadRequest("Don da hoan thanh");
 
         order.TrangThai = status;
         _db.SaveChanges();
 
-        return Ok("Cập nhật thành công");
-
-
+        return Ok("Cap nhat thanh cong");
     }
 
+    // Đọc mã người dùng từ JWT.
+    private int? GetUserId()
+    {
+        var claim = User.FindFirst("user_id")?.Value;
+        return int.TryParse(claim, out var userId) ? userId : null;
+    }
 
+    // Đọc role hiện tại từ JWT.
+    private string GetRole()
+    {
+        return User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
+    }
+
+    // Kiểm tra role thuộc nhóm nhân sự nội bộ.
+    private static bool IsInternalRole(string role)
+    {
+        return role is "admin" or "manager" or "staff";
+    }
 }

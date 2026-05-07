@@ -121,6 +121,17 @@ namespace SyncChain.API.Migrations
                     b.Property<decimal>("GiaBan")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("GiaNhap")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HinhAnhUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MoTa")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("MucTonThap")
                         .HasColumnType("INTEGER");
 
