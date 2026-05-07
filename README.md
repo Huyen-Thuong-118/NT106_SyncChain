@@ -1,62 +1,190 @@
-# RetailOps - Hệ thống quản lý vận hành chuỗi bán lẻ dựa trên mô hình Client-Server
+# 🏪 RetailOps — Hệ thống quản lý vận hành chuỗi bán lẻ
 
-## 📖 Giới thiệu
-Đây là đồ án môn Lập trình mạng căn bản. Ứng dụng cung cấp giải pháp [Mô tả ngắn gọn trong 1-2 câu: ví dụ: chat đa luồng, truyền nhận file qua mạng LAN, hoặc ứng dụng quản lý từ xa...].
+> Đồ án môn **Lập trình mạng căn bản** — Mô hình Client/Server
 
-## ✨ Chức năng chính
-* **Giao diện:** Thiết kế thân thiện, trực quan bằng Windows Forms.
-* **Server:** * Khởi tạo và lắng nghe kết nối từ nhiều Client cùng lúc.
-  * Xử lý đa luồng (Multi-threading).
-  * Ghi log hoạt động và lưu trữ dữ liệu (I/O Stream).
-* **Client:** * Kết nối an toàn tới Server thông qua IP và Port.
-  * [Chức năng A của Client]
-  * [Chức năng B của Client]
+---
 
-## 🛠 Công nghệ và Thư viện sử dụng
-* **Ngôn ngữ lập trình:** C#
-* **Nền tảng:** .NET Framework (Windows Forms)
-* **Giao thức mạng:** TCP/IP (hoặc UDP) thông qua thư viện `System.Net.Sockets`.
-* **Khác:** Xử lý luồng (`System.Threading`), Xử lý file (`System.IO`).
+## 📋 Mục lục
 
-## 🚀 Hướng dẫn Cài đặt và Sử dụng
+- [Giới thiệu](#giới-thiệu)
+- [Kiến trúc hệ thống](#kiến-trúc-hệ-thống)
+- [Sơ đồ kiến trúc](#sơ-đồ-kiến-trúc)
+- [Luồng dữ liệu](#luồng-dữ-liệu)
+- [Công nghệ sử dụng](#công-nghệ-sử-dụng)
+- [Cài đặt & Chạy thử](#cài-đặt--chạy-thử)
+- [Thành viên nhóm](#thành-viên-nhóm)
 
-### Yêu cầu hệ thống
-* Máy tính cài đặt sẵn Visual Studio.
-* Hai máy tính cùng kết nối chung một mạng LAN (nếu muốn test thực tế), hoặc test trực tiếp trên cùng một máy (Localhost).
+---
 
-### Các bước chạy chương trình
-1. Tải toàn bộ mã nguồn về máy và giải nén.
-2. Mở file Solution (`.sln`) bằng Visual Studio.
-3. Nhấn chuột phải vào Solution -> Chọn **Build Solution** để khôi phục các thư viện cần thiết.
-4. **Khởi động Server:**
-   * Mở project Server và nhấn Start.
-   * Cấp quyền truy cập mạng nếu Windows Firewall xuất hiện hộp thoại cảnh báo (Chọn *Allow access*).
-   * Nhấn nút "Khởi động Server" trên giao diện. Server sẽ lắng nghe ở Port mặc định (ví dụ: `8080`).
-5. **Khởi động Client:**
-   * Mở project Client và nhấn Start.
-   * Nhập địa chỉ IP của Server (Nhập `127.0.0.1` nếu chạy trên cùng 1 máy) và Port tương ứng.
-   * Nhấn "Kết nối" và bắt đầu sử dụng.
+## Giới thiệu
 
-6. **Cây thư mục**
-   NT106_SyncChain/
-   ├── server/                 # Toàn bộ logic Node.js hiện tại chuyển vào đây
-   │   ├── src/
-   │   │   ├── controllers/    # Xử lý logic API
-   │   │   ├── routes/         # Định nghĩa các endpoint
-   │   │   ├── models/         # Định nghĩa Schema/Query
-   │   │   └── server.js
-   │   ├── database/           # Chứa file .db và các file Migration/Seed
-   │   └── package.json
-   ├── client/                 # Tạo mới - Project C# WinForms
-   │   ├── RetailOps.sln
-   │   ├── Models/             # Map dữ liệu JSON từ API về Class C#
-   │   └── Services/           # Nơi chứa code HttpClient gọi lên Server
-   ├── docs/                   # Tài liệu đồ án, sơ đồ Sequence, Class Diagram
-   ├── .gitignore              # Cập nhật để chặn cả bin/obj của C# và node_modules
-   └── README.md
+**RetailOps** là hệ thống quản lý vận hành chuỗi bán lẻ được xây dựng theo mô hình **Client – Server**, cho phép:
 
+- Xác thực người dùng và phân quyền (Admin / Nhân viên / Nhà phân phối / Khách hàng)
+- Quản lý sản phẩm và tồn kho theo thời gian thực
+- Xử lý đơn hàng bán lẻ (Sales Order) và đơn nhập hàng (Purchase Order)
+- Cảnh báo tồn kho thấp tức thời qua TCP Socket
+- Báo cáo và thống kê đơn hàng
 
-## 👥 Thành viên thực hiện
-* **Nguyễn Đỗ Ngọc Huyền Thương** - 24521750 - [Vai trò: Code Server/Code UI...]
-* **Tăng Thanh Thư** - 245217xx - [Vai trò: Code Client/Viết báo cáo...]
-* **Mai Lương Khánh Vy** - 24521xxx - [Vai trò: Code Client/Viết báo cáo...]
+---
+
+## Kiến trúc hệ thống
+
+Hệ thống được chia thành 3 tầng độc lập:
+
+| Tầng | Công nghệ | Vai trò |
+|------|-----------|---------|
+| **Client** | C# WinForms | Giao diện máy POS, giao tiếp với Server qua HTTP & Socket |
+| **Server** | Node.js + Express | RESTful API, xử lý nghiệp vụ, phát sự kiện realtime |
+| **Database** | SQLite | Lưu trữ dữ liệu cục bộ trên máy Server |
+
+---
+
+## Sơ đồ kiến trúc
+
+```mermaid
+graph TD
+
+subgraph CLIENT["CLIENT — Máy POS (C# WinForms)"]
+    direction TB
+    UI["Giao diện người dùng (WinForms UI)"]
+    AUTH_C["Module đăng nhập (AuthService)"]
+    POS["Module bán hàng POS (Quét mã / Giỏ hàng)"]
+    SYNC["Đồng bộ tồn kho (HttpClient Polling 5s)"]
+    SOCK["Nhận cảnh báo realtime (TCP Socket Listener)"]
+end
+
+subgraph SERVER["SERVER — Node.js + Express (Port 3000)"]
+    direction TB
+    API["RESTful API Router (Express.js)"]
+    AUTH_SVC["Xác thực & Phân quyền (JWT Middleware)"]
+    PROD_SVC["Quản lý sản phẩm (Product Service)"]
+    ORDER_SVC["Xử lý đơn hàng PO / SO (Order Service)"]
+    INV_SVC["Quản lý tồn kho (Inventory Service)"]
+    EMIT["Phát sự kiện tồn kho (Socket.IO Emitter)"]
+end
+
+subgraph DB["DATABASE — SQLite (Local)"]
+    direction LR
+    USERS[("Users")]
+    SKU[("SKU — Sản phẩm")]
+    PO[("PurchaseOrder")]
+    SO[("SalesOrder")]
+    INV_TXN[("InventoryTxn")]
+end
+
+UI --> AUTH_C
+UI --> POS
+UI --> SYNC
+
+AUTH_C -- "HTTP POST /auth/login" --> API
+POS -- "HTTP GET /products/:id" --> API
+POS -- "HTTP POST /orders/sales" --> API
+SYNC -- "HTTP GET /inventory/status (Polling 5s)" --> API
+
+API --> AUTH_SVC
+API --> PROD_SVC
+API --> ORDER_SVC
+API --> INV_SVC
+ORDER_SVC --> INV_SVC
+INV_SVC --> EMIT
+
+EMIT -- "TCP Socket / Event: low-stock" --> SOCK
+
+AUTH_SVC --- USERS
+PROD_SVC --- SKU
+ORDER_SVC --- PO
+ORDER_SVC --- SO
+INV_SVC --- INV_TXN
+INV_SVC --- SKU
+
+style CLIENT fill:#E6F1FB,stroke:#185FA5,stroke-width:2px,color:#042C53
+style SERVER fill:#E1F5EE,stroke:#0F6E56,stroke-width:2px,color:#04342C
+style DB     fill:#FAEEDA,stroke:#854F0B,stroke-width:2px,color:#412402
+```
+
+---
+
+## Luồng dữ liệu
+
+**1. Đăng nhập**
+```
+WinForms → HTTP POST /auth/login → JWT verify → trả về token
+```
+
+**2. Bán hàng (POS)**
+```
+Quét mã → HTTP GET /products/:id → hiển thị giỏ hàng
+Xác nhận đơn → HTTP POST /orders/sales → ghi SalesOrder + trừ tồn kho
+```
+
+**3. Đồng bộ tồn kho (Polling)**
+```
+HttpClient gọi HTTP GET /inventory/status mỗi 5 giây
+→ Server truy vấn SQLite → trả JSON về Client cập nhật UI
+```
+
+**4. Cảnh báo tồn kho thấp (Realtime)**
+```
+INV_SVC phát hiện SoLuongTon < MucTonThap
+→ Socket.IO emit "low-stock" → TCP → Client hiển thị cảnh báo ngay lập tức
+```
+
+**5. Đặt hàng nhà máy (Purchase Order)**
+```
+WinForms → HTTP POST /orders/purchase → PO Service → ghi PurchaseOrder
+→ Khi duyệt: cập nhật SoLuongTon trong SKU
+```
+
+---
+
+## Công nghệ sử dụng
+
+### Client
+- **Ngôn ngữ:** C# (.NET WinForms)
+- **Thư viện:** `HttpClient`, `System.Net.Sockets`, `Newtonsoft.Json`
+
+### Server
+- **Runtime:** Node.js
+- **Framework:** Express.js
+- **Realtime:** Socket.IO
+- **Xác thực:** JWT (jsonwebtoken)
+- **Port:** `3000`
+
+### Database
+- **Engine:** SQLite
+- **Thư viện:** `better-sqlite3`
+- **Bảng chính:** `Users`, `SKU`, `PurchaseOrder`, `SalesOrder`, `InventoryTxn`
+
+---
+
+## Cài đặt & Chạy thử
+
+### Yêu cầu
+- Node.js >= 18
+- .NET >= 6.0
+
+### Chạy Server
+
+```bash
+cd server
+npm install
+node index.js
+# Server lắng nghe tại http://localhost:3000
+```
+
+### Chạy Client
+
+Mở file `.sln` bằng Visual Studio, build và chạy.  
+Đảm bảo Server đang chạy trước khi mở Client.
+
+---
+
+## Thành viên nhóm
+
+| Họ tên                      |   MSSV   |
+|-----------------------------|----------|
+| Nguyễn Đỗ Ngọc Huyền Thương | 24521750 |
+| Tăng Thanh Thư              | 24521731 |
+| Mai Lương Khánh Vy          | 24522057 |
+---
