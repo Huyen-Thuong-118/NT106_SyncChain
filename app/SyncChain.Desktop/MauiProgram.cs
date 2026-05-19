@@ -13,6 +13,12 @@ public static class MauiProgram
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+				fonts.AddFont("SourceSerif4-Medium.ttf", "SourceSerif4");
+				fonts.AddFont("SourceSerif4-SemiBold.ttf", "SourceSerif4");
+				fonts.AddFont("Inter-Regular.ttf", "Inter");
+				fonts.AddFont("Inter-SemiBold.ttf", "Inter");
+				fonts.AddFont("Inter-Bold.ttf", "Inter");
+				fonts.AddFont("MaterialSymbolsOutlined.ttf", "MaterialSymbols");
 			});
 
 #if DEBUG

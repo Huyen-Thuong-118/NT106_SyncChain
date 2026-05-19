@@ -22,9 +22,9 @@
                     </HorizontalStackLayout>
 
                     <VerticalStackLayout Grid.Row="1" Margin="0,48,0,0" Spacing="10">
-                        <Label Text="LOGISTICS TVT SYSTEM" TextColor="#A7C2F5" FontSize="12" CharacterSpacing="2" />
-                        <Label Text="Architectural&#10;Precision in Every&#10;Shipment." TextColor="White" FontSize="42" FontAttributes="Bold" />
-                        <Label Text="Join the most advanced logistical network designed for the modern industrial monolith. Manage fleet, inventory, and global shipping with editorial clarity." TextColor="#D7E6FF" FontSize="16" MaximumWidthRequest="360" />
+                        <Label Text="HỆ THỐNG LOGISTICS TVT" TextColor="#A7C2F5" FontSize="12" CharacterSpacing="2" />
+                        <Label Text="Quản lý&#10;chuỗi cung ứng&#10;chính xác." TextColor="White" FontSize="42" FontAttributes="Bold" />
+                        <Label Text="Tham gia hệ thống quản lý logistics hiện đại nhất. Quản lý kho hàng, đơn hàng và vận chuyển toàn diện." TextColor="#D7E6FF" FontSize="16" MaximumWidthRequest="360" />
                     </VerticalStackLayout>
 
                     <Border Grid.Row="2" BackgroundColor="#17376A" StrokeThickness="0" Margin="0,28,0,20">
@@ -35,45 +35,45 @@
 
                     <VerticalStackLayout Grid.Row="3" Spacing="8">
                         <BoxView HeightRequest="2" WidthRequest="140" Color="#93B3EF" />
-                        <Label Text="GLOBAL SUPPLY CHAIN STANDARDS V4.0" TextColor="#93B3EF" FontSize="11" CharacterSpacing="1.5" />
+                        <Label Text="TIÊU CHUẨN CHUỖI CUNG ỨNG V4.0" TextColor="#93B3EF" FontSize="11" CharacterSpacing="1.5" />
                     </VerticalStackLayout>
                 </Grid>
 
                 <ScrollView Grid.Column="1">
                     <VerticalStackLayout Padding="42" Spacing="14">
-                        <Label Text="Register" Style="{StaticResource PageTitleLabel}" />
-                        <Label Text="Enter your credentials to access the Kinetic framework" Style="{StaticResource CaptionLabel}" />
+                        <Label Text="Đăng ký" Style="{StaticResource PageTitleLabel}" />
+                        <Label Text="Nhập thông tin để tạo tài khoản mới" Style="{StaticResource CaptionLabel}" />
 
-                        <Label Text="FULL NAME" Style="{StaticResource CaptionLabel}" />
-                        <Entry Placeholder="Jonhathan Doe" />
+                        <Label Text="HỌ VÀ TÊN" Style="{StaticResource CaptionLabel}" />
+                        <Entry Placeholder="Nguyễn Văn A" />
 
                         <Label Text="EMAIL" Style="{StaticResource CaptionLabel}" />
-                        <Entry Placeholder="j.doe@logistics-kinetic.com" />
+                        <Entry Placeholder="email@example.com" />
 
-                        <Label Text="USERNAME" Style="{StaticResource CaptionLabel}" />
-                        <Entry Placeholder="jdoe_monolith" />
+                        <Label Text="TÊN ĐĂNG NHẬP" Style="{StaticResource CaptionLabel}" />
+                        <Entry Placeholder="ten_dang_nhap" />
 
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                             <VerticalStackLayout Spacing="8">
-                                <Label Text="PASSWORD" Style="{StaticResource CaptionLabel}" />
+                                <Label Text="MẬT KHẨU" Style="{StaticResource CaptionLabel}" />
                                 <Entry Placeholder="••••••••" IsPassword="True" />
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                <Label Text="CONFIRM PASSWORD" Style="{StaticResource CaptionLabel}" />
+                                <Label Text="XÁC NHẬN MẬT KHẨU" Style="{StaticResource CaptionLabel}" />
                                 <Entry Placeholder="••••••••" IsPassword="True" />
                             </VerticalStackLayout>
                         </Grid>
 
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" Margin="0,6,0,0">
                             <CheckBox IsChecked="True" />
-                            <Label Grid.Column="1" Text="I acknowledge the terms of the Kinetic Service Agreement and architectural governance policies." VerticalTextAlignment="Center" />
+                            <Label Grid.Column="1" Text="Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của hệ thống." VerticalTextAlignment="Center" />
                         </Grid>
 
-                        <Button Text="SIGN UP →" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnRegisterClicked" />
+                        <Button Text="ĐĂNG KÝ →" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnRegisterClicked" />
 
                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
-                            <Label Text="Already have an account?" />
-                            <Label Text="Login" TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold">
+                            <Label Text="Đã có tài khoản?" />
+                            <Label Text="Đăng nhập" TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnBackClicked" />
                                 </Label.GestureRecognizers>
@@ -81,9 +81,9 @@
                         </HorizontalStackLayout>
 
                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="18" Margin="0,12,0,0">
-                            <Label Text="HELP CENTER" Style="{StaticResource CaptionLabel}" />
-                            <Label Text="TECHNICAL SPECS" Style="{StaticResource CaptionLabel}" />
-                            <Label Text="SYSTEM STATUS" Style="{StaticResource CaptionLabel}" />
+                            <Label Text="TRUNG TÂM HỖ TRỢ" Style="{StaticResource CaptionLabel}" />
+                            <Label Text="THÔNG SỐ KỸ THUẬT" Style="{StaticResource CaptionLabel}" />
+                            <Label Text="TRẠNG THÁI HỆ THỐNG" Style="{StaticResource CaptionLabel}" />
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </ScrollView>

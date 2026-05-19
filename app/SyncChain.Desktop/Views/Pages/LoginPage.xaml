@@ -103,7 +103,7 @@
                                  Color="White"
                                  HorizontalOptions="Center" />
 
-                        <Label Text="Architectural logistics management for high-precision supply chain operations."
+                        <Label Text="Hệ thống quản lý chuỗi cung ứng hiện đại, chính xác và hiệu quả cao."
                                TextColor="#D7E6FF"
                                FontSize="16"
                                MaximumWidthRequest="360"
@@ -123,11 +123,11 @@
                                              HorizontalOptions="Center"
                                              VerticalOptions="Center"
                                              MaximumWidthRequest="420">
-                            <Label Text="Login" Style="{StaticResource PageTitleLabel}" />
-                            <Label Text="AUTHENTICATION PROTOCOL REQUIRED" Style="{StaticResource CaptionLabel}" />
+                            <Label Text="Đăng nhập" Style="{StaticResource PageTitleLabel}" />
+                            <Label Text="VUI LÒNG NHẬP THÔNG TIN TÀI KHOẢN" Style="{StaticResource CaptionLabel}" />
 
                             <VerticalStackLayout Spacing="8">
-                                <Label Text="USERNAME" Style="{StaticResource CaptionLabel}" />
+                                <Label Text="TÊN ĐĂNG NHẬP" Style="{StaticResource CaptionLabel}" />
                                 <Border BackgroundColor="White"
                                         Stroke="{StaticResource BorderColor}"
                                         StrokeThickness="1"
@@ -142,14 +142,14 @@
                                                VerticalTextAlignment="Center"
                                                TextColor="{StaticResource MutedColor}" />
                                         <Entry Grid.Column="1"
-                                               Placeholder="enterprise_id"
+                                               Placeholder="Nhập tên đăng nhập"
                                                BackgroundColor="Transparent" />
                                     </Grid>
                                 </Border>
                             </VerticalStackLayout>
 
                             <VerticalStackLayout Spacing="8">
-                                <Label Text="PASSWORD" Style="{StaticResource CaptionLabel}" />
+                                <Label Text="MẬT KHẨU" Style="{StaticResource CaptionLabel}" />
                                 <Border BackgroundColor="White"
                                         Stroke="{StaticResource BorderColor}"
                                         StrokeThickness="1"
@@ -174,26 +174,26 @@
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
                                 <CheckBox IsChecked="True" />
                                 <Label Grid.Column="1"
-                                       Text="Remember Me"
+                                       Text="Ghi nhớ đăng nhập"
                                        VerticalTextAlignment="Center" />
                                 <Label Grid.Column="2"
-                                       Text="Forgot Password?"
+                                       Text="Quên mật khẩu?"
                                        TextColor="{StaticResource PrimaryColor}"
                                        VerticalTextAlignment="Center"
                                        HorizontalTextAlignment="End" />
                             </Grid>
 
-                            <Button Text="ACCESS DASHBOARD"
+                            <Button Text="ĐĂNG NHẬP QUẢN TRỊ"
                                     Style="{StaticResource PrimaryButtonStyle}"
                                     Clicked="OnLoginClicked" />
 
-                            <Button Text="ACCESS CUSTOMER PORTAL"
+                            <Button Text="ĐĂNG NHẬP KHÁCH HÀNG"
                                     Style="{StaticResource SecondaryButtonStyle}"
                                     Clicked="OnCustomerLoginClicked" />
 
                             <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
-                                <Label Text="Don't have an account?" />
-                                <Label Text="Sign Up"
+                                <Label Text="Chưa có tài khoản?" />
+                                <Label Text="Đăng ký"
                                        TextColor="{StaticResource PrimaryColor}"
                                        FontAttributes="Bold">
                                     <Label.GestureRecognizers>

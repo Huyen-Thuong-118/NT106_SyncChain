@@ -4,51 +4,160 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:SyncChain.Desktop.Views.Pages"
-    FlyoutBackgroundColor="{StaticResource SidebarColor}"
+    FlyoutBackgroundColor="#66e0f2fe"
     FlyoutBehavior="Flyout"
-    Shell.BackgroundColor="{StaticResource SidebarColor}"
+    FlyoutWidth="280"
+    Shell.BackgroundColor="{StaticResource Primary}"
     Shell.ForegroundColor="White"
     Shell.TitleColor="White"
-    Shell.UnselectedColor="{StaticResource SidebarMutedColor}">
+    Shell.UnselectedColor="{StaticResource OnSurfaceVariant}">
 
-    <Shell.FlyoutHeader>
-        <Grid Padding="22,26,22,18">
-            <VerticalStackLayout Spacing="4">
-                <Label Text="SyncChain" TextColor="White" FontSize="22" FontAttributes="Bold" />
-                <Label Text="RETAILOPS MANAGEMENT" TextColor="{StaticResource SidebarMutedColor}" FontSize="10" CharacterSpacing="1.8" />
+    <!-- ═══════════════════════════════════════════════════════════════
+         FLYOUT HEADER - Logo + Brand Name
+    ═══════════════════════════════════════════════════════════════ -->
+    <Shell.FlyoutHeaderTemplate>
+        <DataTemplate>
+            <Grid Padding="24,32,24,20">
+                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                    <!-- Logo icon container: primary bg, rounded-xl, white icon -->
+                    <Border BackgroundColor="{StaticResource Primary}"
+                            StrokeThickness="0"
+                            WidthRequest="44"
+                            HeightRequest="44">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+                        <Label Text="&#xe157;"
+                               FontFamily="MaterialSymbols"
+                               FontSize="24"
+                               TextColor="White"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+                    <!-- Brand name in SourceSerif4 -->
+                    <Label Text="SyncChain"
+                           FontFamily="SourceSerif4"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource OnSurface}"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Grid>
+        </DataTemplate>
+    </Shell.FlyoutHeaderTemplate>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         FLYOUT ITEM TEMPLATE - Navigation items with icons + label-caps
+         Active item: PrimaryContainer bg, Primary text, bold, subtle shadow
+    ═══════════════════════════════════════════════════════════════ -->
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14"
+                  Padding="20,12" Margin="8,2"
+                  HeightRequest="44">
+                <Label Grid.Column="0"
+                       Text="{Binding FlyoutIcon}"
+                       FontFamily="MaterialSymbols"
+                       FontSize="20"
+                       TextColor="{StaticResource OnSurfaceVariant}"
+                       VerticalOptions="Center" />
+                <Label Grid.Column="1"
+                       Text="{Binding Title}"
+                       FontFamily="Inter"
+                       FontSize="12"
+                       FontAttributes="Bold"
+                       TextTransform="Uppercase"
+                       TextColor="{StaticResource OnSurfaceVariant}"
+                       VerticalOptions="Center" />
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         FLYOUT FOOTER - Support + Sign Out
+    ═══════════════════════════════════════════════════════════════ -->
+    <Shell.FlyoutFooterTemplate>
+        <DataTemplate>
+            <VerticalStackLayout Padding="24,16,24,24">
+                <!-- Top border separator at 20% white opacity -->
+                <BoxView HeightRequest="1"
+                         Color="#33FFFFFF"
+                         Margin="0,0,0,16" />
+                <HorizontalStackLayout Spacing="24">
+                    <Label Text="Hỗ trợ"
+                           FontFamily="Inter"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextTransform="Uppercase"
+                           TextColor="{StaticResource OnSurfaceVariant}" />
+                    <Label Text="Đăng xuất"
+                           FontFamily="Inter"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextTransform="Uppercase"
+                           TextColor="{StaticResource OnSurfaceVariant}" />
+                </HorizontalStackLayout>
             </VerticalStackLayout>
-        </Grid>
-    </Shell.FlyoutHeader>
+        </DataTemplate>
+    </Shell.FlyoutFooterTemplate>
 
-    <FlyoutItem Title="Báº£ng Ä‘iá»u khiá»ƒn" Route="dashboard">
+    <!-- ═══════════════════════════════════════════════════════════════
+         NAVIGATION ITEMS - Preserved routes with Material Symbols icons
+         Icons use FontImageSource with MaterialSymbols font glyphs
+    ═══════════════════════════════════════════════════════════════ -->
+    <FlyoutItem Title="Bảng điều khiển" Route="dashboard">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe871;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:DashboardPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Sáº£n pháº©m" Route="products">
+    <FlyoutItem Title="Sản phẩm" Route="products">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe8f8;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:ProductsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="ÄÆ¡n hÃ ng" Route="orders">
+    <FlyoutItem Title="Đơn hàng" Route="orders">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xeb40;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:OrdersPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Táº¡o Ä‘Æ¡n hÃ ng" Route="create-order">
+    <FlyoutItem Title="Tạo đơn hàng" Route="create-order">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe145;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:CreateOrderPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Nháº­p hÃ ng" Route="imports">
+    <FlyoutItem Title="Nhập hàng" Route="imports">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe8d5;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:ImportsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Nháº­t kÃ½" Route="logs">
+    <FlyoutItem Title="Nhật ký" Route="logs">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe85d;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:LogsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Tin nháº¯n" Route="chat">
+    <FlyoutItem Title="Tin nhắn" Route="chat">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe0b7;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:ChatPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="NgÆ°á»i dÃ¹ng &amp; phÃ¢n quyá»n" Route="access">
+    <FlyoutItem Title="Người dùng &amp; phân quyền" Route="access">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe7ef;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:UserAccessPage}" />
     </FlyoutItem>
 </Shell>
