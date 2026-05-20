@@ -3,147 +3,536 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              NavigationPage.HasNavigationBar="False">
-    <ScrollView Background="{StaticResource AppPageBackgroundBrush}">
-        <VerticalStackLayout Padding="30" Spacing="24">
+    <ScrollView>
+        <VerticalStackLayout Padding="64,30" Spacing="24">
+
+            <!-- Navigation Bar -->
             <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
-                <Button Text="← Quay lại sản phẩm" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBackClicked" />
+                <Button Text="← Quay lại sản phẩm"
+                        Style="{StaticResource PillSecondaryButton}"
+                        Clicked="OnBackClicked" />
                 <Label Grid.Column="1" />
-                <Button Grid.Column="2" Text="Nhân bản" Style="{StaticResource SecondaryButtonStyle}" />
-                <Button Grid.Column="3" Text="Chỉnh sửa" Style="{StaticResource PrimaryButtonStyle}" />
+                <Button Grid.Column="2" Text="Nhân bản" Style="{StaticResource PillSecondaryButton}" />
+                <Button Grid.Column="3" Text="Chỉnh sửa" Style="{StaticResource PillPrimaryButton}" />
             </Grid>
 
-            <Grid ColumnDefinitions="0.95*,1.05*" ColumnSpacing="18">
-                <Border Style="{StaticResource CardBorderStyle}">
-                    <VerticalStackLayout Spacing="16">
-                        <Grid HeightRequest="320">
-                            <Border BackgroundColor="#E8EDF4" StrokeThickness="0">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="22" /></Border.StrokeShape>
-                                <Label Text="S3" HorizontalOptions="Center" VerticalOptions="Center" FontSize="72" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" />
-                            </Border>
-                            <Border BackgroundColor="{StaticResource WarningColor}" StrokeThickness="0" Padding="12,6" HorizontalOptions="End" VerticalOptions="Start" Margin="18">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="999" /></Border.StrokeShape>
-                                <Label Text="Sắp hết hàng" TextColor="White" />
-                            </Border>
-                        </Grid>
-                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
-                            <Border BackgroundColor="#E8EDF4" StrokeThickness="0" HeightRequest="88"><Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape><Label Text="S3" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" /></Border>
-                            <Border Grid.Column="1" BackgroundColor="#E8EDF4" StrokeThickness="0" HeightRequest="88"><Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape><Label Text="ANG" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" /></Border>
-                            <Border Grid.Column="2" BackgroundColor="#E8EDF4" StrokeThickness="0" HeightRequest="88"><Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape><Label Text="DET" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource PrimaryColor}" /></Border>
-                        </Grid>
+            <!-- Hero Image Section with Overlay Gradient and Product Title -->
+            <Border BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                    StrokeThickness="0"
+                    HeightRequest="360">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="24" />
+                </Border.StrokeShape>
+                <Grid>
+                    <!-- Product Photo Placeholder -->
+                    <Label Text="S3"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           FontSize="120"
+                           FontAttributes="Bold"
+                           TextColor="{DynamicResource Primary}"
+                           Opacity="0.3" />
+
+                    <!-- Overlay Gradient -->
+                    <BoxView>
+                        <BoxView.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#00000000" Offset="0.0" />
+                                <GradientStop Color="#66000000" Offset="0.6" />
+                                <GradientStop Color="#CC000000" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </BoxView.Background>
+                    </BoxView>
+
+                    <!-- Product Title Overlay -->
+                    <VerticalStackLayout VerticalOptions="End" Padding="32">
+                        <Label Text="WTC-0012"
+                               Style="{StaticResource LabelCapsLabel}"
+                               TextColor="White"
+                               Opacity="0.8" />
+                        <Label Text="Đồng hồ thông minh S3"
+                               Style="{StaticResource DisplayXlLabel}"
+                               TextColor="White" />
+                        <Label Text="Thiết bị đeo thông minh hỗ trợ theo dõi sức khỏe"
+                               Style="{StaticResource BodyMdLabel}"
+                               TextColor="White"
+                               Opacity="0.85" />
+                    </VerticalStackLayout>
+
+                    <!-- Status Badge -->
+                    <Border BackgroundColor="{DynamicResource StatusAmber}"
+                            StrokeThickness="0"
+                            Padding="12,6"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start"
+                            Margin="24">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="9999" />
+                        </Border.StrokeShape>
+                        <Label Text="SẮP HẾT HÀNG"
+                               Style="{StaticResource StatusBadgePill}"
+                               Padding="0" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Price and Stock Summary Row -->
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16">
+                <Border Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="GIÁ BÁN" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="890,000 đ"
+                               FontFamily="Inter"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource OnSurface}" />
                     </VerticalStackLayout>
                 </Border>
+                <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="GIÁ NHẬP" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="620,000 đ"
+                               FontFamily="Inter"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource OnSurface}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="TỒN KHO" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="02"
+                               FontFamily="Inter"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource Error}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="3" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="ĐÃ BÁN" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="342"
+                               FontFamily="Inter"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource OnSurface}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
 
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
-                    <VerticalStackLayout Spacing="18">
-                        <Label Text="WTC-0012" Style="{StaticResource CaptionLabel}" />
-                        <Label Text="Đồng hồ thông minh S3" Style="{StaticResource PageTitleLabel}" />
-                        <Label Text="Thiết bị đeo thông minh hỗ trợ theo dõi sức khỏe, đo nhịp tim, đếm bước chân và nhận thông báo từ điện thoại." FontSize="14" TextColor="{StaticResource TextSecondaryColor}" />
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                            <Border BackgroundColor="#F4F6F8" StrokeThickness="0" Padding="18">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
-                                <VerticalStackLayout>
-                                    <Label Text="Giá bán" Style="{StaticResource CaptionLabel}" />
-                                    <Label Text="890,000 đ" FontSize="24" FontAttributes="Bold" />
-                                </VerticalStackLayout>
-                            </Border>
-                            <Border Grid.Column="1" BackgroundColor="#F4F6F8" StrokeThickness="0" Padding="18">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
-                                <VerticalStackLayout>
-                                    <Label Text="Giá nhập" Style="{StaticResource CaptionLabel}" />
-                                    <Label Text="620,000 đ" FontSize="24" FontAttributes="Bold" />
-                                </VerticalStackLayout>
-                            </Border>
+            <!-- Main Content: Specifications + Sales Performance -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="24">
+
+                <!-- Specifications Section -->
+                <Border Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="Thông số kỹ thuật"
+                               Style="{StaticResource HeadlineLgMobileLabel}" />
+
+                        <!-- Key-Value Pairs in DataTabularLabel -->
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                              RowSpacing="14" ColumnSpacing="12">
+                            <Label Text="Danh mục" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Column="1" Text="Điện tử" Style="{StaticResource DataTabularLabel}" HorizontalTextAlignment="End" />
+
+                            <Label Grid.Row="1" Text="Thương hiệu" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Row="1" Grid.Column="1" Text="SyncWatch" Style="{StaticResource DataTabularLabel}" HorizontalTextAlignment="End" />
+
+                            <Label Grid.Row="2" Text="Đơn vị tính" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Row="2" Grid.Column="1" Text="Cái" Style="{StaticResource DataTabularLabel}" HorizontalTextAlignment="End" />
+
+                            <Label Grid.Row="3" Text="Hạn mức cảnh báo" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Row="3" Grid.Column="1" Text="10" Style="{StaticResource DataTabularLabel}" HorizontalTextAlignment="End" />
+
+                            <Label Grid.Row="4" Text="Trạng thái" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Row="4" Grid.Column="1" Text="Đang bán" Style="{StaticResource DataTabularLabel}" HorizontalTextAlignment="End" />
+
+                            <Label Grid.Row="5" Text="Ngày tạo" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Row="5" Grid.Column="1" Text="12/08/2023" Style="{StaticResource DataTabularLabel}" HorizontalTextAlignment="End" />
+
+                            <Label Grid.Row="6" Text="Cập nhật gần nhất" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Row="6" Grid.Column="1" Text="14/10/2023" Style="{StaticResource DataTabularLabel}" HorizontalTextAlignment="End" />
                         </Grid>
 
-                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="18">
-                            <VerticalStackLayout>
-                                <Label Text="Tồn kho hiện tại" Style="{StaticResource CaptionLabel}" />
-                                <Label Text="02" FontAttributes="Bold" FontSize="22" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1">
-                                <Label Text="Hạn mức cảnh báo" Style="{StaticResource CaptionLabel}" />
-                                <Label Text="10" FontAttributes="Bold" FontSize="22" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="2">
-                                <Label Text="Đã bán" Style="{StaticResource CaptionLabel}" />
-                                <Label Text="342" FontAttributes="Bold" FontSize="22" />
-                            </VerticalStackLayout>
-                        </Grid>
-
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
-                            <Label Text="Trạng thái" Style="{StaticResource CaptionLabel}" VerticalTextAlignment="Center" />
-                            <Label Grid.Column="1" Text="Đang bán" FontAttributes="Bold" VerticalTextAlignment="Center" />
-                        </Grid>
-
-                        <HorizontalStackLayout Spacing="12">
-                            <Button Text="Nhập thêm hàng" Style="{StaticResource PrimaryButtonStyle}" />
-                            <Button Text="Ngừng bán" BackgroundColor="{StaticResource DangerColor}" TextColor="White" CornerRadius="10" Padding="20,12" FontAttributes="Bold" />
+                        <!-- Action Buttons -->
+                        <HorizontalStackLayout Spacing="12" Margin="0,8,0,0">
+                            <Button Text="Nhập thêm hàng" Style="{StaticResource PillPrimaryButton}" />
+                            <Button Text="Ngừng bán" Style="{StaticResource PillSecondaryButton}" />
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </Border>
-            </Grid>
 
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="18">
-                <Border Style="{StaticResource CardBorderStyle}">
+                <!-- Sales Performance Section -->
+                <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="16">
-                        <Label Text="Thông tin sản phẩm" Style="{StaticResource SectionTitleLabel}" />
-                        <Grid ColumnDefinitions="*,Auto"><Label Text="Danh mục" TextColor="{StaticResource TextSecondaryColor}" /><Label Grid.Column="1" Text="Điện tử" FontAttributes="Bold" /></Grid>
-                        <Grid ColumnDefinitions="*,Auto"><Label Text="Thương hiệu" TextColor="{StaticResource TextSecondaryColor}" /><Label Grid.Column="1" Text="SyncWatch" FontAttributes="Bold" /></Grid>
-                        <Grid ColumnDefinitions="*,Auto"><Label Text="Đơn vị tính" TextColor="{StaticResource TextSecondaryColor}" /><Label Grid.Column="1" Text="Cái" FontAttributes="Bold" /></Grid>
-                        <Grid ColumnDefinitions="*,Auto"><Label Text="Ngày tạo" TextColor="{StaticResource TextSecondaryColor}" /><Label Grid.Column="1" Text="12/08/2023" FontAttributes="Bold" /></Grid>
-                        <Grid ColumnDefinitions="*,Auto"><Label Text="Cập nhật gần nhất" TextColor="{StaticResource TextSecondaryColor}" /><Label Grid.Column="1" Text="14/10/2023" FontAttributes="Bold" /></Grid>
-                    </VerticalStackLayout>
-                </Border>
+                        <Label Text="Hiệu suất bán hàng"
+                               Style="{StaticResource HeadlineLgMobileLabel}" />
 
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
-                    <VerticalStackLayout Spacing="16">
-                        <Label Text="Hiệu suất bán hàng" Style="{StaticResource SectionTitleLabel}" />
-                        <Grid ColumnDefinitions="*,*,*">
-                            <VerticalStackLayout><Label Text="342" FontAttributes="Bold" FontSize="24" /><Label Text="Đã bán" Style="{StaticResource CaptionLabel}" /></VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1"><Label Text="304,3tr" FontAttributes="Bold" FontSize="24" /><Label Text="Doanh thu" Style="{StaticResource CaptionLabel}" /></VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="2"><Label Text="92%" FontAttributes="Bold" FontSize="24" /><Label Text="Đánh giá tốt" Style="{StaticResource CaptionLabel}" /></VerticalStackLayout>
+                        <!-- Metrics Row -->
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="342"
+                                       FontFamily="Inter"
+                                       FontSize="28"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="Đã bán" Style="{StaticResource LabelCapsLabel}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label Text="304,3tr"
+                                       FontFamily="Inter"
+                                       FontSize="28"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="Doanh thu" Style="{StaticResource LabelCapsLabel}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" Spacing="4">
+                                <Label Text="92%"
+                                       FontFamily="Inter"
+                                       FontSize="28"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="Đánh giá tốt" Style="{StaticResource LabelCapsLabel}" />
+                            </VerticalStackLayout>
                         </Grid>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Mức tiêu thụ" />
-                            <Label Grid.Column="1" Text="78%" FontAttributes="Bold" />
-                        </Grid>
-                        <Border BackgroundColor="#E5E7EB" StrokeThickness="0" HeightRequest="10">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="5" />
-                            </Border.StrokeShape>
-                            <Grid>
-                                <Border BackgroundColor="{StaticResource PrimaryColor}" StrokeThickness="0" HorizontalOptions="Start" WidthRequest="260">
-                                    <Border.StrokeShape><RoundRectangle CornerRadius="5" /></Border.StrokeShape>
-                                </Border>
+
+                        <!-- Consumption Progress -->
+                        <VerticalStackLayout Spacing="8" Margin="0,8,0,0">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Mức tiêu thụ" Style="{StaticResource BodyMdLabel}" />
+                                <Label Grid.Column="1" Text="78%" Style="{StaticResource DataTabularLabel}" />
                             </Grid>
+                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
+                                    StrokeThickness="0"
+                                    HeightRequest="10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="5" />
+                                </Border.StrokeShape>
+                                <Grid>
+                                    <Border BackgroundColor="{DynamicResource Primary}"
+                                            StrokeThickness="0"
+                                            HorizontalOptions="Start"
+                                            WidthRequest="260">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="5" />
+                                        </Border.StrokeShape>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Insight Note -->
+                        <Border BackgroundColor="{DynamicResource StatusAmber}"
+                                StrokeThickness="0"
+                                Padding="16,12">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            <Label Text="Sản phẩm đang bán tốt nhưng tồn kho thấp. Nên tạo phiếu nhập mới."
+                                   Style="{StaticResource BodyMdLabel}"
+                                   TextColor="{DynamicResource OnSurface}" />
                         </Border>
-                        <Label Text="Sản phẩm đang bán tốt nhưng tồn kho thấp. Nên tạo phiếu nhập mới." Style="{StaticResource CaptionLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
             </Grid>
 
-            <Border Style="{StaticResource CardBorderStyle}">
+            <!-- Regional Distribution Section -->
+            <Border Style="{StaticResource GlassCardBorder}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Phân phối theo khu vực"
+                           Style="{StaticResource HeadlineLgMobileLabel}" />
+
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16">
+                        <!-- Region: Ho Chi Minh -->
+                        <Border BackgroundColor="{DynamicResource SurfaceContainer}"
+                                StrokeThickness="0"
+                                Padding="16">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="TP.HCM"
+                                       Style="{StaticResource DataTabularLabel}"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="128"
+                                       FontFamily="Inter"
+                                       FontSize="32"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource Primary}"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="đơn vị"
+                                       Style="{StaticResource LabelCapsLabel}"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Region: Ha Noi -->
+                        <Border Grid.Column="1"
+                                BackgroundColor="{DynamicResource SurfaceContainer}"
+                                StrokeThickness="0"
+                                Padding="16">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="Hà Nội"
+                                       Style="{StaticResource DataTabularLabel}"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="96"
+                                       FontFamily="Inter"
+                                       FontSize="32"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource Primary}"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="đơn vị"
+                                       Style="{StaticResource LabelCapsLabel}"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Region: Da Nang -->
+                        <Border Grid.Column="2"
+                                BackgroundColor="{DynamicResource SurfaceContainer}"
+                                StrokeThickness="0"
+                                Padding="16">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="Đà Nẵng"
+                                       Style="{StaticResource DataTabularLabel}"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="72"
+                                       FontFamily="Inter"
+                                       FontSize="32"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource Primary}"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="đơn vị"
+                                       Style="{StaticResource LabelCapsLabel}"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Region: Other -->
+                        <Border Grid.Column="3"
+                                BackgroundColor="{DynamicResource SurfaceContainer}"
+                                StrokeThickness="0"
+                                Padding="16">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="Khác"
+                                       Style="{StaticResource DataTabularLabel}"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="46"
+                                       FontFamily="Inter"
+                                       FontSize="32"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource Primary}"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="đơn vị"
+                                       Style="{StaticResource LabelCapsLabel}"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Stock Trends Section -->
+            <Border Style="{StaticResource GlassCardBorder}">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Xu hướng tồn kho"
+                           Style="{StaticResource HeadlineLgMobileLabel}" />
+
+                    <!-- Monthly Trend Bars -->
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                          RowSpacing="12" ColumnSpacing="16">
+
+                        <!-- Month 1 -->
+                        <Label Text="Th.10" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        <Grid Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
+                                    StrokeThickness="0" HeightRequest="24">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                <Grid>
+                                    <Border BackgroundColor="{DynamicResource Primary}"
+                                            StrokeThickness="0"
+                                            HorizontalOptions="Start"
+                                            WidthRequest="45">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Label Grid.Column="1" Text="02" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        </Grid>
+
+                        <!-- Month 2 -->
+                        <Label Grid.Row="1" Text="Th.09" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
+                                    StrokeThickness="0" HeightRequest="24">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                <Grid>
+                                    <Border BackgroundColor="{DynamicResource Primary}"
+                                            StrokeThickness="0"
+                                            HorizontalOptions="Start"
+                                            WidthRequest="180">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Label Grid.Column="1" Text="38" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        </Grid>
+
+                        <!-- Month 3 -->
+                        <Label Grid.Row="2" Text="Th.08" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        <Grid Grid.Row="2" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
+                                    StrokeThickness="0" HeightRequest="24">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                <Grid>
+                                    <Border BackgroundColor="{DynamicResource StatusBlue}"
+                                            StrokeThickness="0"
+                                            HorizontalOptions="Start"
+                                            WidthRequest="320">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Label Grid.Column="1" Text="85" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        </Grid>
+
+                        <!-- Month 4 -->
+                        <Label Grid.Row="3" Text="Th.07" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        <Grid Grid.Row="3" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
+                                    StrokeThickness="0" HeightRequest="24">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                <Grid>
+                                    <Border BackgroundColor="{DynamicResource StatusBlue}"
+                                            StrokeThickness="0"
+                                            HorizontalOptions="Start"
+                                            WidthRequest="280">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Label Grid.Column="1" Text="72" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        </Grid>
+
+                        <!-- Month 5 -->
+                        <Label Grid.Row="4" Text="Th.06" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        <Grid Grid.Row="4" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
+                                    StrokeThickness="0" HeightRequest="24">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                <Grid>
+                                    <Border BackgroundColor="{DynamicResource StatusBlue}"
+                                            StrokeThickness="0"
+                                            HorizontalOptions="Start"
+                                            WidthRequest="350">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Label Grid.Column="1" Text="95" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        </Grid>
+
+                        <!-- Month 6 -->
+                        <Label Grid.Row="5" Text="Th.05" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        <Grid Grid.Row="5" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
+                                    StrokeThickness="0" HeightRequest="24">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                <Grid>
+                                    <Border BackgroundColor="{DynamicResource StatusBlue}"
+                                            StrokeThickness="0"
+                                            HorizontalOptions="Start"
+                                            WidthRequest="400">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Label Grid.Column="1" Text="110" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                        </Grid>
+                    </Grid>
+
+                    <!-- Trend Summary -->
+                    <Border BackgroundColor="{DynamicResource StatusEmerald}"
+                            StrokeThickness="0"
+                            Padding="16,12">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="↓"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource Primary}"
+                                   VerticalTextAlignment="Center" />
+                            <Label Text="Tồn kho giảm mạnh trong 2 tháng gần đây. Cần nhập thêm hàng để đáp ứng nhu cầu."
+                                   Style="{StaticResource BodyMdLabel}"
+                                   TextColor="{DynamicResource OnSurface}" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Inventory History Section -->
+            <Border Style="{StaticResource GlassCardBorder}">
                 <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding Events}">
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="Lịch sử nhập / xuất kho" Style="{StaticResource SectionTitleLabel}" />
-                        <Button Grid.Column="1" Text="Xem tất cả" Style="{StaticResource SecondaryButtonStyle}" />
+                        <Label Text="Lịch sử nhập / xuất kho"
+                               Style="{StaticResource HeadlineLgMobileLabel}" />
+                        <Button Grid.Column="1" Text="Xem tất cả" Style="{StaticResource PillSecondaryButton}" />
                     </Grid>
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="*,Auto,Auto,*,*" ColumnSpacing="18">
-                                <Label Text="{Binding Date}" />
-                                <Border Grid.Column="1" BackgroundColor="{Binding Accent}" StrokeThickness="0" Padding="10,4">
-                                    <Border.StrokeShape><RoundRectangle CornerRadius="999" /></Border.StrokeShape>
-                                    <Label Text="{Binding Type}" TextColor="White" FontSize="12" />
-                                </Border>
-                                <Label Grid.Column="2" Text="{Binding Quantity}" FontAttributes="Bold" />
-                                <Label Grid.Column="3" Text="{Binding Actor}" />
-                                <Label Grid.Column="4" Text="{Binding Note}" />
-                            </Grid>
+                            <Border BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                                    StrokeThickness="0"
+                                    Padding="16,12">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="*,Auto,Auto,*,*" ColumnSpacing="18">
+                                    <Label Text="{Binding Date}"
+                                           Style="{StaticResource DataTabularLabel}"
+                                           VerticalTextAlignment="Center" />
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="{Binding Accent}"
+                                            StrokeThickness="0"
+                                            Padding="10,4">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="9999" />
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding Type}"
+                                               TextColor="White"
+                                               FontFamily="Inter"
+                                               FontSize="11"
+                                               FontAttributes="Bold" />
+                                    </Border>
+                                    <Label Grid.Column="2"
+                                           Text="{Binding Quantity}"
+                                           Style="{StaticResource DataTabularLabel}"
+                                           VerticalTextAlignment="Center" />
+                                    <Label Grid.Column="3"
+                                           Text="{Binding Actor}"
+                                           Style="{StaticResource BodyMdLabel}"
+                                           VerticalTextAlignment="Center" />
+                                    <Label Grid.Column="4"
+                                           Text="{Binding Note}"
+                                           Style="{StaticResource BodyMdLabel}"
+                                           VerticalTextAlignment="Center" />
+                                </Grid>
+                            </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
             </Border>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

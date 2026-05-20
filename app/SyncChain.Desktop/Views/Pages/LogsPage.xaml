@@ -3,75 +3,142 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              NavigationPage.HasNavigationBar="False">
-    <ScrollView Background="{StaticResource AppPageBackgroundBrush}">
-        <VerticalStackLayout Padding="30" Spacing="24">
-            <Grid ColumnDefinitions="*,Auto">
-                <VerticalStackLayout>
-                    <Label Text="NHẬT KÝ HOẠT ĐỘNG" Style="{StaticResource PageTitleLabel}" />
-                    <Label Text="Theo dõi các thao tác quan trọng trong hệ thống." Style="{StaticResource CaptionLabel}" FontSize="14" />
+    <ScrollView>
+        <VerticalStackLayout Padding="64,30" Spacing="24">
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 PAGE HEADER
+                 "Nhật ký Hoạt động" in DisplayXlLabel + "Xuất nhật ký" PillPrimaryButton
+            ═══════════════════════════════════════════════════════════════ -->
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Nhật ký Hoạt động" Style="{StaticResource DisplayXlLabel}" />
+                    <Label Text="Theo dõi các thao tác quan trọng trong hệ thống." Style="{StaticResource BodyMdLabel}" />
                 </VerticalStackLayout>
-                <Button Grid.Column="1" Text="Xuất nhật ký" Style="{StaticResource PrimaryButtonStyle}" />
+                <Button Grid.Column="1" Text="XUẤT NHẬT KÝ" Style="{StaticResource PillPrimaryButton}" VerticalOptions="Center" />
             </Grid>
 
-            <Border Style="{StaticResource CardBorderStyle}">
+            <!-- ═══════════════════════════════════════════════════════════════
+                 FILTER BAR
+                 GlassCardBorder with search + filter buttons
+            ═══════════════════════════════════════════════════════════════ -->
+            <Border Style="{StaticResource GlassCardBorder}">
                 <Grid ColumnDefinitions="2*,Auto,Auto,Auto" ColumnSpacing="12">
-                    <Border BackgroundColor="White" Stroke="{StaticResource BorderColor}" StrokeThickness="1" Padding="14,0">
-                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                    <Border BackgroundColor="{DynamicResource SurfaceContainerLowest}" Stroke="{DynamicResource OutlineVariant}" StrokeThickness="1" Padding="14,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" HeightRequest="42">
-                            <Label Text="⌕" VerticalTextAlignment="Center" TextColor="{StaticResource MutedColor}" />
-                            <Entry Grid.Column="1" Placeholder="Tìm kiếm theo người dùng, hành động..." BackgroundColor="Transparent" />
+                            <Label Text="⌕" VerticalTextAlignment="Center" TextColor="{DynamicResource OnSurfaceVariant}" />
+                            <Entry Grid.Column="1" Placeholder="Tìm kiếm theo người dùng, hành động..." Style="{StaticResource MinimalistEntry}" />
                         </Grid>
                     </Border>
-                    <Button Grid.Column="1" Text="Tất cả vai trò ▾" Style="{StaticResource SecondaryButtonStyle}" />
-                    <Button Grid.Column="2" Text="Loại hoạt động ▾" Style="{StaticResource SecondaryButtonStyle}" />
-                    <Button Grid.Column="3" Text="30 ngày qua ▾" Style="{StaticResource SecondaryButtonStyle}" />
+                    <Button Grid.Column="1" Text="TẤT CẢ VAI TRÒ ▾" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
+                    <Button Grid.Column="2" Text="LOẠI HOẠT ĐỘNG ▾" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
+                    <Button Grid.Column="3" Text="30 NGÀY QUA ▾" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
                 </Grid>
             </Border>
 
-            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="18">
-                <Border Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="HOẠT ĐỘNG HÔM NAY" Style="{StaticResource CaptionLabel}" /><Label Text="128" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="THAY ĐỔI DỮ LIỆU" Style="{StaticResource CaptionLabel}" /><Label Text="42" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
-                <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="CẢNH BÁO" Style="{StaticResource CaptionLabel}" /><Label Text="06" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
+            <!-- ═══════════════════════════════════════════════════════════════
+                 STATISTICS CARDS
+                 3-column grid with GlassCardBorder containers
+            ═══════════════════════════════════════════════════════════════ -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="24">
+                <Border Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="HOẠT ĐỘNG HÔM NAY" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="128" Style="{StaticResource DataTabularLabel}" FontSize="28" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="THAY ĐỔI DỮ LIỆU" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="42" Style="{StaticResource DataTabularLabel}" FontSize="28" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="CẢNH BÁO" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="06" Style="{StaticResource DataTabularLabel}" FontSize="28" />
+                    </VerticalStackLayout>
+                </Border>
             </Grid>
 
-            <Border Style="{StaticResource CardBorderStyle}">
-                <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding Logs}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Grid ColumnDefinitions="52,*,Auto" ColumnSpacing="14">
-                                <Border BackgroundColor="{Binding Accent}" StrokeThickness="0" WidthRequest="46" HeightRequest="46">
+            <!-- ═══════════════════════════════════════════════════════════════
+                 LOG TABLE
+                 GlassCardBorder with column headers + log entry rows
+            ═══════════════════════════════════════════════════════════════ -->
+            <Border Style="{StaticResource GlassCardBorder}">
+                <VerticalStackLayout Spacing="16">
+                    <!-- Table title -->
+                    <Label Text="Chi tiết nhật ký" Style="{StaticResource DataTabularLabel}" FontSize="17" />
+
+                    <!-- Table header -->
+                    <Grid ColumnDefinitions="52,2*,2.5*,1.2*,1.2*" ColumnSpacing="14" Padding="8,0">
+                        <Label Text="" WidthRequest="52" />
+                        <Label Grid.Column="1" Text="Hành động" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
+                        <Label Grid.Column="2" Text="Mô tả" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
+                        <Label Grid.Column="3" Text="Thời gian" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
+                        <Label Grid.Column="4" Text="Loại" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
+                    </Grid>
+                    <!-- Separator -->
+                    <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+
+                    <!-- Log entry rows -->
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Logs}" Spacing="8">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Border BackgroundColor="Transparent" StrokeThickness="0" Padding="8,12">
                                     <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="14" />
+                                        <RoundRectangle CornerRadius="12" />
                                     </Border.StrokeShape>
-                                    <Label Text="{Binding Icon}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold" />
+                                    <Grid ColumnDefinitions="52,2*,2.5*,1.2*,1.2*" ColumnSpacing="14">
+                                        <!-- Icon container -->
+                                        <Border BackgroundColor="{Binding Accent}" StrokeThickness="0" WidthRequest="46" HeightRequest="46">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="14" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Icon}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold" />
+                                        </Border>
+                                        <!-- Hành động (Title) -->
+                                        <Label Grid.Column="1" Text="{Binding Title}" Style="{StaticResource DataTabularLabel}"
+                                               VerticalTextAlignment="Center" />
+                                        <!-- Mô tả (Description) -->
+                                        <Label Grid.Column="2" Text="{Binding Description}" Style="{StaticResource DataTabularLabel}"
+                                               FontAttributes="None" TextColor="{DynamicResource OnSurfaceVariant}"
+                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                        <!-- Thời gian (Time) -->
+                                        <Label Grid.Column="3" Text="{Binding Time}" Style="{StaticResource DataTabularLabel}"
+                                               FontAttributes="None" TextColor="{DynamicResource OnSurfaceVariant}"
+                                               VerticalTextAlignment="Center" />
+                                        <!-- Loại (Tag) - StatusBadgePill -->
+                                        <Border Grid.Column="4" BackgroundColor="{Binding Accent}" StrokeThickness="0"
+                                                Padding="12,4" HorizontalOptions="Start" VerticalOptions="Center">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="9999" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Tag}" Style="{StaticResource StatusBadgePill}" TextColor="White" Padding="0" />
+                                        </Border>
+                                    </Grid>
                                 </Border>
-                                <VerticalStackLayout Grid.Column="1">
-                                    <Label Text="{Binding Title}" FontAttributes="Bold" />
-                                    <Label Text="{Binding Description}" Style="{StaticResource CaptionLabel}" />
-                                    <Label Text="{Binding Time}" Style="{StaticResource CaptionLabel}" />
-                                </VerticalStackLayout>
-                                <Border Grid.Column="2" BackgroundColor="{Binding Accent}" StrokeThickness="0" Padding="10,4" HorizontalOptions="End" VerticalOptions="Start">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="999" />
-                                    </Border.StrokeShape>
-                                    <Label Text="{Binding Tag}" TextColor="White" />
-                                </Border>
-                            </Grid>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <!-- Pagination -->
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+                        <Label Text="Hiển thị 1 – 5 trong số 2,481 hoạt động" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                            <Button Text="TRƯỚC" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
+                            <Button Text="1" Style="{StaticResource PillPrimaryButton}" Padding="14,10" />
+                            <Button Text="2" Style="{StaticResource PillSecondaryButton}" Padding="14,10" />
+                            <Button Text="3" Style="{StaticResource PillSecondaryButton}" Padding="14,10" />
+                            <Button Text="TIẾP" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
+                        </HorizontalStackLayout>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <Grid ColumnDefinitions="*,Auto">
-                <Label Text="Hiển thị 1 - 5 trong số 2,481 hoạt động" Style="{StaticResource CaptionLabel}" />
-                <HorizontalStackLayout Grid.Column="1" Spacing="8">
-                    <Button Text="‹" Style="{StaticResource SecondaryButtonStyle}" Padding="14,8" />
-                    <Button Text="1" Style="{StaticResource PrimaryButtonStyle}" Padding="14,8" />
-                    <Button Text="2" Style="{StaticResource SecondaryButtonStyle}" Padding="14,8" />
-                    <Button Text="3" Style="{StaticResource SecondaryButtonStyle}" Padding="14,8" />
-                    <Button Text="›" Style="{StaticResource SecondaryButtonStyle}" Padding="14,8" />
-                </HorizontalStackLayout>
-            </Grid>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

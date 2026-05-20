@@ -3,73 +3,120 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              NavigationPage.HasNavigationBar="False">
-    <Grid Padding="30" Background="{StaticResource AppPageBackgroundBrush}">
-        <Grid RowDefinitions="Auto,Auto,*" RowSpacing="18">
+    <ScrollView>
+        <VerticalStackLayout Padding="64,30" Spacing="24">
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 PAGE HEADER
+                 Title + breadcrumb + action buttons
+            ═══════════════════════════════════════════════════════════════ -->
             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
                 <VerticalStackLayout>
-                    <Label Text="Danh sách Người dùng" Style="{StaticResource PageTitleLabel}" />
-                    <Label Text="Hệ thống › Quản lý người dùng" Style="{StaticResource CaptionLabel}" />
+                    <Label Text="Người dùng &amp; Phân quyền" Style="{StaticResource HeadlineLgLabel}" />
+                    <Label Text="Hệ thống › Quản lý người dùng" Style="{StaticResource BodyMdLabel}" Margin="0,8,0,0" />
                 </VerticalStackLayout>
-                <Button Grid.Column="1" Text="Xem lịch sử đăng nhập" Style="{StaticResource SecondaryButtonStyle}" />
-                <Button Grid.Column="2" Text="Đăng xuất" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnLogoutClicked" />
+                <Button Grid.Column="1" Text="XEM LỊCH SỬ ĐĂNG NHẬP" Style="{StaticResource PillSecondaryButton}" />
+                <Button Grid.Column="2" Text="ĐĂNG XUẤT" Style="{StaticResource PillPrimaryButton}" Clicked="OnLogoutClicked" />
             </Grid>
 
-            <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*" ColumnSpacing="16">
-                <Border Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="Người dùng hoạt động" Style="{StaticResource CaptionLabel}" /><Label Text="32" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
-                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="Admin" Style="{StaticResource CaptionLabel}" /><Label Text="03" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
-                <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="Manager" Style="{StaticResource CaptionLabel}" /><Label Text="09" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
-                <Border Grid.Column="3" Style="{StaticResource CardBorderStyle}"><VerticalStackLayout><Label Text="Passkey required" Style="{StaticResource CaptionLabel}" /><Label Text="Yes" FontSize="28" FontAttributes="Bold" /></VerticalStackLayout></Border>
+            <!-- ═══════════════════════════════════════════════════════════════
+                 STATISTICS CARDS
+                 4-column grid with GlassCardBorder containers
+            ═══════════════════════════════════════════════════════════════ -->
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="18">
+                <Border Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="NGƯỜI DÙNG HOẠT ĐỘNG" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="32" FontSize="28" FontAttributes="Bold" FontFamily="Inter"
+                               TextColor="{DynamicResource OnSurface}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="QUẢN TRỊ VIÊN" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="03" FontSize="28" FontAttributes="Bold" FontFamily="Inter"
+                               TextColor="{DynamicResource OnSurface}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="QUẢN LÝ" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="09" FontSize="28" FontAttributes="Bold" FontFamily="Inter"
+                               TextColor="{DynamicResource OnSurface}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="3" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="YÊU CẦU PASSKEY" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="Có" FontSize="28" FontAttributes="Bold" FontFamily="Inter"
+                               TextColor="{DynamicResource OnSurface}" />
+                    </VerticalStackLayout>
+                </Border>
             </Grid>
 
-            <Grid Grid.Row="2" BackgroundColor="#64748B33">
-                <Border Style="{StaticResource CardBorderStyle}" WidthRequest="760" HorizontalOptions="Center" VerticalOptions="Center">
-                    <VerticalStackLayout Spacing="16">
-                        <Grid ColumnDefinitions="*,Auto">
-                            <VerticalStackLayout>
-                                <Label Text="Thêm người dùng mới" Style="{StaticResource SectionTitleLabel}" />
-                                <Label Text="Cung cấp thông tin tài khoản cho nhân viên mới." Style="{StaticResource CaptionLabel}" />
-                            </VerticalStackLayout>
-                            <Button Grid.Column="1" Text="×" Style="{StaticResource SecondaryButtonStyle}" />
-                        </Grid>
+            <!-- ═══════════════════════════════════════════════════════════════
+                 ADD NEW USER FORM
+                 GlassCardBorder container with form fields
+            ═══════════════════════════════════════════════════════════════ -->
+            <Border Style="{StaticResource GlassCardBorder}">
+                <VerticalStackLayout Spacing="16">
+                    <!-- Form header -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout>
+                            <Label Text="Thêm người dùng mới" Style="{StaticResource DataTabularLabel}" FontSize="17" />
+                            <Label Text="Cung cấp thông tin tài khoản cho nhân viên mới."
+                                   Style="{StaticResource BodyMdLabel}" FontSize="13" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1" Text="×" Style="{StaticResource PillSecondaryButton}" Padding="12,8" />
+                    </Grid>
 
-                        <Label Text="HỌ VÀ TÊN" Style="{StaticResource CaptionLabel}" />
+                    <!-- Full name field -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="HỌ VÀ TÊN" Style="{StaticResource LabelCapsLabel}" />
                         <Entry Placeholder="Nhập tên nhân viên..." />
+                    </VerticalStackLayout>
 
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="EMAIL CÔNG VIỆC" Style="{StaticResource CaptionLabel}" />
-                                <Entry Placeholder="example@syncchain.com" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                <Label Text="MẬT KHẨU TẠM THỜI" Style="{StaticResource CaptionLabel}" />
-                                <Entry Placeholder="12345678" IsPassword="True" Text="12345678" />
-                            </VerticalStackLayout>
-                        </Grid>
+                    <!-- Email and password row -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="EMAIL CÔNG VIỆC" Style="{StaticResource LabelCapsLabel}" />
+                            <Entry Placeholder="example@syncchain.com" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="MẬT KHẨU TẠM THỜI" Style="{StaticResource LabelCapsLabel}" />
+                            <Entry Placeholder="12345678" IsPassword="True" Text="12345678" />
+                        </VerticalStackLayout>
+                    </Grid>
 
-                        <Label Text="VAI TRÒ HỆ THỐNG" Style="{StaticResource CaptionLabel}" />
+                    <!-- Role selection -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="VAI TRÒ HỆ THỐNG" Style="{StaticResource LabelCapsLabel}" />
                         <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Roles}" Spacing="12">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Border BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=SelectedRole}" Stroke="{StaticResource BorderColor}" StrokeThickness="1" Padding="14" WidthRequest="220">
+                                    <Border BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=SelectedRole}"
+                                            Stroke="{DynamicResource GlassBorder30}" StrokeThickness="1" Padding="14" WidthRequest="220">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="18" />
                                         </Border.StrokeShape>
                                         <VerticalStackLayout Spacing="8">
-                                            <Label Text="{Binding Name}" FontAttributes="Bold" />
-                                            <Label Text="{Binding Description}" Style="{StaticResource CaptionLabel}" />
+                                            <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}" />
+                                            <Label Text="{Binding Description}" Style="{StaticResource BodyMdLabel}" FontSize="12" />
                                         </VerticalStackLayout>
                                     </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </HorizontalStackLayout>
-
-                        <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="12" HorizontalOptions="End">
-                            <Button Text="Hủy bỏ" Style="{StaticResource SecondaryButtonStyle}" />
-                            <Button Grid.Column="1" Text="Tạo tài khoản" Style="{StaticResource PrimaryButtonStyle}" />
-                        </Grid>
                     </VerticalStackLayout>
-                </Border>
-            </Grid>
-        </Grid>
-    </Grid>
+
+                    <!-- Action buttons -->
+                    <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="12" HorizontalOptions="End">
+                        <Button Text="HỦY BỎ" Style="{StaticResource PillSecondaryButton}" />
+                        <Button Grid.Column="1" Text="TẠO TÀI KHOẢN" Style="{StaticResource PillPrimaryButton}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

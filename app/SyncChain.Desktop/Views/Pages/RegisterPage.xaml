@@ -4,90 +4,106 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="Đăng ký"
              NavigationPage.HasNavigationBar="False">
-    <Grid Padding="28" BackgroundColor="#0E1420">
-        <Border BackgroundColor="{StaticResource SurfaceColor}" StrokeThickness="0" HorizontalOptions="Center" VerticalOptions="Center" MaximumWidthRequest="1240">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="26" />
-            </Border.StrokeShape>
-            <Grid ColumnDefinitions="1.05*,0.95*">
-                <Grid BackgroundColor="#11284E" Padding="34" RowDefinitions="Auto,Auto,*,Auto">
-                    <HorizontalStackLayout Spacing="12">
-                        <Border BackgroundColor="#1A3F72" StrokeThickness="0" WidthRequest="42" HeightRequest="42">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="10" />
-                            </Border.StrokeShape>
-                            <Label Text="⟠" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" />
-                        </Border>
-                        <Label Text="SUPPLY CHAIN" VerticalTextAlignment="Center" TextColor="White" FontAttributes="Bold" CharacterSpacing="1.6" />
+
+    <ScrollView>
+        <Grid HorizontalOptions="Center"
+              VerticalOptions="Center"
+              Padding="24">
+
+            <Border Style="{StaticResource GlassCardBorder}"
+                    MaximumWidthRequest="480"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="18">
+
+                    <!-- Header -->
+                    <VerticalStackLayout Spacing="8" Margin="0,0,0,8">
+                        <Label Text="Đăng ký"
+                               Style="{StaticResource HeadlineLgMobileLabel}"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="Nhập thông tin để tạo tài khoản mới"
+                               Style="{StaticResource BodyMdLabel}"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+
+                    <!-- Full name field -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="HỌ VÀ TÊN"
+                               Style="{StaticResource LabelCapsLabel}" />
+                        <Entry Style="{StaticResource MinimalistEntry}"
+                               Placeholder="Nguyễn Văn A" />
+                    </VerticalStackLayout>
+
+                    <!-- Email field -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="EMAIL"
+                               Style="{StaticResource LabelCapsLabel}" />
+                        <Entry Style="{StaticResource MinimalistEntry}"
+                               Placeholder="email@example.com"
+                               Keyboard="Email" />
+                    </VerticalStackLayout>
+
+                    <!-- Username field -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="TÊN ĐĂNG NHẬP"
+                               Style="{StaticResource LabelCapsLabel}" />
+                        <Entry Style="{StaticResource MinimalistEntry}"
+                               Placeholder="ten_dang_nhap" />
+                    </VerticalStackLayout>
+
+                    <!-- Password fields in 2-column grid -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="MẬT KHẨU"
+                                   Style="{StaticResource LabelCapsLabel}" />
+                            <Entry Style="{StaticResource MinimalistEntry}"
+                                   Placeholder="••••••••"
+                                   IsPassword="True" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="6">
+                            <Label Text="XÁC NHẬN MẬT KHẨU"
+                                   Style="{StaticResource LabelCapsLabel}" />
+                            <Entry Style="{StaticResource MinimalistEntry}"
+                                   Placeholder="••••••••"
+                                   IsPassword="True" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Terms agreement -->
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,4,0,0">
+                        <CheckBox IsChecked="True"
+                                  Color="{DynamicResource Primary}" />
+                        <Label Grid.Column="1"
+                               Text="Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của hệ thống."
+                               Style="{StaticResource BodyMdLabel}"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+
+                    <!-- Register button -->
+                    <Button Text="ĐĂNG KÝ"
+                            Style="{StaticResource PillPrimaryButton}"
+                            Clicked="OnRegisterClicked" />
+
+                    <!-- Login link -->
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="6" Margin="0,4,0,0">
+                        <Label Text="Đã có tài khoản?"
+                               Style="{StaticResource BodyMdLabel}"
+                               VerticalTextAlignment="Center" />
+                        <Label Text="Đăng nhập"
+                               TextColor="{DynamicResource Primary}"
+                               FontFamily="Inter"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               VerticalTextAlignment="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnBackClicked" />
+                            </Label.GestureRecognizers>
+                        </Label>
                     </HorizontalStackLayout>
 
-                    <VerticalStackLayout Grid.Row="1" Margin="0,48,0,0" Spacing="10">
-                        <Label Text="HỆ THỐNG LOGISTICS TVT" TextColor="#A7C2F5" FontSize="12" CharacterSpacing="2" />
-                        <Label Text="Quản lý&#10;chuỗi cung ứng&#10;chính xác." TextColor="White" FontSize="42" FontAttributes="Bold" />
-                        <Label Text="Tham gia hệ thống quản lý logistics hiện đại nhất. Quản lý kho hàng, đơn hàng và vận chuyển toàn diện." TextColor="#D7E6FF" FontSize="16" MaximumWidthRequest="360" />
-                    </VerticalStackLayout>
-
-                    <Border Grid.Row="2" BackgroundColor="#17376A" StrokeThickness="0" Margin="0,28,0,20">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="24" />
-                        </Border.StrokeShape>
-                    </Border>
-
-                    <VerticalStackLayout Grid.Row="3" Spacing="8">
-                        <BoxView HeightRequest="2" WidthRequest="140" Color="#93B3EF" />
-                        <Label Text="TIÊU CHUẨN CHUỖI CUNG ỨNG V4.0" TextColor="#93B3EF" FontSize="11" CharacterSpacing="1.5" />
-                    </VerticalStackLayout>
-                </Grid>
-
-                <ScrollView Grid.Column="1">
-                    <VerticalStackLayout Padding="42" Spacing="14">
-                        <Label Text="Đăng ký" Style="{StaticResource PageTitleLabel}" />
-                        <Label Text="Nhập thông tin để tạo tài khoản mới" Style="{StaticResource CaptionLabel}" />
-
-                        <Label Text="HỌ VÀ TÊN" Style="{StaticResource CaptionLabel}" />
-                        <Entry Placeholder="Nguyễn Văn A" />
-
-                        <Label Text="EMAIL" Style="{StaticResource CaptionLabel}" />
-                        <Entry Placeholder="email@example.com" />
-
-                        <Label Text="TÊN ĐĂNG NHẬP" Style="{StaticResource CaptionLabel}" />
-                        <Entry Placeholder="ten_dang_nhap" />
-
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="MẬT KHẨU" Style="{StaticResource CaptionLabel}" />
-                                <Entry Placeholder="••••••••" IsPassword="True" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                <Label Text="XÁC NHẬN MẬT KHẨU" Style="{StaticResource CaptionLabel}" />
-                                <Entry Placeholder="••••••••" IsPassword="True" />
-                            </VerticalStackLayout>
-                        </Grid>
-
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" Margin="0,6,0,0">
-                            <CheckBox IsChecked="True" />
-                            <Label Grid.Column="1" Text="Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của hệ thống." VerticalTextAlignment="Center" />
-                        </Grid>
-
-                        <Button Text="ĐĂNG KÝ →" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnRegisterClicked" />
-
-                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
-                            <Label Text="Đã có tài khoản?" />
-                            <Label Text="Đăng nhập" TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnBackClicked" />
-                                </Label.GestureRecognizers>
-                            </Label>
-                        </HorizontalStackLayout>
-
-                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="18" Margin="0,12,0,0">
-                            <Label Text="TRUNG TÂM HỖ TRỢ" Style="{StaticResource CaptionLabel}" />
-                            <Label Text="THÔNG SỐ KỸ THUẬT" Style="{StaticResource CaptionLabel}" />
-                            <Label Text="TRẠNG THÁI HỆ THỐNG" Style="{StaticResource CaptionLabel}" />
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
-                </ScrollView>
-            </Grid>
-        </Border>
-    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </ScrollView>
 </ContentPage>

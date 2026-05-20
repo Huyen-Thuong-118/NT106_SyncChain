@@ -67,6 +67,15 @@ public sealed class OrderItem
 	public string Status { get; init; } = string.Empty;
 	public Color StatusColor { get; init; } = Colors.Transparent;
 	public string Initials { get; init; } = string.Empty;
+
+	public Color StatusBadgeBackground => Status switch
+	{
+		"Đã giao" => Color.FromArgb("#dcfce7"),           // StatusEmerald
+		"Đang vận chuyển" => Color.FromArgb("#dbeafe"),   // StatusBlue
+		"Đang xử lý" => Color.FromArgb("#fef3c7"),       // StatusAmber
+		"Chờ duyệt" => Color.FromArgb("#f1f5f9"),        // StatusSlate
+		_ => Color.FromArgb("#f1f5f9")                    // StatusSlate (default)
+	};
 }
 
 public sealed class TimelineItem
@@ -95,6 +104,15 @@ public sealed class ImportItem
 	public string Amount { get; init; } = string.Empty;
 	public string Status { get; init; } = string.Empty;
 	public Color StatusColor { get; init; } = Colors.Transparent;
+
+	public Color StatusBadgeBackground => Status switch
+	{
+		"Đã giao" => Color.FromArgb("#dcfce7"),           // StatusEmerald
+		"Đang vận chuyển" => Color.FromArgb("#dbeafe"),   // StatusBlue
+		"Đang xử lý" => Color.FromArgb("#fef3c7"),       // StatusAmber
+		"Chờ duyệt" => Color.FromArgb("#f1f5f9"),        // StatusSlate
+		_ => Color.FromArgb("#f1f5f9")                    // StatusSlate (default)
+	};
 }
 
 public sealed class SupplierItem
@@ -130,6 +148,7 @@ public sealed class ChatMessage
 	public string Content { get; init; } = string.Empty;
 	public string Time { get; init; } = string.Empty;
 	public bool IsOutgoing { get; init; }
+	public bool IsDateDivider { get; init; }
 }
 
 public sealed class RoleOption
