@@ -247,12 +247,12 @@
 
                     <!-- Table header -->
                     <Grid ColumnDefinitions="1.2*,1.5*,1.5*,1.2*,1.2*,Auto" ColumnSpacing="12" Padding="8,0">
-                        <Label Text="Mã vận đơn" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="1" Text="Nhà cung cấp" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="2" Text="Hàng hóa" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="3" Text="Ngày đến (dự kiến)" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="4" Text="Trạng thái" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="5" Text="Quản lý" Style="{StaticResource LabelCapsLabel}" WidthRequest="80" VerticalTextAlignment="Center" />
+                        <Label Text="Mã vận đơn" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="1" Text="Nhà cung cấp" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="2" Text="Hàng hóa" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="3" Text="Ngày đến (dự kiến)" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="4" Text="Trạng thái" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="5" Text="Quản lý" Style="{StaticResource LabelCapsLabel}" WidthRequest="80" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                     </Grid>
                     <!-- Separator -->
                     <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
@@ -268,23 +268,23 @@
                                     <Grid ColumnDefinitions="1.2*,1.5*,1.5*,1.2*,1.2*,Auto" ColumnSpacing="12">
                                         <!-- Mã vận đơn -->
                                         <Label Text="{Binding Code}" Style="{StaticResource DataTabularLabel}"
-                                               TextColor="{DynamicResource Primary}" VerticalTextAlignment="Center" />
+                                               TextColor="{DynamicResource Primary}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         <!-- Nhà cung cấp -->
                                         <Label Grid.Column="1" Text="{Binding Supplier}" Style="{StaticResource DataTabularLabel}"
-                                               VerticalTextAlignment="Center" />
+                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         <!-- Hàng hóa (ProductCount) -->
                                         <Label Grid.Column="2" Text="{Binding ProductCount}" Style="{StaticResource DataTabularLabel}"
-                                               VerticalTextAlignment="Center" />
+                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         <!-- Ngày đến (dự kiến) -->
                                         <Label Grid.Column="3" Text="{Binding Date}" Style="{StaticResource DataTabularLabel}"
-                                               VerticalTextAlignment="Center" />
+                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         <!-- Trạng thái - StatusBadgePill -->
                                         <Border Grid.Column="4" BackgroundColor="{Binding StatusBadgeBackground}" StrokeThickness="0"
                                                 Padding="12,4" HorizontalOptions="Start" VerticalOptions="Center">
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="12" />
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding Status}" Style="{StaticResource StatusBadgePill}" Padding="0" />
+                                            <Label Text="{Binding Status}" Style="{StaticResource StatusBadgePill}" Padding="0" LineBreakMode="TailTruncation" />
                                         </Border>
                                         <!-- Quản lý button -->
                                         <Button Grid.Column="5" Text="CHI TIẾT" Style="{StaticResource PillSecondaryButton}"

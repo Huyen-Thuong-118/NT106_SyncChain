@@ -41,7 +41,7 @@
                         <!-- Headline -->
                         <Label Text="Quản lý Sản phẩm" Style="{StaticResource DisplayXlLabel}" />
                         <!-- Description -->
-                        <Label Text="Theo dõi danh sách sản phẩm, tồn kho và trạng thái kinh doanh trong hệ thống SyncChain." Style="{StaticResource BodyMdLabel}" />
+                        <Label Text="Theo dõi danh sách sản phẩm, tồn kho và trạng thái kinh doanh trong hệ thống SyncChain." Style="{StaticResource BodyMdLabel}" LineBreakMode="TailTruncation" MaxLines="2" />
                         <!-- Action buttons -->
                         <HorizontalStackLayout Spacing="12" Margin="0,8,0,0">
                             <Button Text="+ THÊM SẢN PHẨM" Style="{StaticResource PillPrimaryButton}" />
@@ -109,12 +109,12 @@
                 <VerticalStackLayout Spacing="16">
                     <!-- Table header -->
                     <Grid ColumnDefinitions="2.5*,1.2*,1.2*,0.8*,1.2*,1.2*" ColumnSpacing="12" Padding="8,0">
-                        <Label Text="Sản phẩm" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="1" Text="Mã lô" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="2" Text="Danh mục" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="3" Text="Tồn kho" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="4" Text="Trạng thái" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="5" Text="Sức khỏe" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
+                        <Label Text="Sản phẩm" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="1" Text="Mã lô" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="2" Text="Danh mục" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="3" Text="Tồn kho" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="4" Text="Trạng thái" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="5" Text="Sức khỏe" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                     </Grid>
                     <!-- Separator -->
                     <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
@@ -137,25 +137,25 @@
                                                 <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="13" TextColor="{DynamicResource Primary}" />
                                             </Border>
                                             <VerticalStackLayout VerticalOptions="Center" Spacing="2">
-                                                <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}" />
+                                                <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}" LineBreakMode="TailTruncation" />
                                                 <Label Text="{Binding Description}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" LineBreakMode="TailTruncation" MaximumWidthRequest="200" />
                                             </VerticalStackLayout>
                                         </HorizontalStackLayout>
                                         <!-- Batch ID -->
-                                        <Label Grid.Column="1" Text="{Binding Code}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                                        <Label Grid.Column="1" Text="{Binding Code}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         <!-- Category badge -->
                                         <Border Grid.Column="2" BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" Padding="12,4" HorizontalOptions="Start" VerticalOptions="Center">
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="12" />
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding BadgeText}" Style="{StaticResource CategoryBadgePill}" Padding="0" BackgroundColor="Transparent" />
+                                            <Label Text="{Binding BadgeText}" Style="{StaticResource CategoryBadgePill}" Padding="0" BackgroundColor="Transparent" LineBreakMode="TailTruncation" />
                                         </Border>
                                         <!-- Stock count -->
-                                        <Label Grid.Column="3" Text="{Binding Stock}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                                        <Label Grid.Column="3" Text="{Binding Stock}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         <!-- Status dot + label -->
                                         <HorizontalStackLayout Grid.Column="4" Spacing="8" VerticalOptions="Center">
                                             <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="{Binding BadgeColor}" VerticalOptions="Center" />
-                                            <Label Text="{Binding BadgeText}" FontSize="12" TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center" />
+                                            <Label Text="{Binding BadgeText}" FontSize="12" TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         </HorizontalStackLayout>
                                         <!-- Health progress bar -->
                                         <Grid Grid.Column="5" VerticalOptions="Center">

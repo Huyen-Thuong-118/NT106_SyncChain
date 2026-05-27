@@ -199,26 +199,10 @@
                         <!-- Consumption Progress -->
                         <VerticalStackLayout Spacing="8" Margin="0,8,0,0">
                             <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="Mức tiêu thụ" Style="{StaticResource BodyMdLabel}" />
+                                <Label Text="Mức tiêu thụ" Style="{StaticResource BodyMdLabel" />
                                 <Label Grid.Column="1" Text="78%" Style="{StaticResource DataTabularLabel}" />
                             </Grid>
-                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
-                                    StrokeThickness="0"
-                                    HeightRequest="10">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="5" />
-                                </Border.StrokeShape>
-                                <Grid>
-                                    <Border BackgroundColor="{DynamicResource Primary}"
-                                            StrokeThickness="0"
-                                            HorizontalOptions="Start"
-                                            WidthRequest="260">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="5" />
-                                        </Border.StrokeShape>
-                                    </Border>
-                                </Grid>
-                            </Border>
+                            <ProgressBar Progress="0.78" ProgressColor="{DynamicResource Primary}" HeightRequest="10" />
                         </VerticalStackLayout>
 
                         <!-- Insight Note -->
@@ -230,7 +214,9 @@
                             </Border.StrokeShape>
                             <Label Text="Sản phẩm đang bán tốt nhưng tồn kho thấp. Nên tạo phiếu nhập mới."
                                    Style="{StaticResource BodyMdLabel}"
-                                   TextColor="{DynamicResource OnSurface}" />
+                                   TextColor="{DynamicResource OnSurface}"
+                                   LineBreakMode="TailTruncation"
+                                   MaxLines="2" />
                         </Border>
                     </VerticalStackLayout>
                 </Border>
@@ -354,108 +340,42 @@
                         <!-- Month 1 -->
                         <Label Text="Th.10" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         <Grid Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
-                                    StrokeThickness="0" HeightRequest="24">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                <Grid>
-                                    <Border BackgroundColor="{DynamicResource Primary}"
-                                            StrokeThickness="0"
-                                            HorizontalOptions="Start"
-                                            WidthRequest="45">
-                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                    </Border>
-                                </Grid>
-                            </Border>
+                            <ProgressBar Progress="0.02" ProgressColor="{DynamicResource Primary}" HeightRequest="10" VerticalOptions="Center" />
                             <Label Grid.Column="1" Text="02" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         </Grid>
 
                         <!-- Month 2 -->
                         <Label Grid.Row="1" Text="Th.09" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
-                                    StrokeThickness="0" HeightRequest="24">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                <Grid>
-                                    <Border BackgroundColor="{DynamicResource Primary}"
-                                            StrokeThickness="0"
-                                            HorizontalOptions="Start"
-                                            WidthRequest="180">
-                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                    </Border>
-                                </Grid>
-                            </Border>
+                            <ProgressBar Progress="0.35" ProgressColor="{DynamicResource Primary}" HeightRequest="10" VerticalOptions="Center" />
                             <Label Grid.Column="1" Text="38" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         </Grid>
 
                         <!-- Month 3 -->
                         <Label Grid.Row="2" Text="Th.08" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         <Grid Grid.Row="2" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
-                                    StrokeThickness="0" HeightRequest="24">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                <Grid>
-                                    <Border BackgroundColor="{DynamicResource StatusBlue}"
-                                            StrokeThickness="0"
-                                            HorizontalOptions="Start"
-                                            WidthRequest="320">
-                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                    </Border>
-                                </Grid>
-                            </Border>
+                            <ProgressBar Progress="0.77" ProgressColor="{DynamicResource StatusBlue}" HeightRequest="10" VerticalOptions="Center" />
                             <Label Grid.Column="1" Text="85" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         </Grid>
 
                         <!-- Month 4 -->
                         <Label Grid.Row="3" Text="Th.07" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         <Grid Grid.Row="3" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
-                                    StrokeThickness="0" HeightRequest="24">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                <Grid>
-                                    <Border BackgroundColor="{DynamicResource StatusBlue}"
-                                            StrokeThickness="0"
-                                            HorizontalOptions="Start"
-                                            WidthRequest="280">
-                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                    </Border>
-                                </Grid>
-                            </Border>
+                            <ProgressBar Progress="0.65" ProgressColor="{DynamicResource StatusBlue}" HeightRequest="10" VerticalOptions="Center" />
                             <Label Grid.Column="1" Text="72" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         </Grid>
 
                         <!-- Month 5 -->
                         <Label Grid.Row="4" Text="Th.06" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         <Grid Grid.Row="4" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
-                                    StrokeThickness="0" HeightRequest="24">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                <Grid>
-                                    <Border BackgroundColor="{DynamicResource StatusBlue}"
-                                            StrokeThickness="0"
-                                            HorizontalOptions="Start"
-                                            WidthRequest="350">
-                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                    </Border>
-                                </Grid>
-                            </Border>
+                            <ProgressBar Progress="0.86" ProgressColor="{DynamicResource StatusBlue}" HeightRequest="10" VerticalOptions="Center" />
                             <Label Grid.Column="1" Text="95" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         </Grid>
 
                         <!-- Month 6 -->
                         <Label Grid.Row="5" Text="Th.05" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         <Grid Grid.Row="5" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <Border BackgroundColor="{DynamicResource OutlineVariant}"
-                                    StrokeThickness="0" HeightRequest="24">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                <Grid>
-                                    <Border BackgroundColor="{DynamicResource StatusBlue}"
-                                            StrokeThickness="0"
-                                            HorizontalOptions="Start"
-                                            WidthRequest="400">
-                                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                    </Border>
-                                </Grid>
-                            </Border>
+                            <ProgressBar Progress="1.0" ProgressColor="{DynamicResource StatusBlue}" HeightRequest="10" VerticalOptions="Center" />
                             <Label Grid.Column="1" Text="110" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                         </Grid>
                     </Grid>
@@ -475,7 +395,9 @@
                                    VerticalTextAlignment="Center" />
                             <Label Text="Tồn kho giảm mạnh trong 2 tháng gần đây. Cần nhập thêm hàng để đáp ứng nhu cầu."
                                    Style="{StaticResource BodyMdLabel}"
-                                   TextColor="{DynamicResource OnSurface}" />
+                                   TextColor="{DynamicResource OnSurface}"
+                                   LineBreakMode="TailTruncation"
+                                   MaxLines="2" />
                         </HorizontalStackLayout>
                     </Border>
                 </VerticalStackLayout>
@@ -500,7 +422,8 @@
                                 <Grid ColumnDefinitions="*,Auto,Auto,*,*" ColumnSpacing="18">
                                     <Label Text="{Binding Date}"
                                            Style="{StaticResource DataTabularLabel}"
-                                           VerticalTextAlignment="Center" />
+                                           VerticalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation" />
                                     <Border Grid.Column="1"
                                             BackgroundColor="{Binding Accent}"
                                             StrokeThickness="0"
@@ -512,20 +435,24 @@
                                                TextColor="White"
                                                FontFamily="Inter"
                                                FontSize="11"
-                                               FontAttributes="Bold" />
+                                               FontAttributes="Bold"
+                                               LineBreakMode="TailTruncation" />
                                     </Border>
                                     <Label Grid.Column="2"
                                            Text="{Binding Quantity}"
                                            Style="{StaticResource DataTabularLabel}"
-                                           VerticalTextAlignment="Center" />
+                                           VerticalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation" />
                                     <Label Grid.Column="3"
                                            Text="{Binding Actor}"
                                            Style="{StaticResource BodyMdLabel}"
-                                           VerticalTextAlignment="Center" />
+                                           VerticalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation" />
                                     <Label Grid.Column="4"
                                            Text="{Binding Note}"
                                            Style="{StaticResource BodyMdLabel}"
-                                           VerticalTextAlignment="Center" />
+                                           VerticalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation" />
                                 </Grid>
                             </Border>
                         </DataTemplate>

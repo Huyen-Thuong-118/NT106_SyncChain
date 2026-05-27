@@ -76,10 +76,10 @@
                     <!-- Table header -->
                     <Grid ColumnDefinitions="52,2*,2.5*,1.2*,1.2*" ColumnSpacing="14" Padding="8,0">
                         <Label Text="" WidthRequest="52" />
-                        <Label Grid.Column="1" Text="Hành động" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="2" Text="Mô tả" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="3" Text="Thời gian" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                        <Label Grid.Column="4" Text="Loại" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
+                        <Label Grid.Column="1" Text="Hành động" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="2" Text="Mô tả" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="3" Text="Thời gian" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="4" Text="Loại" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                     </Grid>
                     <!-- Separator -->
                     <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
@@ -102,7 +102,7 @@
                                         </Border>
                                         <!-- Hành động (Title) -->
                                         <Label Grid.Column="1" Text="{Binding Title}" Style="{StaticResource DataTabularLabel}"
-                                               VerticalTextAlignment="Center" />
+                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         <!-- Mô tả (Description) -->
                                         <Label Grid.Column="2" Text="{Binding Description}" Style="{StaticResource DataTabularLabel}"
                                                FontAttributes="None" TextColor="{DynamicResource OnSurfaceVariant}"
@@ -110,14 +110,14 @@
                                         <!-- Thời gian (Time) -->
                                         <Label Grid.Column="3" Text="{Binding Time}" Style="{StaticResource DataTabularLabel}"
                                                FontAttributes="None" TextColor="{DynamicResource OnSurfaceVariant}"
-                                               VerticalTextAlignment="Center" />
+                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         <!-- Loại (Tag) - StatusBadgePill -->
                                         <Border Grid.Column="4" BackgroundColor="{Binding Accent}" StrokeThickness="0"
                                                 Padding="12,4" HorizontalOptions="Start" VerticalOptions="Center">
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="12" />
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding Tag}" Style="{StaticResource StatusBadgePill}" TextColor="White" Padding="0" />
+                                            <Label Text="{Binding Tag}" Style="{StaticResource StatusBadgePill}" TextColor="White" Padding="0" LineBreakMode="TailTruncation" />
                                         </Border>
                                     </Grid>
                                 </Border>
