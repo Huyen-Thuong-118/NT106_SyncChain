@@ -3,7 +3,6 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="Đăng ký"
-             BackgroundImageSource="background_signin.jpg"
              NavigationPage.HasNavigationBar="False">
 
     <Grid BackgroundColor="#17213145">
@@ -15,7 +14,7 @@
                InputTransparent="True" />
         <BoxView Color="#33213145"
                  InputTransparent="True" />
-        <ScrollView BackgroundColor="Transparent">
+        <ScrollView Background="Transparent" BackgroundColor="Transparent">
             <Grid Padding="24"
                   MinimumHeightRequest="760">
 
