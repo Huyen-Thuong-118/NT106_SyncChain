@@ -10,8 +10,8 @@
                  PAGE HEADER
                  "Quản lý Đơn hàng" in DisplayXlLabel + "Xuất báo cáo" PillPrimaryButton
             ═══════════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                <Label Text="Quản lý Đơn hàng" Style="{StaticResource DisplayXlLabel}" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                <Label Text="Quản lý Đơn hàng" Style="{StaticResource DisplayXlLabel}" VerticalOptions="Center" />
                 <HorizontalStackLayout Grid.Column="1" Spacing="12" VerticalOptions="Center">
                     <Button Text="+ TẠO ĐƠN HÀNG" Style="{StaticResource PillSecondaryButton}" Clicked="OnCreateOrderClicked" />
                     <Button Text="XUẤT BÁO CÁO" Style="{StaticResource PillPrimaryButton}" />
@@ -32,7 +32,7 @@
                             <!-- Real-time badge -->
                             <Border Grid.Column="1" BackgroundColor="{DynamicResource StatusEmerald}" StrokeThickness="0" Padding="12,6" HorizontalOptions="End">
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="9999" />
+                                    <RoundRectangle CornerRadius="12" />
                                 </Border.StrokeShape>
                                 <Label Text="⚡ THỜI GIAN THỰC" Style="{StaticResource StatusBadgePill}" TextColor="{DynamicResource Primary}" Padding="0" />
                             </Border>
@@ -40,12 +40,12 @@
 
                         <!-- Large metric value -->
                         <HorizontalStackLayout Spacing="16">
-                            <Label Text="1,284" FontSize="56" FontAttributes="Bold" FontFamily="SourceSerif4"
+                            <Label Text="1,284" FontSize="42" FontAttributes="Bold" FontFamily="SourceSerif4"
                                    TextColor="{DynamicResource OnSurface}" />
                             <!-- Percentage change indicator -->
                             <Border BackgroundColor="{DynamicResource StatusEmerald}" StrokeThickness="0" Padding="10,4" VerticalOptions="Center">
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="9999" />
+                                    <RoundRectangle CornerRadius="12" />
                                 </Border.StrokeShape>
                                 <Label Text="↑ 12.5%" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
                             </Border>
@@ -143,7 +143,7 @@
                                         <Border Grid.Column="3" BackgroundColor="{Binding StatusColor}" StrokeThickness="0"
                                                 Padding="12,4" HorizontalOptions="Start" VerticalOptions="Center">
                                             <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="9999" />
+                                                <RoundRectangle CornerRadius="12" />
                                             </Border.StrokeShape>
                                             <Label Text="{Binding Status}" Style="{StaticResource StatusBadgePill}" Padding="0" />
                                         </Border>
@@ -216,3 +216,4 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+

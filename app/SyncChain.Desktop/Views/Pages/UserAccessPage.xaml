@@ -10,13 +10,13 @@
                  PAGE HEADER
                  Title + breadcrumb + action buttons
             ═══════════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
-                <VerticalStackLayout>
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                <VerticalStackLayout VerticalOptions="Center">
                     <Label Text="Người dùng &amp; Phân quyền" Style="{StaticResource HeadlineLgLabel}" />
                     <Label Text="Hệ thống › Quản lý người dùng" Style="{StaticResource BodyMdLabel}" Margin="0,8,0,0" />
                 </VerticalStackLayout>
-                <Button Grid.Column="1" Text="XEM LỊCH SỬ ĐĂNG NHẬP" Style="{StaticResource PillSecondaryButton}" />
-                <Button Grid.Column="2" Text="ĐĂNG XUẤT" Style="{StaticResource PillPrimaryButton}" Clicked="OnLogoutClicked" />
+                <Button Grid.Column="1" Text="LỊCH SỬ ĐĂNG NHẬP" Style="{StaticResource PillSecondaryButton}" VerticalOptions="Center" />
+                <Button Grid.Column="2" Text="ĐĂNG XUẤT" Style="{StaticResource PillPrimaryButton}" Clicked="OnLogoutClicked" VerticalOptions="Center" />
             </Grid>
 
             <!-- ═══════════════════════════════════════════════════════════════

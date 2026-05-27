@@ -10,11 +10,11 @@
                  PAGE HEADER
                  Back button + Title + Save draft button
             ═══════════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
-                <Button Text="← QUAY LẠI" Style="{StaticResource PillSecondaryButton}" Clicked="OnBackClicked" />
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                <Button Text="← QUAY LẠI" Style="{StaticResource PillSecondaryButton}" Clicked="OnBackClicked" VerticalOptions="Center" />
                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                    <Label Text="Tạo Đơn Hàng Mới" Style="{StaticResource DisplayXlLabel}" FontSize="48" />
-                    <Label Text="Nhập thông tin khách hàng và sản phẩm cần bán." Style="{StaticResource BodyMdLabel}" />
+                    <Label Text="Tạo Đơn Hàng Mới" Style="{StaticResource DisplayXlLabel}" LineBreakMode="TailTruncation" />
+                    <Label Text="Nhập thông tin khách hàng và sản phẩm cần bán." Style="{StaticResource BodyMdLabel}" LineBreakMode="TailTruncation" />
                 </VerticalStackLayout>
                 <Button Grid.Column="2" Text="LƯU NHÁP" Style="{StaticResource PillSecondaryButton}" VerticalOptions="Center" />
             </Grid>

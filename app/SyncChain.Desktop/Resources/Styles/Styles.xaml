@@ -26,24 +26,32 @@
         <Setter Property="Background" Value="{StaticResource LiquidGradientBrush}" />
     </Style>
 
+    <Style TargetType="ScrollView">
+        <Setter Property="Background" Value="{StaticResource LiquidGradientBrush}" />
+    </Style>
+
+    <Style TargetType="Shell">
+        <Setter Property="Background" Value="{StaticResource LiquidGradientBrush}" />
+    </Style>
+
     <!-- ═══════════════════════════════════════════════════════════════
          TYPOGRAPHY STYLES
          Source Serif 4: editorial headlines
          Inter: functional/data text
     ═══════════════════════════════════════════════════════════════ -->
 
-    <!-- DisplayXlLabel: Source Serif 4, 72px, weight 600 (SemiBold) -->
+    <!-- DisplayXlLabel: Source Serif 4, 40px, weight 600 (SemiBold) -->
     <Style x:Key="DisplayXlLabel" TargetType="Label">
         <Setter Property="FontFamily" Value="SourceSerif4" />
-        <Setter Property="FontSize" Value="72" />
+        <Setter Property="FontSize" Value="40" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
     </Style>
 
-    <!-- HeadlineLgLabel: Source Serif 4, 48px, weight 500 (Medium) -->
+    <!-- HeadlineLgLabel: Source Serif 4, 32px, weight 500 (Medium) -->
     <Style x:Key="HeadlineLgLabel" TargetType="Label">
         <Setter Property="FontFamily" Value="SourceSerif4" />
-        <Setter Property="FontSize" Value="48" />
+        <Setter Property="FontSize" Value="32" />
         <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
     </Style>
 
@@ -83,21 +91,38 @@
          Semi-transparent white bg, 30% white stroke, 24px corners, shadow
     ═══════════════════════════════════════════════════════════════ -->
     <Style x:Key="GlassCardBorder" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="{DynamicResource GlassWhite60}" />
+        <Setter Property="BackgroundColor" Value="#D9FFFFFF" />
         <Setter Property="Stroke" Value="{DynamicResource GlassBorder30}" />
         <Setter Property="StrokeThickness" Value="1" />
-        <Setter Property="Padding" Value="24" />
+        <Setter Property="Padding" Value="28" />
         <Setter Property="StrokeShape">
             <Setter.Value>
-                <RoundRectangle CornerRadius="24" />
+                <RoundRectangle CornerRadius="16" />
             </Setter.Value>
         </Setter>
         <Setter Property="Shadow">
             <Setter.Value>
-                <Shadow Brush="#14000000"
-                        Offset="0,8"
-                        Radius="24"
-                        Opacity="0.12" />
+                <Shadow Brush="#1A213145"
+                        Offset="0,18"
+                        Radius="48"
+                        Opacity="0.08" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PageHeaderCard" TargetType="Border" BasedOn="{StaticResource GlassCardBorder}">
+        <Setter Property="BackgroundColor" Value="{DynamicResource GlassWhite80}" />
+        <Setter Property="Padding" Value="32,26" />
+    </Style>
+
+    <Style x:Key="DataRowBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#33FFFFFF" />
+        <Setter Property="Stroke" Value="#33FFFFFF" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12" />
             </Setter.Value>
         </Setter>
     </Style>
@@ -106,22 +131,23 @@
          BUTTON STYLES
     ═══════════════════════════════════════════════════════════════ -->
 
-    <!-- PillPrimaryButton: pill shape, primary bg, white label-caps text -->
+    <!-- PillPrimaryButton: compact rounded rectangle, primary bg, white label-caps text -->
     <Style x:Key="PillPrimaryButton" TargetType="Button">
-        <Setter Property="CornerRadius" Value="9999" />
+        <Setter Property="CornerRadius" Value="12" />
         <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
         <Setter Property="TextColor" Value="White" />
         <Setter Property="FontFamily" Value="Inter" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="TextTransform" Value="Uppercase" />
-        <Setter Property="Padding" Value="24,14" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="Padding" Value="22,12" />
     </Style>
 
-    <!-- PillSecondaryButton: pill shape, glass bg, primary border -->
+    <!-- PillSecondaryButton: compact rounded rectangle, glass bg, primary border -->
     <Style x:Key="PillSecondaryButton" TargetType="Button">
-        <Setter Property="CornerRadius" Value="9999" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource GlassWhite60}" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="BackgroundColor" Value="#66FFFFFF" />
         <Setter Property="TextColor" Value="{DynamicResource Primary}" />
         <Setter Property="BorderColor" Value="{DynamicResource Primary}" />
         <Setter Property="BorderWidth" Value="1" />
@@ -129,7 +155,8 @@
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="TextTransform" Value="Uppercase" />
-        <Setter Property="Padding" Value="24,14" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="Padding" Value="22,12" />
     </Style>
 
     <!-- ═══════════════════════════════════════════════════════════════
@@ -190,7 +217,7 @@
          BADGE STYLES
     ═══════════════════════════════════════════════════════════════ -->
 
-    <!-- StatusBadgePill: pill-shaped label with contextual bg, bold uppercase 10px -->
+    <!-- StatusBadgePill: rectangular badge text, bold uppercase 10px -->
     <Style x:Key="StatusBadgePill" TargetType="Label">
         <Setter Property="FontFamily" Value="Inter" />
         <Setter Property="FontSize" Value="10" />
@@ -202,7 +229,7 @@
         <Setter Property="VerticalTextAlignment" Value="Center" />
     </Style>
 
-    <!-- CategoryBadgePill: pill-shaped label with PrimaryContainer background -->
+    <!-- CategoryBadgePill: rectangular category label with PrimaryContainer background -->
     <Style x:Key="CategoryBadgePill" TargetType="Label">
         <Setter Property="FontFamily" Value="Inter" />
         <Setter Property="FontSize" Value="11" />

@@ -70,11 +70,11 @@ public sealed class OrderItem
 
 	public Color StatusBadgeBackground => Status switch
 	{
-		"Đã giao" => Color.FromArgb("#dcfce7"),           // StatusEmerald
-		"Đang vận chuyển" => Color.FromArgb("#dbeafe"),   // StatusBlue
-		"Đang xử lý" => Color.FromArgb("#fef3c7"),       // StatusAmber
-		"Chờ duyệt" => Color.FromArgb("#f1f5f9"),        // StatusSlate
-		_ => Color.FromArgb("#f1f5f9")                    // StatusSlate (default)
+		"Hoàn tất" or "Đã giao" or "Đã nhập" => Color.FromArgb("#d3e5f1"),
+		"Đang vận chuyển" or "Đang xử lý" or "Đã xử lý" => Color.FromArgb("#dbeafe"),
+		"Chờ duyệt" => Color.FromArgb("#dae2fd"),
+		"Hủy" or "Từ chối" => Color.FromArgb("#ffdad6"),
+		_ => Color.FromArgb("#eef0f2")
 	};
 }
 
@@ -107,11 +107,11 @@ public sealed class ImportItem
 
 	public Color StatusBadgeBackground => Status switch
 	{
-		"Đã giao" => Color.FromArgb("#dcfce7"),           // StatusEmerald
-		"Đang vận chuyển" => Color.FromArgb("#dbeafe"),   // StatusBlue
-		"Đang xử lý" => Color.FromArgb("#fef3c7"),       // StatusAmber
-		"Chờ duyệt" => Color.FromArgb("#f1f5f9"),        // StatusSlate
-		_ => Color.FromArgb("#f1f5f9")                    // StatusSlate (default)
+		"Hoàn tất" or "Đã giao" or "Đã nhập" => Color.FromArgb("#d3e5f1"),
+		"Đang vận chuyển" or "Đang xử lý" or "Đã xử lý" => Color.FromArgb("#dbeafe"),
+		"Chờ duyệt" => Color.FromArgb("#dae2fd"),
+		"Hủy" or "Từ chối" => Color.FromArgb("#ffdad6"),
+		_ => Color.FromArgb("#eef0f2")
 	};
 }
 

@@ -17,8 +17,15 @@ public partial class App : MauiWinUIApplication
 	public App()
 	{
 		this.InitializeComponent();
+		UnhandledException += OnUnhandledException;
 	}
 
 	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+
+	private void OnUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+	{
+		var logPath = Path.Combine(Path.GetTempPath(), "syncchain-desktop-crash.log");
+		File.WriteAllText(logPath, e.Message + Environment.NewLine + e.Exception);
+	}
 }
 

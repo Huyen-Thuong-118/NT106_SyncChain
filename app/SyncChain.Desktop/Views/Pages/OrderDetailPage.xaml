@@ -10,14 +10,14 @@
                  PAGE HEADER
                  Back button, order title, action buttons
             ═══════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
-                <Button Text="← Quay lại danh sách" Style="{StaticResource PillSecondaryButton}" Clicked="OnBackClicked" />
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                <Button Text="← Quay lại" Style="{StaticResource PillSecondaryButton}" Clicked="OnBackClicked" VerticalOptions="Center" />
                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                    <Label Text="ĐƠN HÀNG #ORD-2023-8942" Style="{StaticResource DisplayXlLabel}" FontSize="36" />
+                    <Label Text="ĐƠN HÀNG #ORD-2023-8942" Style="{StaticResource DisplayXlLabel}" LineBreakMode="TailTruncation" />
                     <Label Text="Được tạo vào 14/10/2023 lúc 10:24 AM" Style="{StaticResource BodyMdLabel}" />
                 </VerticalStackLayout>
-                <Button Grid.Column="2" Text="IN HÓA ĐƠN" Style="{StaticResource PillSecondaryButton}" />
-                <Button Grid.Column="3" Text="CẬP NHẬT TRẠNG THÁI" Style="{StaticResource PillPrimaryButton}" />
+                <Button Grid.Column="2" Text="IN HÓA ĐƠN" Style="{StaticResource PillSecondaryButton}" VerticalOptions="Center" />
+                <Button Grid.Column="3" Text="CẬP NHẬT" Style="{StaticResource PillPrimaryButton}" VerticalOptions="Center" />
             </Grid>
 
             <!-- ═══════════════════════════════════════════════════════════

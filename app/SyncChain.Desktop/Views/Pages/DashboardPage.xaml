@@ -10,11 +10,11 @@
                  PAGE HEADER
                  Title "Bảng điều khiển" in HeadlineLgLabel + welcome message
             ═══════════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                <VerticalStackLayout>
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                <VerticalStackLayout VerticalOptions="Center">
                     <Label Text="Bảng điều khiển" Style="{StaticResource HeadlineLgLabel}" />
-                    <Label Text="Chào buổi sáng, Quản trị viên. Dưới đây là diễn biến hoạt động bán hàng trong 24h qua."
-                           Style="{StaticResource BodyMdLabel}" Margin="0,8,0,0" />
+                    <Label Text="Chào buổi sáng, Quản trị viên. Diễn biến bán hàng trong 24h qua."
+                           Style="{StaticResource BodyMdLabel}" Margin="0,8,0,0" LineBreakMode="TailTruncation" />
                 </VerticalStackLayout>
                 <HorizontalStackLayout Grid.Column="1" Spacing="12" VerticalOptions="Center">
                     <Button Text="7 NGÀY QUA" Style="{StaticResource PillSecondaryButton}" />
@@ -41,7 +41,7 @@
                                 <!-- Subtitle badge -->
                                 <Border Grid.Column="1" BackgroundColor="{DynamicResource StatusEmerald}" StrokeThickness="0" HorizontalOptions="End" Padding="10,5" IsVisible="{Binding Subtitle}">
                                     <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="9999" />
+                                        <RoundRectangle CornerRadius="12" />
                                     </Border.StrokeShape>
                                     <Label Text="{Binding Subtitle}" Style="{StaticResource StatusBadgePill}" TextColor="{DynamicResource Primary}" Padding="0" />
                                 </Border>
@@ -267,3 +267,4 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+

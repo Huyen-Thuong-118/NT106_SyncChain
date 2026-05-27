@@ -5,6 +5,19 @@ public partial class RegisterPage : ContentPage
 	public RegisterPage()
 	{
 		InitializeComponent();
+		ApplyBackgroundImage();
+	}
+
+	private void ApplyBackgroundImage()
+	{
+		var source = Services.SigninBackground.CreateSource();
+		if (source is null)
+		{
+			return;
+		}
+
+		BackgroundPhoto.Source = source;
+		BackgroundImageSource = Services.SigninBackground.CreateSource();
 	}
 
 	private async void OnRegisterClicked(object? sender, EventArgs e)

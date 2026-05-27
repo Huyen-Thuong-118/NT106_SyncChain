@@ -10,11 +10,11 @@
                  PAGE HEADER
                  Greeting in HeadlineLgMobileLabel + subtitle in BodyMdLabel
             ═══════════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                <VerticalStackLayout Spacing="4">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                <VerticalStackLayout Spacing="4" VerticalOptions="Center">
                     <Label Text="Xin chào, Nguyễn Văn Lâm" Style="{StaticResource HeadlineLgMobileLabel}" />
-                    <Label Text="Theo dõi đơn hàng, ưu đãi và hỗ trợ khách hàng trong một nơi."
-                           Style="{StaticResource BodyMdLabel}" />
+                    <Label Text="Theo dõi đơn hàng, ưu đãi và hỗ trợ khách hàng."
+                           Style="{StaticResource BodyMdLabel}" LineBreakMode="TailTruncation" />
                 </VerticalStackLayout>
                 <HorizontalStackLayout Grid.Column="1" Spacing="12" VerticalOptions="Center">
                     <Button Text="THEO DÕI ĐƠN" Style="{StaticResource PillPrimaryButton}" Clicked="OnTrackOrderClicked" />
@@ -41,7 +41,7 @@
                                 <!-- Subtitle badge -->
                                 <Border Grid.Column="1" BackgroundColor="{DynamicResource StatusEmerald}" StrokeThickness="0" HorizontalOptions="End" Padding="10,5">
                                     <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="9999" />
+                                        <RoundRectangle CornerRadius="12" />
                                     </Border.StrokeShape>
                                     <Label Text="{Binding Subtitle}" Style="{StaticResource StatusBadgePill}" TextColor="{DynamicResource Primary}" Padding="0" />
                                 </Border>
@@ -74,7 +74,7 @@
                             </VerticalStackLayout>
                             <Border Grid.Column="1" BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" Padding="12,7" VerticalOptions="Start">
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="9999" />
+                                    <RoundRectangle CornerRadius="12" />
                                 </Border.StrokeShape>
                                 <Label Text="CẬP NHẬT 5 PHÚT TRƯỚC" TextColor="{DynamicResource Primary}" FontSize="10" FontAttributes="Bold" FontFamily="Inter" />
                             </Border>
@@ -286,3 +286,4 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+

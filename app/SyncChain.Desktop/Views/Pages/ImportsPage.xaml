@@ -10,8 +10,8 @@
                  PAGE HEADER
                  "Quản lý Đơn nhập hàng" in DisplayXlLabel + "Tạo Đơn Nhập Mới" PillPrimaryButton
             ═══════════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                <Label Text="Quản lý Đơn nhập hàng" Style="{StaticResource DisplayXlLabel}" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                <Label Text="Quản lý Đơn nhập hàng" Style="{StaticResource DisplayXlLabel}" VerticalOptions="Center" />
                 <Button Grid.Column="1" Text="TẠO ĐƠN NHẬP MỚI" Style="{StaticResource PillPrimaryButton}" VerticalOptions="Center" />
             </Grid>
 
@@ -24,7 +24,7 @@
                 <Border Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="TỔNG KIỆN HÀNG" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="1,847" Style="{StaticResource DisplayXlLabel}" FontSize="48" />
+                        <Label Text="1,847" Style="{StaticResource DisplayXlLabel}" FontSize="36" />
                         <Label Text="Tổng số kiện đã nhập" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
@@ -33,7 +33,7 @@
                 <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="ĐANG TRÊN BIỂN" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="342" Style="{StaticResource DisplayXlLabel}" FontSize="48" TextColor="{DynamicResource Primary}" />
+                        <Label Text="342" Style="{StaticResource DisplayXlLabel}" FontSize="36" TextColor="{DynamicResource Primary}" />
                         <Label Text="Đang vận chuyển" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
@@ -42,7 +42,7 @@
                 <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="ĐỢI THÔNG QUAN" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="56" Style="{StaticResource DisplayXlLabel}" FontSize="48" />
+                        <Label Text="56" Style="{StaticResource DisplayXlLabel}" FontSize="36" />
                         <Label Text="Chờ xử lý hải quan" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
@@ -51,7 +51,7 @@
                 <Border Grid.Column="3" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="HOÀN TẤT NHẬP KHO" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="1,449" Style="{StaticResource DisplayXlLabel}" FontSize="48" TextColor="{DynamicResource Primary}" />
+                        <Label Text="1,449" Style="{StaticResource DisplayXlLabel}" FontSize="36" TextColor="{DynamicResource Primary}" />
                         <Label Text="Đã nhập kho thành công" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
@@ -70,7 +70,7 @@
                             <Label Text="Theo dõi trực tiếp" Style="{StaticResource DataTabularLabel}" FontSize="17" />
                             <Border Grid.Column="1" BackgroundColor="{DynamicResource StatusBlue}" StrokeThickness="0" Padding="12,6" HorizontalOptions="End">
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="9999" />
+                                    <RoundRectangle CornerRadius="12" />
                                 </Border.StrokeShape>
                                 <Label Text="🔴 TRỰC TIẾP" Style="{StaticResource StatusBadgePill}" TextColor="{DynamicResource Primary}" Padding="0" />
                             </Border>
@@ -211,7 +211,7 @@
                                     </VerticalStackLayout>
                                     <Border Grid.Column="2" BackgroundColor="{DynamicResource StatusBlue}" StrokeThickness="0" Padding="10,4" VerticalOptions="Center">
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="9999" />
+                                            <RoundRectangle CornerRadius="12" />
                                         </Border.StrokeShape>
                                         <Label Text="TRÊN BIỂN" Style="{StaticResource StatusBadgePill}" TextColor="{DynamicResource Primary}" Padding="0" />
                                     </Border>
@@ -282,7 +282,7 @@
                                         <Border Grid.Column="4" BackgroundColor="{Binding StatusBadgeBackground}" StrokeThickness="0"
                                                 Padding="12,4" HorizontalOptions="Start" VerticalOptions="Center">
                                             <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="9999" />
+                                                <RoundRectangle CornerRadius="12" />
                                             </Border.StrokeShape>
                                             <Label Text="{Binding Status}" Style="{StaticResource StatusBadgePill}" Padding="0" />
                                         </Border>
@@ -312,3 +312,4 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+

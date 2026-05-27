@@ -34,7 +34,7 @@
                         <!-- Featured product badge -->
                         <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" Padding="12,6" HorizontalOptions="Start">
                             <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="9999" />
+                                <RoundRectangle CornerRadius="12" />
                             </Border.StrokeShape>
                             <Label Text="⭐ SẢN PHẨM NỔI BẬT" Style="{StaticResource LabelCapsLabel}" TextColor="{DynamicResource Primary}" />
                         </Border>
@@ -90,7 +90,7 @@
                         <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
                             <Border BackgroundColor="{DynamicResource StatusEmerald}" StrokeThickness="0" Padding="10,4">
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="9999" />
+                                    <RoundRectangle CornerRadius="12" />
                                 </Border.StrokeShape>
                                 <Label Text="↑ 18%" FontSize="12" FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
                             </Border>
@@ -146,7 +146,7 @@
                                         <!-- Category badge -->
                                         <Border Grid.Column="2" BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" Padding="12,4" HorizontalOptions="Start" VerticalOptions="Center">
                                             <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="9999" />
+                                                <RoundRectangle CornerRadius="12" />
                                             </Border.StrokeShape>
                                             <Label Text="{Binding BadgeText}" Style="{StaticResource CategoryBadgePill}" Padding="0" BackgroundColor="Transparent" />
                                         </Border>
@@ -187,3 +187,4 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+

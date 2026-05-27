@@ -3,107 +3,104 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="Đăng ký"
+             BackgroundImageSource="background_signin.jpg"
              NavigationPage.HasNavigationBar="False">
 
-    <ScrollView>
-        <Grid HorizontalOptions="Center"
-              VerticalOptions="Center"
-              Padding="24">
+    <Grid BackgroundColor="#17213145">
+        <Image x:Name="BackgroundPhoto"
+               Source="background_signin.jpg"
+               Aspect="AspectFill"
+               HorizontalOptions="Fill"
+               VerticalOptions="Fill"
+               InputTransparent="True" />
+        <BoxView Color="#33213145"
+                 InputTransparent="True" />
+        <ScrollView BackgroundColor="Transparent">
+            <Grid Padding="24"
+                  MinimumHeightRequest="760">
 
-            <Border Style="{StaticResource GlassCardBorder}"
-                    MaximumWidthRequest="480"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center">
+                <Border MaximumWidthRequest="500"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        BackgroundColor="#FAFFFFFF"
+                        Stroke="#FFFFFFFF"
+                        StrokeThickness="1"
+                        Padding="30">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18" />
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#33213145" Offset="0,18" Radius="48" Opacity="0.45" />
+                    </Border.Shadow>
 
-                <VerticalStackLayout Spacing="18">
+                    <VerticalStackLayout Spacing="18">
 
-                    <!-- Header -->
-                    <VerticalStackLayout Spacing="8" Margin="0,0,0,8">
-                        <Label Text="Đăng ký"
-                               Style="{StaticResource HeadlineLgMobileLabel}"
-                               HorizontalTextAlignment="Center" />
-                        <Label Text="Nhập thông tin để tạo tài khoản mới"
-                               Style="{StaticResource BodyMdLabel}"
-                               HorizontalTextAlignment="Center" />
-                    </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="8" Margin="0,0,0,8">
+                            <Label Text="Đăng ký"
+                                   Style="{StaticResource HeadlineLgMobileLabel}"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Nhập thông tin để tạo tài khoản mới"
+                                   Style="{StaticResource BodyMdLabel}"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
 
-                    <!-- Full name field -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="HỌ VÀ TÊN"
-                               Style="{StaticResource LabelCapsLabel}" />
-                        <Entry Style="{StaticResource MinimalistEntry}"
-                               Placeholder="Nguyễn Văn A" />
-                    </VerticalStackLayout>
-
-                    <!-- Email field -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="EMAIL"
-                               Style="{StaticResource LabelCapsLabel}" />
-                        <Entry Style="{StaticResource MinimalistEntry}"
-                               Placeholder="email@example.com"
-                               Keyboard="Email" />
-                    </VerticalStackLayout>
-
-                    <!-- Username field -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="TÊN ĐĂNG NHẬP"
-                               Style="{StaticResource LabelCapsLabel}" />
-                        <Entry Style="{StaticResource MinimalistEntry}"
-                               Placeholder="ten_dang_nhap" />
-                    </VerticalStackLayout>
-
-                    <!-- Password fields in 2-column grid -->
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="MẬT KHẨU"
-                                   Style="{StaticResource LabelCapsLabel}" />
-                            <Entry Style="{StaticResource MinimalistEntry}"
-                                   Placeholder="••••••••"
-                                   IsPassword="True" />
+                            <Label Text="HỌ VÀ TÊN" Style="{StaticResource LabelCapsLabel}" />
+                            <Entry Style="{StaticResource MinimalistEntry}" Placeholder="Nguyễn Văn A" />
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="1" Spacing="6">
-                            <Label Text="XÁC NHẬN MẬT KHẨU"
-                                   Style="{StaticResource LabelCapsLabel}" />
-                            <Entry Style="{StaticResource MinimalistEntry}"
-                                   Placeholder="••••••••"
-                                   IsPassword="True" />
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="EMAIL" Style="{StaticResource LabelCapsLabel}" />
+                            <Entry Style="{StaticResource MinimalistEntry}" Placeholder="email@example.com" Keyboard="Email" />
                         </VerticalStackLayout>
-                    </Grid>
 
-                    <!-- Terms agreement -->
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,4,0,0">
-                        <CheckBox IsChecked="True"
-                                  Color="{DynamicResource Primary}" />
-                        <Label Grid.Column="1"
-                               Text="Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của hệ thống."
-                               Style="{StaticResource BodyMdLabel}"
-                               VerticalTextAlignment="Center" />
-                    </Grid>
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="TÊN ĐĂNG NHẬP" Style="{StaticResource LabelCapsLabel}" />
+                            <Entry Style="{StaticResource MinimalistEntry}" Placeholder="ten_dang_nhap" />
+                        </VerticalStackLayout>
 
-                    <!-- Register button -->
-                    <Button Text="ĐĂNG KÝ"
-                            Style="{StaticResource PillPrimaryButton}"
-                            Clicked="OnRegisterClicked" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="MẬT KHẨU" Style="{StaticResource LabelCapsLabel}" />
+                                <Entry Style="{StaticResource MinimalistEntry}" Placeholder="••••••••" IsPassword="True" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                <Label Text="XÁC NHẬN MẬT KHẨU" Style="{StaticResource LabelCapsLabel}" />
+                                <Entry Style="{StaticResource MinimalistEntry}" Placeholder="••••••••" IsPassword="True" />
+                            </VerticalStackLayout>
+                        </Grid>
 
-                    <!-- Login link -->
-                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="6" Margin="0,4,0,0">
-                        <Label Text="Đã có tài khoản?"
-                               Style="{StaticResource BodyMdLabel}"
-                               VerticalTextAlignment="Center" />
-                        <Label Text="Đăng nhập"
-                               TextColor="{DynamicResource Primary}"
-                               FontFamily="Inter"
-                               FontSize="16"
-                               FontAttributes="Bold"
-                               VerticalTextAlignment="Center">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnBackClicked" />
-                            </Label.GestureRecognizers>
-                        </Label>
-                    </HorizontalStackLayout>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,4,0,0">
+                            <CheckBox IsChecked="True" Color="{DynamicResource Primary}" />
+                            <Label Grid.Column="1"
+                                   Text="Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của hệ thống."
+                                   Style="{StaticResource BodyMdLabel}"
+                                   VerticalTextAlignment="Center" />
+                        </Grid>
 
-                </VerticalStackLayout>
-            </Border>
-        </Grid>
-    </ScrollView>
+                        <Button Text="ĐĂNG KÝ"
+                                Style="{StaticResource PillPrimaryButton}"
+                                Clicked="OnRegisterClicked" />
+
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="6" Margin="0,4,0,0">
+                            <Label Text="Đã có tài khoản?"
+                                   Style="{StaticResource BodyMdLabel}"
+                                   VerticalTextAlignment="Center" />
+                            <Label Text="Đăng nhập"
+                                   TextColor="{DynamicResource Primary}"
+                                   FontFamily="Inter"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   VerticalTextAlignment="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnBackClicked" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </ScrollView>
+    </Grid>
 </ContentPage>

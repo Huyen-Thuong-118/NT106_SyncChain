@@ -67,7 +67,7 @@
                             VerticalOptions="Start"
                             Margin="24">
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="9999" />
+                            <RoundRectangle CornerRadius="12" />
                         </Border.StrokeShape>
                         <Label Text="SẮP HẾT HÀNG"
                                Style="{StaticResource StatusBadgePill}"
@@ -506,7 +506,7 @@
                                             StrokeThickness="0"
                                             Padding="10,4">
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="9999" />
+                                            <RoundRectangle CornerRadius="12" />
                                         </Border.StrokeShape>
                                         <Label Text="{Binding Type}"
                                                TextColor="White"
@@ -536,3 +536,4 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+

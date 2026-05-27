@@ -4,28 +4,28 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:SyncChain.Desktop.Views.Pages"
-    FlyoutBackgroundColor="#66e0f2fe"
+    FlyoutBackgroundColor="#CCEFF4FF"
     FlyoutBehavior="Flyout"
     FlyoutWidth="280"
-    Shell.BackgroundColor="{StaticResource Primary}"
-    Shell.ForegroundColor="White"
-    Shell.TitleColor="White"
-    Shell.UnselectedColor="{StaticResource OnSurfaceVariant}">
+    Shell.BackgroundColor="#CCFFFFFF"
+    Shell.ForegroundColor="{StaticResource Primary}"
+    Shell.TitleColor="{StaticResource Primary}"
+    Shell.UnselectedColor="{StaticResource OnSurfaceVariant}"
+    Shell.NavBarIsVisible="False">
 
     <!-- ═══════════════════════════════════════════════════════════════
          FLYOUT HEADER - Logo + Brand Name
     ═══════════════════════════════════════════════════════════════ -->
     <Shell.FlyoutHeaderTemplate>
         <DataTemplate>
-            <Grid Padding="24,32,24,20">
-                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                    <!-- Logo icon container: primary bg, rounded-xl, white icon -->
+            <Grid Padding="24,32,24,22">
+                <HorizontalStackLayout Spacing="14" VerticalOptions="Center">
                     <Border BackgroundColor="{StaticResource Primary}"
                             StrokeThickness="0"
-                            WidthRequest="44"
-                            HeightRequest="44">
+                            WidthRequest="46"
+                            HeightRequest="46">
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="12" />
+                            <RoundRectangle CornerRadius="14" />
                         </Border.StrokeShape>
                         <Label Text="&#xe157;"
                                FontFamily="MaterialSymbols"
@@ -34,13 +34,19 @@
                                HorizontalOptions="Center"
                                VerticalOptions="Center" />
                     </Border>
-                    <!-- Brand name in SourceSerif4 -->
-                    <Label Text="SyncChain"
-                           FontFamily="SourceSerif4"
-                           FontSize="22"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource OnSurface}"
-                           VerticalOptions="Center" />
+                    <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                        <Label Text="SyncChain"
+                               FontFamily="SourceSerif4"
+                               FontSize="26"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="OPERATIONS"
+                               FontFamily="Inter"
+                               FontSize="10"
+                               FontAttributes="Bold"
+                               CharacterSpacing="2"
+                               TextColor="{StaticResource OnSurfaceVariant}" />
+                    </VerticalStackLayout>
                 </HorizontalStackLayout>
             </Grid>
         </DataTemplate>
@@ -52,24 +58,31 @@
     ═══════════════════════════════════════════════════════════════ -->
     <Shell.ItemTemplate>
         <DataTemplate>
-            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14"
-                  Padding="20,12" Margin="8,2"
-                  HeightRequest="44">
-                <Label Grid.Column="0"
-                       Text="{Binding FlyoutIcon}"
-                       FontFamily="MaterialSymbols"
-                       FontSize="20"
-                       TextColor="{StaticResource OnSurfaceVariant}"
-                       VerticalOptions="Center" />
-                <Label Grid.Column="1"
-                       Text="{Binding Title}"
-                       FontFamily="Inter"
-                       FontSize="12"
-                       FontAttributes="Bold"
-                       TextTransform="Uppercase"
-                       TextColor="{StaticResource OnSurfaceVariant}"
-                       VerticalOptions="Center" />
-            </Grid>
+            <Border BackgroundColor="#33FFFFFF"
+                    Stroke="#33FFFFFF"
+                    StrokeThickness="1"
+                    Margin="14,4"
+                    Padding="14,12">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14"
+                      HeightRequest="34">
+                    <Image Grid.Column="0"
+                           Source="{Binding FlyoutIcon}"
+                           WidthRequest="22"
+                           HeightRequest="22"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="{Binding Title}"
+                           FontFamily="Inter"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextTransform="Uppercase"
+                           TextColor="{StaticResource OnSurfaceVariant}"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
         </DataTemplate>
     </Shell.ItemTemplate>
 

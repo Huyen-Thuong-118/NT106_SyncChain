@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SyncChain | New Inbound Shipment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .liquid-bg {
+            background: radial-gradient(circle at 0% 0%, #f8f9ff 0%, #e5eeff 100%);
+        }
+        input:focus {
+            outline: none;
+            border-bottom: 2px solid #50616b !important;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d3e5f1;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#d3e5f1",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#d3e4fe",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-tint": "#50616b",
+                        "outline-variant": "#c3c7cb",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "outline": "#73787b",
+                        "on-primary-container": "#5e6f79",
+                        "tertiary": "#5c5f61",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "secondary-container": "#dae2fd",
+                        "primary-fixed-dim": "#b7c9d5",
+                        "secondary-fixed": "#dae2fd",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary-container": "#6a6d6f",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container": "#e5eeff",
+                        "on-primary-fixed": "#0c1e26",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary": "#565e74",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "on-primary-fixed-variant": "#384953",
+                        "on-background": "#0b1c30",
+                        "on-secondary-fixed": "#131b2e",
+                        "inverse-surface": "#213145",
+                        "on-surface-variant": "#43474b",
+                        "primary": "#50616b",
+                        "on-surface": "#0b1c30",
+                        "inverse-primary": "#b7c9d5",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#eef0f2",
+                        "surface": "#f8f9ff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "primary-container": "#e0f2fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "fluid-gap": "clamp(2rem, 5vw, 6rem)",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "16px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Source Serif 4"],
+                        "headline-lg-mobile": ["Source Serif 4"],
+                        "label-caps": ["Inter"],
+                        "data-tabular": ["Inter"],
+                        "display-xl": ["Source Serif 4"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["48px", {"lineHeight": "56px", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "data-tabular": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-xl": ["72px", {"lineHeight": "80px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased overflow-x-hidden liquid-bg min-h-screen">
+<!-- Top AppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-5rem)] z-40 bg-surface/40 backdrop-blur-2xl border-b border-white/30 flex justify-between items-center h-20 px-gutter">
+<div class="flex items-center gap-8 flex-1">
+<span class="font-headline-lg text-primary text-xl font-bold">SyncChain</span>
+<div class="hidden md:flex relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low/50 border-none rounded-full py-2 pl-10 pr-4 text-body-md focus:ring-2 focus:ring-primary/20" placeholder="Search shipments, SKUs, or documents..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications_unread">notifications_unread</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-white/30">
+<img alt="User" class="w-full h-full object-cover" data-alt="A professional portrait of a senior logistics executive in a clean, high-key office setting. The lighting is soft and porcelain-like, matching the Liquid Blue Edition's cool-toned, serene aesthetic. The background is a minimalist, slightly blurred workspace with soft sapphire blue accents and clean white lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChlYlUQf8OFsvMvmiyoomasQrgkbIYYUoQ8ZVlOLevioz7BsHMS7cLKznzKUZwkysWlFUxvGjB3Mw__CnKuKvzV6H5AO0dTEyviX8sMHgEwovlmk1yJqcxCo0PXtkpEjA9gMTwqApEUX9Ab2qRb6IYvObQzj1igCQsQL6HkSa_LOuqpwsIYhYnzBFla2Bob8JvZlTw8SYX7Nzi6Umh689tRb06A8SsYWuU2QVVMFV3R97BQzwceARihAPqjuKffpD-a8tSM1oUj_8"/>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Side Navigation (Fixed Icon-Only Overlay) -->
+<aside class="fixed left-0 top-0 h-full w-20 hover:w-64 z-50 transition-all duration-500 ease-in-out group bg-surface-container-low/60 backdrop-blur-3xl border-r border-white/30 shadow-[40px_0px_60px_rgba(80,97,107,0.05)] overflow-hidden">
+<div class="flex flex-col h-full py-8 px-4">
+<div class="flex items-center gap-4 mb-12 px-2">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white" data-icon="hub">hub</span>
+</div>
+<span class="font-headline-lg text-primary text-2xl tracking-tight opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">SyncChain</span>
+</div>
+<nav class="flex flex-col gap-2 flex-1">
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-white/40 hover:scale-[1.02] p-3 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 transition-opacity">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-white/40 hover:scale-[1.02] p-3 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 transition-opacity">Inventory</span>
+</a>
+<a class="flex items-center gap-4 bg-primary-container/80 text-on-primary-container rounded-xl p-3 shadow-sm scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 transition-opacity">Supply Chain</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-white/40 hover:scale-[1.02] p-3 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 transition-opacity">Orders</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-white/40 hover:scale-[1.02] p-3 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 transition-opacity">Analytics</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full bg-primary text-white p-3 rounded-xl flex items-center justify-center gap-3 hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95 mb-4 overflow-hidden">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span class="font-label-caps text-label-caps whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">New Report</span>
+</button>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-white/40 p-3 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 transition-opacity">Settings</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-20 pt-28 px-gutter pb-gutter min-h-screen">
+<div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Hero Title Section -->
+<section class="lg:col-span-12 mb-4">
+<div class="flex items-center gap-2 text-primary/60 font-label-caps text-label-caps mb-2">
+<a class="hover:text-primary" href="#">Supply Chain</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary">New Inbound Shipment</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Create Inbound Shipment</h1>
+<p class="text-on-surface-variant max-w-2xl mt-2">Configure logistics parameters and itemized inventory for incoming supply chain transfers.</p>
+</section>
+<!-- Main Form Section -->
+<div class="lg:col-span-8 space-y-6">
+<!-- Logistics Header -->
+<div class="glass-card rounded-[2rem] p-8">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="ship">sailing</span>
+</div>
+<h2 class="font-headline-lg text-2xl">Logistics Overview</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+<!-- Supplier Selection -->
+<div class="relative group">
+<label class="font-label-caps text-label-caps text-primary/60 block mb-1">Supplier Selection</label>
+<select class="w-full bg-transparent border-0 border-b border-primary-fixed py-3 px-0 font-body-md focus:ring-0 focus:border-primary appearance-none cursor-pointer">
+<option>Shenzhen Tech Ltd</option>
+<option>EuroLogistics Hub</option>
+<option>Palo Alto Manufacturing</option>
+<option>Global Silicon Foundry</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-9 text-primary/40 pointer-events-none">expand_more</span>
+</div>
+<!-- Expected Arrival -->
+<div class="relative">
+<label class="font-label-caps text-label-caps text-primary/60 block mb-1">Expected Arrival Date</label>
+<input class="w-full bg-transparent border-0 border-b border-primary-fixed py-3 px-0 font-body-md focus:ring-0 focus:border-primary cursor-pointer" type="date"/>
+</div>
+<!-- Port of Entry -->
+<div class="relative group">
+<label class="font-label-caps text-label-caps text-primary/60 block mb-1">Port of Entry</label>
+<select class="w-full bg-transparent border-0 border-b border-primary-fixed py-3 px-0 font-body-md focus:ring-0 focus:border-primary appearance-none cursor-pointer">
+<option>Port of Long Beach, CA</option>
+<option>Rotterdam Terminal, NL</option>
+<option>Singapore Port Authority</option>
+<option>Hamburg Logistics Base, DE</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-9 text-primary/40 pointer-events-none">anchor</span>
+</div>
+<!-- Shipment Priority -->
+<div class="flex flex-col">
+<label class="font-label-caps text-label-caps text-primary/60 block mb-3">Shipment Priority</label>
+<div class="flex gap-2">
+<span class="px-4 py-1 rounded-full bg-primary text-white text-label-caps font-label-caps cursor-pointer">Standard</span>
+<span class="px-4 py-1 rounded-full bg-primary-container text-on-primary-container text-label-caps font-label-caps hover:bg-primary/10 transition-colors cursor-pointer">Express</span>
+<span class="px-4 py-1 rounded-full bg-primary-container text-on-primary-container text-label-caps font-label-caps hover:bg-primary/10 transition-colors cursor-pointer">Critical</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Add Items -->
+<div class="glass-card rounded-[2rem] p-8 overflow-hidden">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="inventory">inventory</span>
+</div>
+<h2 class="font-headline-lg text-2xl">Item Manifest</h2>
+</div>
+<button class="flex items-center gap-2 text-primary hover:bg-primary-container/40 px-4 py-2 rounded-xl transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+<span class="font-label-caps text-label-caps">Import CSV</span>
+</button>
+</div>
+<!-- Item List Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-primary-fixed">
+<th class="pb-4 font-label-caps text-label-caps text-primary/60">SKU Reference</th>
+<th class="pb-4 font-label-caps text-label-caps text-primary/60">Batch ID</th>
+<th class="pb-4 font-label-caps text-label-caps text-primary/60">Quantity</th>
+<th class="pb-4 font-label-caps text-label-caps text-primary/60">Unit</th>
+<th class="pb-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary-fixed/30" id="item-rows">
+<tr class="group">
+<td class="py-6">
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-data-tabular text-on-surface" type="text" value="SKU-8829-XL"/>
+</td>
+<td class="py-6">
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-data-tabular text-on-surface" type="text" value="B-2023-09A"/>
+</td>
+<td class="py-6">
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-data-tabular text-on-surface" type="number" value="1250"/>
+</td>
+<td class="py-6 font-data-tabular text-on-surface-variant">Units</td>
+<td class="py-6 text-right">
+<button class="text-error/40 hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</td>
+</tr>
+<tr class="group">
+<td class="py-6">
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-data-tabular text-on-surface-variant italic" placeholder="Add SKU..." type="text"/>
+</td>
+<td class="py-6">
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-data-tabular text-on-surface-variant" placeholder="Batch..." type="text"/>
+</td>
+<td class="py-6">
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-data-tabular text-on-surface-variant" placeholder="0" type="number"/>
+</td>
+<td class="py-6 font-data-tabular text-on-surface-variant">---</td>
+<td class="py-6 text-right"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<button class="mt-8 w-full border-2 border-dashed border-primary-fixed rounded-2xl py-6 flex flex-col items-center justify-center gap-2 text-primary/60 hover:text-primary hover:bg-white/40 transition-all group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="add_circle">add_circle</span>
+<span class="font-label-caps text-label-caps">Add Line Item</span>
+</button>
+</div>
+</div>
+<!-- Side Summary Column -->
+<div class="lg:col-span-4">
+<div class="sticky top-28 space-y-6">
+<!-- Shipment Card (Visual) -->
+<div class="glass-card rounded-[2rem] p-8 bg-gradient-to-br from-primary-fixed/40 to-transparent relative overflow-hidden group">
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-primary/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+<div class="relative z-10">
+<h3 class="font-label-caps text-label-caps text-primary/60 mb-6">Draft Shipment Summary</h3>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-xl bg-white/60 flex items-center justify-center border border-white shadow-sm">
+<span class="material-symbols-outlined text-primary" data-icon="factory">factory</span>
+</div>
+<div>
+<p class="text-xs font-label-caps text-primary/60">Supplier</p>
+<p class="font-data-tabular">Shenzhen Tech Ltd</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-xl bg-white/60 flex items-center justify-center border border-white shadow-sm">
+<span class="material-symbols-outlined text-primary" data-icon="calendar_today">calendar_today</span>
+</div>
+<div>
+<p class="text-xs font-label-caps text-primary/60">Est. Arrival</p>
+<p class="font-data-tabular">Oct 24, 2023</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-xl bg-white/60 flex items-center justify-center border border-white shadow-sm">
+<span class="material-symbols-outlined text-primary" data-icon="box">inventory</span>
+</div>
+<div>
+<p class="text-xs font-label-caps text-primary/60">Manifest Total</p>
+<p class="font-data-tabular">1,250 Units / 1 SKU</p>
+</div>
+</div>
+</div>
+<hr class="my-8 border-white/50"/>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Net Weight</span>
+<span class="font-data-tabular">4.2 Tons</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Est. Duties</span>
+<span class="font-data-tabular">$1,420.00</span>
+</div>
+<div class="flex justify-between items-center pt-2 font-bold text-primary">
+<span>Total Value</span>
+<span class="text-xl">$48,250.00</span>
+</div>
+</div>
+<div class="mt-10 space-y-3">
+<button class="w-full bg-primary text-white py-4 rounded-2xl font-label-caps text-label-caps flex items-center justify-center gap-3 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                                    Submit Shipment
+                                    <span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+<button class="w-full bg-white/40 text-primary border border-primary-fixed py-4 rounded-2xl font-label-caps text-label-caps hover:bg-white/60 transition-all">
+                                    Save as Draft
+                                </button>
+</div>
+</div>
+</div>
+<!-- Visual Accent Card -->
+<div class="rounded-[2rem] overflow-hidden h-40 relative group">
+<img alt="Logistics Center" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms]" data-alt="A high-end, futuristic logistics terminal featuring sleek white robotic arms and minimalist freight containers. The environment is bathed in a soft, ethereal sapphire blue light that glimmers off polished porcelain surfaces. The mood is clinical, efficient, and technologically advanced, reflecting the Digital Luxury aesthetic with atmospheric depth and crystalline clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2x2Dle51N7qMDdthlWyqygsLdhpGvxAlsgLqf6ahRzXc8X9xf_BDrLr0-vo06MxJ7rtbMJiVALJVdFKhxWmqob5Cri40-Lb3DCG96dQ-nxtwUXWjsFJYqdZFtb8-lg_CEYFKeSAFe3AgxXbIMnPy7WHOo-M_wsS9cN3WfTCyoEQxBlyyz9-iXlFOSOSvN5XEomChW13wLHsThHJ72fgnyhE_OYQuMifUvSv--hsoAo_ToTwo3JmR0jXw8YJcvqoeEpQPZ_c59HQs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent flex items-end p-6">
+<div class="text-white">
+<p class="font-label-caps text-label-caps opacity-80">Network Status</p>
+<p class="text-sm font-medium">Shenzhen Route: Optimal Flow</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Success Toast (Hidden) -->
+<div class="fixed bottom-10 left-1/2 -translate-x-1/2 translate-y-32 transition-all duration-500 z-[100] glass-card rounded-2xl px-6 py-4 flex items-center gap-4 shadow-2xl border-primary/20" id="success-toast">
+<div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="check">check</span>
+</div>
+<p class="font-data-tabular text-on-surface">Shipment draft saved successfully.</p>
+</div>
+<script>
+        // Subtle micro-interactions
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.96)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = '';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        });
+
+        // Simulate save as draft
+        const draftBtn = document.querySelector('button:last-of-type');
+        const toast = document.getElementById('success-toast');
+        
+        if(draftBtn && toast) {
+            draftBtn.addEventListener('click', () => {
+                toast.classList.remove('translate-y-32');
+                setTimeout(() => {
+                    toast.classList.add('translate-y-32');
+                }, 3000);
+            });
+        }
+    </script>
+</body></html>

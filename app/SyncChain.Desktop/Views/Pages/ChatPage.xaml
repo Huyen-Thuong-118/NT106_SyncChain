@@ -28,7 +28,7 @@
                         Padding="14,0"
                         HeightRequest="44">
                     <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="9999" />
+                        <RoundRectangle CornerRadius="12" />
                     </Border.StrokeShape>
                     <Entry Placeholder="Tìm kiếm..."
                            Style="{StaticResource MinimalistEntry}"
@@ -121,8 +121,7 @@
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
                     <VerticalStackLayout VerticalOptions="Center">
                         <Label Text="Lê Minh Tuấn"
-                               Style="{StaticResource DisplayXlLabel}"
-                               FontSize="36" />
+                               Style="{StaticResource DisplayXlLabel}" />
                         <Label Text="Quản lý kho — Đang hoạt động"
                                Style="{StaticResource BodyMdLabel}"
                                Margin="0,4,0,0" />
@@ -185,7 +184,7 @@
                      Outgoing (PrimaryContainer, 18px top / 2px bottom-right)
                      Date dividers with LabelCapsLabel
                 ═══════════════════════════════════════════════════════ -->
-                <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Default">
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Messages}" Spacing="10" Padding="0,12">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
@@ -197,7 +196,7 @@
                                             Padding="16,6"
                                             IsVisible="{Binding IsDateDivider}">
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="9999" />
+                                            <RoundRectangle CornerRadius="12" />
                                         </Border.StrokeShape>
                                         <Label Text="{Binding Content}"
                                                Style="{StaticResource LabelCapsLabel}"
@@ -241,7 +240,7 @@
                         Padding="8,6"
                         Margin="0,8,0,0">
                     <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="9999" />
+                        <RoundRectangle CornerRadius="12" />
                     </Border.StrokeShape>
                     <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
                         <!-- Attachment button -->
@@ -294,3 +293,4 @@
 
     </Grid>
 </ContentPage>
+
