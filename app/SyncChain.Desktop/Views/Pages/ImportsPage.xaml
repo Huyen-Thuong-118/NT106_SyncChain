@@ -206,8 +206,8 @@
                                         <Label Text="🚢" HorizontalOptions="Center" VerticalOptions="Center" FontSize="18" />
                                     </Border>
                                     <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                        <Label Text="MV Pacific Star" Style="{StaticResource DataTabularLabel}" />
-                                        <Label Text="IMO: 9876543" Style="{StaticResource BodyMdLabel}" FontSize="11" />
+                                        <Label Text="MV Pacific Star" Style="{StaticResource DataTabularLabel}" LineBreakMode="TailTruncation" />
+                                        <Label Text="IMO: 9876543" Style="{StaticResource BodyMdLabel}" FontSize="11" LineBreakMode="TailTruncation" />
                                     </VerticalStackLayout>
                                     <Border Grid.Column="2" BackgroundColor="{DynamicResource StatusBlue}" StrokeThickness="0" Padding="10,4" VerticalOptions="Center">
                                         <Border.StrokeShape>

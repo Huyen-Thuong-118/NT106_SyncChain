@@ -121,10 +121,12 @@
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
                     <VerticalStackLayout VerticalOptions="Center">
                         <Label Text="Lê Minh Tuấn"
-                               Style="{StaticResource DisplayXlLabel}" />
+                               Style="{StaticResource DisplayXlLabel}"
+                               LineBreakMode="TailTruncation" />
                         <Label Text="Quản lý kho — Đang hoạt động"
                                Style="{StaticResource BodyMdLabel}"
-                               Margin="0,4,0,0" />
+                               Margin="0,4,0,0"
+                               LineBreakMode="TailTruncation" />
                     </VerticalStackLayout>
                     <!-- Action buttons: call, video, more -->
                     <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
@@ -217,7 +219,8 @@
                                             <Label Text="{Binding Content}"
                                                    TextColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageText}"
                                                    FontFamily="Inter"
-                                                   FontSize="14" />
+                                                   FontSize="14"
+                                                   LineBreakMode="WordWrap" />
                                             <Label Text="{Binding Time}"
                                                    FontSize="11"
                                                    FontFamily="Inter"

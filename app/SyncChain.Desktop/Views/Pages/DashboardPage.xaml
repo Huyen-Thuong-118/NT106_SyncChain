@@ -14,7 +14,7 @@
                 <VerticalStackLayout VerticalOptions="Center">
                     <Label Text="Bảng điều khiển" Style="{StaticResource HeadlineLgLabel}" />
                     <Label Text="Chào buổi sáng, Quản trị viên. Diễn biến bán hàng trong 24h qua."
-                           Style="{StaticResource BodyMdLabel}" Margin="0,8,0,0" LineBreakMode="TailTruncation" />
+                           Style="{StaticResource BodyMdLabel}" Margin="0,8,0,0" LineBreakMode="TailTruncation" MaxLines="2" />
                 </VerticalStackLayout>
                 <HorizontalStackLayout Grid.Column="1" Spacing="12" VerticalOptions="Center">
                     <Button Text="7 NGÀY QUA" Style="{StaticResource PillSecondaryButton}" />
@@ -172,8 +172,8 @@
                                                 <Label Text="{Binding Code}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontSize="10" FontAttributes="Bold" FontFamily="Inter" />
                                             </Border>
                                             <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                                <Label Text="{Binding Name}" FontSize="13" FontAttributes="Bold" FontFamily="Inter" TextColor="{DynamicResource OnSurface}" />
-                                                <Label Text="{Binding Code}" FontSize="11" FontAttributes="Bold" FontFamily="Inter" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                <Label Text="{Binding Name}" FontSize="13" FontAttributes="Bold" FontFamily="Inter" TextColor="{DynamicResource OnSurface}" LineBreakMode="TailTruncation" />
+                                                <Label Text="{Binding Code}" FontSize="11" FontAttributes="Bold" FontFamily="Inter" TextColor="{DynamicResource OnSurfaceVariant}" LineBreakMode="TailTruncation" />
                                             </VerticalStackLayout>
                                             <Label Grid.Column="2" Text="{Binding StockText}" TextColor="{Binding Accent}" FontSize="12" FontAttributes="Bold" FontFamily="Inter" VerticalTextAlignment="Center" HorizontalTextAlignment="End" />
                                         </Grid>
@@ -202,8 +202,8 @@
                                             <Label Text="{Binding Icon}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontSize="10" FontFamily="Inter" />
                                         </Border>
                                         <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                            <Label Text="{Binding Title}" FontSize="13" FontFamily="Inter" TextColor="{DynamicResource OnSurface}" />
-                                            <Label Text="{Binding Time}" FontSize="10" FontAttributes="Bold" FontFamily="Inter" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                            <Label Text="{Binding Title}" FontSize="13" FontFamily="Inter" TextColor="{DynamicResource OnSurface}" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Time}" FontSize="10" FontAttributes="Bold" FontFamily="Inter" TextColor="{DynamicResource OnSurfaceVariant}" LineBreakMode="TailTruncation" />
                                         </VerticalStackLayout>
                                         <!-- Status indicator dot -->
                                         <BoxView Grid.Column="2" Color="{Binding Accent}" WidthRequest="8" HeightRequest="8" CornerRadius="4" VerticalOptions="Center" />

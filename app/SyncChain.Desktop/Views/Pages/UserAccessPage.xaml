@@ -100,8 +100,8 @@
                                             <RoundRectangle CornerRadius="18" />
                                         </Border.StrokeShape>
                                         <VerticalStackLayout Spacing="8">
-                                            <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}" />
-                                            <Label Text="{Binding Description}" Style="{StaticResource BodyMdLabel}" FontSize="12" />
+                                            <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Description}" Style="{StaticResource BodyMdLabel}" FontSize="12" LineBreakMode="TailTruncation" MaxLines="2" />
                                         </VerticalStackLayout>
                                     </Border>
                                 </DataTemplate>

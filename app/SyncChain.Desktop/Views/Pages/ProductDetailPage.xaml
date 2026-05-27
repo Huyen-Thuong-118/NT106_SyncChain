@@ -199,7 +199,7 @@
                         <!-- Consumption Progress -->
                         <VerticalStackLayout Spacing="8" Margin="0,8,0,0">
                             <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="Mức tiêu thụ" Style="{StaticResource BodyMdLabel" />
+                                <Label Text="Mức tiêu thụ" Style="{StaticResource BodyMdLabel}" />
                                 <Label Grid.Column="1" Text="78%" Style="{StaticResource DataTabularLabel}" />
                             </Grid>
                             <ProgressBar Progress="0.78" ProgressColor="{DynamicResource Primary}" HeightRequest="10" />
