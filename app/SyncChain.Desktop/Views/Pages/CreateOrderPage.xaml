@@ -83,8 +83,8 @@
                                             </Border>
                                             <!-- Product info -->
                                             <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                                                <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}" />
-                                                <Label Text="{Binding Variant}" Style="{StaticResource BodyMdLabel}" FontSize="12" />
+                                                <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}" LineBreakMode="TailTruncation" />
+                                                <Label Text="{Binding Variant}" Style="{StaticResource BodyMdLabel}" FontSize="12" LineBreakMode="TailTruncation" />
                                             </VerticalStackLayout>
                                             <!-- Quantity controls -->
                                             <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
@@ -95,7 +95,7 @@
                                             </HorizontalStackLayout>
                                             <!-- Price -->
                                             <Label Grid.Column="3" Text="{Binding Price}" VerticalTextAlignment="Center"
-                                                   Style="{StaticResource DataTabularLabel}" FontSize="15" />
+                                                   Style="{StaticResource DataTabularLabel}" FontSize="15" LineBreakMode="TailTruncation" />
                                             <!-- Remove button -->
                                             <Button Grid.Column="4" Text="×" Style="{StaticResource PillSecondaryButton}" Padding="10,6" />
                                         </Grid>
