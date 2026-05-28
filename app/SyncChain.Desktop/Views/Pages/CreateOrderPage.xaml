@@ -2,6 +2,7 @@
 <ContentPage x:Class="SyncChain.Desktop.Views.Pages.CreateOrderPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
         <VerticalStackLayout Padding="64,30" Spacing="24">
@@ -66,7 +67,7 @@
                             <!-- Separator -->
                             <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="models:LineItem">
                                     <Border BackgroundColor="Transparent" StrokeThickness="0" Padding="8,12">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="12" />
@@ -90,12 +91,13 @@
                                             <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
                                                 <Button Text="−" Style="{StaticResource PillSecondaryButton}" Padding="10,6" />
                                                 <Label Text="{Binding Quantity}" VerticalTextAlignment="Center"
-                                                       Style="{StaticResource DataTabularLabel}" />
+                                                       Style="{StaticResource DataTabularLabel}" VerticalOptions="Center" />
                                                 <Button Text="+" Style="{StaticResource PillSecondaryButton}" Padding="10,6" />
                                             </HorizontalStackLayout>
                                             <!-- Price -->
                                             <Label Grid.Column="3" Text="{Binding Price}" VerticalTextAlignment="Center"
-                                                   Style="{StaticResource DataTabularLabel}" FontSize="15" LineBreakMode="TailTruncation" />
+                                                   Style="{StaticResource DataTabularLabel}" FontSize="15"
+                                                   LineBreakMode="TailTruncation" VerticalOptions="Center" />
                                             <!-- Remove button -->
                                             <Button Grid.Column="4" Text="×" Style="{StaticResource PillSecondaryButton}" Padding="10,6" />
                                         </Grid>
@@ -130,17 +132,17 @@
                             <!-- Subtotal -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Tạm tính" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="1,340,000 đ" Style="{StaticResource DataTabularLabel}" />
+                                <Label Grid.Column="1" Text="1,340,000 đ" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                             </Grid>
                             <!-- Shipping -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Phí vận chuyển" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="30,000 đ" Style="{StaticResource DataTabularLabel}" />
+                                <Label Grid.Column="1" Text="30,000 đ" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                             </Grid>
                             <!-- Discount -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Giảm giá" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="-0 đ" Style="{StaticResource DataTabularLabel}" />
+                                <Label Grid.Column="1" Text="-0 đ" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                             </Grid>
 
                             <!-- Coupon input -->
@@ -155,7 +157,7 @@
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Tổng cộng" Style="{StaticResource DataTabularLabel}" FontSize="16" VerticalTextAlignment="Center" />
                                 <Label Grid.Column="1" Text="1,370,000 đ" FontSize="24" FontAttributes="Bold"
-                                       FontFamily="SourceSerif4" TextColor="{DynamicResource OnSurface}" />
+                                       FontFamily="SourceSerif4" TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center" />
                             </Grid>
 
                             <!-- Create order button -->
@@ -171,7 +173,7 @@
                             <Label Text="PHƯƠNG THỨC THANH TOÁN" Style="{StaticResource LabelCapsLabel}" />
                             <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="models:PaymentOption">
                                     <Border Stroke="{DynamicResource OutlineVariant}"
                                             BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=SelectedPayment}"
                                             Padding="14" Margin="0,4">

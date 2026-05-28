@@ -17,10 +17,6 @@
          CONTENT PAGE STYLE
          Applies LiquidGradientBrush as page background
     ═══════════════════════════════════════════════════════════════ -->
-    <Style x:Key="ContentPageStyle" TargetType="ContentPage">
-        <Setter Property="Background" Value="{StaticResource LiquidGradientBrush}" />
-    </Style>
-
     <!-- Default ContentPage style (implicit) -->
     <Style TargetType="ContentPage">
         <Setter Property="Background" Value="{StaticResource LiquidGradientBrush}" />

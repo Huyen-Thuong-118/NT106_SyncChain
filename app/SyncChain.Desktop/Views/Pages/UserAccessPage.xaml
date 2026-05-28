@@ -2,6 +2,7 @@
 <ContentPage x:Class="SyncChain.Desktop.Views.Pages.UserAccessPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
         <VerticalStackLayout Padding="64,30" Spacing="24">
@@ -91,9 +92,9 @@
                     <!-- Role selection -->
                     <VerticalStackLayout Spacing="8">
                         <Label Text="VAI TRÒ HỆ THỐNG" Style="{StaticResource LabelCapsLabel}" />
-                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Roles}" Spacing="12">
+                        <FlexLayout Wrap="Wrap" Direction="Row" BindableLayout.ItemsSource="{Binding Roles}" JustifyContent="Start">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="models:RoleOption">
                                     <Border BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=SelectedRole}"
                                             Stroke="{DynamicResource GlassBorder30}" StrokeThickness="1" Padding="14" WidthRequest="220">
                                         <Border.StrokeShape>
@@ -106,7 +107,7 @@
                                     </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
-                        </HorizontalStackLayout>
+                        </FlexLayout>
                     </VerticalStackLayout>
 
                     <!-- Action buttons -->

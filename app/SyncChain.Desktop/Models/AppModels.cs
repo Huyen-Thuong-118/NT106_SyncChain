@@ -45,6 +45,7 @@ public sealed class ProductItem
 	public string BadgeText { get; init; } = string.Empty;
 	public Color BadgeColor { get; init; } = Colors.Transparent;
 	public string Initials { get; init; } = string.Empty;
+	public double HealthProgress { get; init; }
 }
 
 public sealed class InventoryEvent

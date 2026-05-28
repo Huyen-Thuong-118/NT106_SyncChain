@@ -44,12 +44,12 @@ public static class DemoData
 
 	public static IReadOnlyList<ProductItem> Products { get; } =
 	[
-		new() { Code = "WTC-0012", Name = "Đồng hồ thông minh S3", Description = "Thiết bị theo dõi sức khỏe và thông báo thời gian thực.", Price = "890,000 đ", Stock = "02", BadgeText = "Đang bán", BadgeColor = Blue, Initials = "S3" },
-		new() { Code = "AUD-0982", Name = "Tai nghe Studio Pro", Description = "Tai nghe chống ồn chủ động dành cho khách lẻ cao cấp.", Price = "450,000 đ", Stock = "05", BadgeText = "Đang bán", BadgeColor = Blue, Initials = "AU" },
-		new() { Code = "WTC-0045", Name = "Classic Gen 2", Description = "Đồng hồ cổ điển, tồn ổn định cho kênh đại lý.", Price = "1,250,000 đ", Stock = "58", BadgeText = "Mới", BadgeColor = Sapphire, Initials = "CG" },
-		new() { Code = "PER-1108", Name = "Mini Rose", Description = "Nước hoa mini cho combo bán lẻ.", Price = "320,000 đ", Stock = "08", BadgeText = "Sắp hết", BadgeColor = Mist, Initials = "MR" },
-		new() { Code = "SHO-2031", Name = "Runner", Description = "Giày thể thao bán tốt ở kênh online.", Price = "690,000 đ", Stock = "120", BadgeText = "Đang bán", BadgeColor = Blue, Initials = "RN" },
-		new() { Code = "GLA-7712", Name = "Urban Shade", Description = "Kính mát thời trang đã tạm ngưng bán.", Price = "250,000 đ", Stock = "00", BadgeText = "Ngưng bán", BadgeColor = Critical, Initials = "US" }
+		new() { Code = "WTC-0012", Name = "Đồng hồ thông minh S3", Description = "Thiết bị theo dõi sức khỏe và thông báo thời gian thực.", Price = "890,000 đ", Stock = "02", BadgeText = "Đang bán", BadgeColor = Blue, Initials = "S3", HealthProgress = 0.15 },
+		new() { Code = "AUD-0982", Name = "Tai nghe Studio Pro", Description = "Tai nghe chống ồn chủ động dành cho khách lẻ cao cấp.", Price = "450,000 đ", Stock = "05", BadgeText = "Đang bán", BadgeColor = Blue, Initials = "AU", HealthProgress = 0.30 },
+		new() { Code = "WTC-0045", Name = "Classic Gen 2", Description = "Đồng hồ cổ điển, tồn ổn định cho kênh đại lý.", Price = "1,250,000 đ", Stock = "58", BadgeText = "Mới", BadgeColor = Sapphire, Initials = "CG", HealthProgress = 0.85 },
+		new() { Code = "PER-1108", Name = "Mini Rose", Description = "Nước hoa mini cho combo bán lẻ.", Price = "320,000 đ", Stock = "08", BadgeText = "Sắp hết", BadgeColor = Mist, Initials = "MR", HealthProgress = 0.40 },
+		new() { Code = "SHO-2031", Name = "Runner", Description = "Giày thể thao bán tốt ở kênh online.", Price = "690,000 đ", Stock = "120", BadgeText = "Đang bán", BadgeColor = Blue, Initials = "RN", HealthProgress = 0.95 },
+		new() { Code = "GLA-7712", Name = "Urban Shade", Description = "Kính mát thời trang đã tạm ngưng bán.", Price = "250,000 đ", Stock = "00", BadgeText = "Ngưng bán", BadgeColor = Critical, Initials = "US", HealthProgress = 0.0 }
 	];
 
 	public static IReadOnlyList<InventoryEvent> InventoryEvents { get; } =

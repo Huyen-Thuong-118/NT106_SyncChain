@@ -2,6 +2,7 @@
 <ContentPage x:Class="SyncChain.Desktop.Views.Pages.LogsPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
         <VerticalStackLayout Padding="64,30" Spacing="24">
@@ -87,7 +88,7 @@
                     <!-- Log entry rows -->
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Logs}" Spacing="8">
                         <BindableLayout.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate x:DataType="models:LogItem">
                                 <Border BackgroundColor="Transparent" StrokeThickness="0" Padding="8,12">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="12" />

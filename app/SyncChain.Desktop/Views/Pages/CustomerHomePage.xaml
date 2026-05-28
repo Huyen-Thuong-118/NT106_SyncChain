@@ -2,6 +2,8 @@
 <ContentPage x:Class="SyncChain.Desktop.Views.Pages.CustomerHomePage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SyncChain.Desktop.Views.Pages"
+             xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
         <VerticalStackLayout Padding="64,30" Spacing="24">
@@ -28,7 +30,7 @@
             ═══════════════════════════════════════════════════════════════ -->
             <FlexLayout Wrap="Wrap" Direction="Row" JustifyContent="Start" BindableLayout.ItemsSource="{Binding Metrics}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="local:CustomerMetric">
                         <Border Style="{StaticResource GlassCardBorder}" Margin="0,0,20,20" WidthRequest="220" Padding="22">
                             <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,*">
                                 <!-- Icon container -->
@@ -149,7 +151,7 @@
                         <Label Text="lam.nv@gmail.com" TextColor="{DynamicResource PrimaryContainer}" FontSize="13" FontFamily="Inter" />
                         <BoxView HeightRequest="1" Color="{DynamicResource GlassBorder30}" Margin="0,8" />
                         <Label Text="ĐỊA CHỈ MẶC ĐỊNH" TextColor="{DynamicResource PrimaryContainer}" FontSize="11" FontAttributes="Bold" FontFamily="Inter" />
-                        <Label Text="12 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh" TextColor="White" FontSize="13" FontFamily="Inter" LineBreakMode="TailTruncation" MaxLines="2" />
+                        <Label Text="12 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh" TextColor="White" FontSize="13" FontFamily="Inter" />
                         <Label Text="SỐ ĐIỆN THOẠI" TextColor="{DynamicResource PrimaryContainer}" FontSize="11" FontAttributes="Bold" FontFamily="Inter" Margin="0,8,0,0" />
                         <Label Text="0901 234 567" TextColor="White" FontSize="13" FontFamily="Inter" />
                     </VerticalStackLayout>
@@ -166,7 +168,7 @@
                         <Label Text="Thao tác nhanh" Style="{StaticResource DataTabularLabel}" FontSize="15" />
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding QuickActions}" Spacing="12">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="local:CustomerAction">
                                     <Border BackgroundColor="{DynamicResource SurfaceContainerLow}" StrokeThickness="0" Padding="12">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="14" />
@@ -199,7 +201,7 @@
                         </Grid>
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentOrders}" Spacing="10">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="local:CustomerOrderCard">
                                     <Grid ColumnDefinitions="42,*,Auto" ColumnSpacing="12" Padding="0,6">
                                         <Border BackgroundColor="{Binding Accent}" StrokeThickness="0" WidthRequest="34" HeightRequest="34">
                                             <Border.StrokeShape>
@@ -233,7 +235,7 @@
                         <Label Text="Gợi ý mua lại" Style="{StaticResource DataTabularLabel}" FontSize="15" />
                         <FlexLayout Wrap="Wrap" Direction="Row" BindableLayout.ItemsSource="{Binding SuggestedProducts}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="models:ProductItem">
                                     <Border BackgroundColor="{DynamicResource SurfaceContainerLow}" StrokeThickness="0" Padding="12" WidthRequest="210" Margin="0,0,12,12">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="14" />
@@ -261,7 +263,7 @@
                         <Label Text="Ưu đãi của bạn" Style="{StaticResource DataTabularLabel}" FontSize="15" />
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding Promotions}" Spacing="12">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="local:CustomerPromotion">
                                     <Border BackgroundColor="{DynamicResource SurfaceContainerLow}" StrokeThickness="0" Padding="14">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="14" />

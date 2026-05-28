@@ -2,6 +2,7 @@
 <ContentPage x:Class="SyncChain.Desktop.Views.Pages.ProductsPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
         <VerticalStackLayout Padding="64,30" Spacing="24">
@@ -66,15 +67,18 @@
                                Style="{StaticResource BodyMdLabel}" />
                         <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16" Margin="0,8,0,0">
                             <VerticalStackLayout>
-                                <Label Text="1,284" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="1,284" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
+                                       VerticalOptions="Center" LineBreakMode="NoWrap" />
                                 <Label Text="Tổng sản phẩm" Style="{StaticResource LabelCapsLabel}" />
                             </VerticalStackLayout>
                             <VerticalStackLayout>
-                                <Label Text="986" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="986" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
+                                       VerticalOptions="Center" LineBreakMode="NoWrap" />
                                 <Label Text="Đang bán" Style="{StaticResource LabelCapsLabel}" />
                             </VerticalStackLayout>
                             <VerticalStackLayout>
-                                <Label Text="14" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="14" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
+                                       VerticalOptions="Center" LineBreakMode="NoWrap" />
                                 <Label Text="Sắp hết hàng" Style="{StaticResource LabelCapsLabel}" />
                             </VerticalStackLayout>
                         </Grid>
@@ -122,7 +126,7 @@
                     <!-- Product rows -->
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Products}" Spacing="8">
                         <BindableLayout.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate x:DataType="models:ProductItem">
                                 <Border BackgroundColor="Transparent" StrokeThickness="0" Padding="8,12">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="12" />
@@ -159,7 +163,7 @@
                                         </HorizontalStackLayout>
                                         <!-- Health progress bar -->
                                         <Grid Grid.Column="5" VerticalOptions="Center">
-                                            <ProgressBar Progress="0.7" ProgressColor="{DynamicResource Primary}" HeightRequest="6" />
+                                            <ProgressBar Progress="{Binding HealthProgress}" ProgressColor="{DynamicResource Primary}" HeightRequest="6" />
                                         </Grid>
                                     </Grid>
                                 </Border>

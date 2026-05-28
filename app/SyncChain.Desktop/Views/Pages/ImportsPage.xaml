@@ -2,6 +2,7 @@
 <ContentPage x:Class="SyncChain.Desktop.Views.Pages.ImportsPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
         <VerticalStackLayout Padding="64,30" Spacing="24">
@@ -24,7 +25,8 @@
                 <Border Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="TỔNG KIỆN HÀNG" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="1,847" Style="{StaticResource DisplayXlLabel}" FontSize="36" />
+                        <Label Text="1,847" Style="{StaticResource DisplayXlLabel}" FontSize="36"
+                               VerticalOptions="Center" LineBreakMode="NoWrap" />
                         <Label Text="Tổng số kiện đã nhập" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
@@ -33,7 +35,8 @@
                 <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="ĐANG TRÊN BIỂN" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="342" Style="{StaticResource DisplayXlLabel}" FontSize="36" TextColor="{DynamicResource Primary}" />
+                        <Label Text="342" Style="{StaticResource DisplayXlLabel}" FontSize="36"
+                               TextColor="{DynamicResource Primary}" VerticalOptions="Center" LineBreakMode="NoWrap" />
                         <Label Text="Đang vận chuyển" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
@@ -42,7 +45,8 @@
                 <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="ĐỢI THÔNG QUAN" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="56" Style="{StaticResource DisplayXlLabel}" FontSize="36" />
+                        <Label Text="56" Style="{StaticResource DisplayXlLabel}" FontSize="36"
+                               VerticalOptions="Center" LineBreakMode="NoWrap" />
                         <Label Text="Chờ xử lý hải quan" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
@@ -51,7 +55,8 @@
                 <Border Grid.Column="3" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="HOÀN TẤT NHẬP KHO" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="1,449" Style="{StaticResource DisplayXlLabel}" FontSize="36" TextColor="{DynamicResource Primary}" />
+                        <Label Text="1,449" Style="{StaticResource DisplayXlLabel}" FontSize="36"
+                               TextColor="{DynamicResource Primary}" VerticalOptions="Center" LineBreakMode="NoWrap" />
                         <Label Text="Đã nhập kho thành công" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
@@ -260,7 +265,7 @@
                     <!-- Import rows -->
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Imports}" Spacing="8">
                         <BindableLayout.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate x:DataType="models:ImportItem">
                                 <Border BackgroundColor="Transparent" StrokeThickness="0" Padding="8,12">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="12" />

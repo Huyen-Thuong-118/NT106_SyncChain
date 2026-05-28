@@ -2,6 +2,7 @@
 <ContentPage x:Class="SyncChain.Desktop.Views.Pages.ChatPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False"
              Padding="0">
 
@@ -39,7 +40,7 @@
                 <ScrollView VerticalScrollBarVisibility="Never">
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Threads}" Spacing="8">
                         <BindableLayout.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate x:DataType="models:ChatThread">
                                 <Border BackgroundColor="{Binding IsActive, Converter={StaticResource BoolToColorConverter}, ConverterParameter=ActiveThread}"
                                         Stroke="{Binding IsActive, Converter={StaticResource BoolToColorConverter}, ConverterParameter=ActiveThread}"
                                         StrokeThickness="1"
@@ -76,7 +77,9 @@
                                                    FontAttributes="Bold"
                                                    FontFamily="Inter"
                                                    FontSize="14"
-                                                   TextColor="{DynamicResource OnSurface}" />
+                                                   TextColor="{DynamicResource OnSurface}"
+                                                   LineBreakMode="TailTruncation"
+                                                   MaxLines="1" />
                                             <Label Text="{Binding Preview}"
                                                    FontFamily="Inter"
                                                    FontSize="12"
@@ -189,7 +192,7 @@
                 <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Default">
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Messages}" Spacing="10" Padding="0,12">
                         <BindableLayout.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate x:DataType="models:ChatMessage">
                                 <VerticalStackLayout Spacing="10">
                                     <!-- Date divider (shown when IsDateDivider is true) -->
                                     <Border BackgroundColor="#33000000"
