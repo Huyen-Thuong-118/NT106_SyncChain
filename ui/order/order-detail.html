@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi tiết đơn hàng</title>
+  <link rel="stylesheet" href="order-detail.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="top">
+      <a href="#">← Quay lại danh sách</a>
+
+      <div class="actions">
+        <button class="light">In hóa đơn</button>
+        <button class="primary">Cập nhật trạng thái</button>
+      </div>
+    </section>
+
+    <section class="title">
+      <div>
+        <h1>ĐƠN HÀNG #ORD-2023-8942</h1>
+        <p>Được tạo vào 14/10/2023 lúc 10:24 AM</p>
+      </div>
+
+      <span class="status">Đã xử lý</span>
+    </section>
+
+    <section class="grid">
+      <div class="left">
+        <div class="card">
+          <div class="card-head">
+            <h3>Sản phẩm trong đơn</h3>
+            <span>3 sản phẩm</span>
+          </div>
+
+          <div class="product">
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=120" />
+            <div class="product-info">
+              <strong>Đồng hồ thông minh S3</strong>
+              <p>Màu đen / Size M</p>
+            </div>
+            <div class="qty">x1</div>
+            <div class="price">890,000 đ</div>
+          </div>
+
+          <div class="product">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=120" />
+            <div class="product-info">
+              <strong>Tai nghe Studio Pro</strong>
+              <p>Màu trắng</p>
+            </div>
+            <div class="qty">x1</div>
+            <div class="price">450,000 đ</div>
+          </div>
+
+          <div class="product">
+            <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=120" />
+            <div class="product-info">
+              <strong>Dây sạc USB-C</strong>
+              <p>1 mét</p>
+            </div>
+            <div class="qty">x2</div>
+            <div class="price">110,000 đ</div>
+          </div>
+        </div>
+
+        <div class="card timeline">
+          <h3>Lịch sử xử lý</h3>
+
+          <div class="time-item done">
+            <span></span>
+            <div>
+              <strong>Đơn hàng đã được tạo</strong>
+              <p>14/10/2023 - 10:24 AM</p>
+            </div>
+          </div>
+
+          <div class="time-item done">
+            <span></span>
+            <div>
+              <strong>Thanh toán thành công</strong>
+              <p>14/10/2023 - 10:25 AM</p>
+            </div>
+          </div>
+
+          <div class="time-item active">
+            <span></span>
+            <div>
+              <strong>Đang chuẩn bị hàng</strong>
+              <p>14/10/2023 - 10:40 AM</p>
+            </div>
+          </div>
+
+          <div class="time-item">
+            <span></span>
+            <div>
+              <strong>Giao cho đơn vị vận chuyển</strong>
+              <p>Đang chờ</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="right">
+        <div class="card customer-card">
+          <h3>Thông tin khách hàng</h3>
+
+          <div class="customer">
+            <div class="avatar">NL</div>
+            <div>
+              <strong>Nguyễn Văn Lâm</strong>
+              <p>lam.nv@gmail.com</p>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <span>Số điện thoại</span>
+            <strong>0901 234 567</strong>
+          </div>
+
+          <div class="info-row">
+            <span>Địa chỉ giao hàng</span>
+            <strong>12 Nguyễn Huệ, Quận 1, TP.HCM</strong>
+          </div>
+        </div>
+
+        <div class="card summary">
+          <h3>Tóm tắt thanh toán</h3>
+
+          <div class="sum-row">
+            <span>Tạm tính</span>
+            <strong>1,450,000 đ</strong>
+          </div>
+
+          <div class="sum-row">
+            <span>Phí vận chuyển</span>
+            <strong>30,000 đ</strong>
+          </div>
+
+          <div class="sum-row">
+            <span>Giảm giá</span>
+            <strong>-30,000 đ</strong>
+          </div>
+
+          <div class="total">
+            <span>Tổng cộng</span>
+            <strong>1,450,000 đ</strong>
+          </div>
+        </div>
+
+        <div class="card note">
+          <h3>Ghi chú đơn hàng</h3>
+          <p>Khách yêu cầu giao trong giờ hành chính. Kiểm tra kỹ sản phẩm trước khi đóng gói.</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

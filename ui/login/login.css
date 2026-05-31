@@ -1,0 +1,233 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #111f8c;
+    --primary-dark: #09156d;
+    --text-main: #19213d;
+    --text-soft: #7f8493;
+    --line: #b8bcc8;
+    --bg: #eeeeef;
+    --white: #ffffff;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    background: #dddddf;
+    color: var(--text-main);
+}
+
+.page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+}
+
+.login-card {
+    width: 1100px;
+    max-width: 100%;
+    min-height: 700px;
+    background: transparent;
+    display: grid;
+    grid-template-columns: 42% 58%;
+}
+
+.left-panel {
+    position: relative;
+    padding: 34px 38px 28px;
+    color: var(--white);
+    background: linear-gradient(rgba(12, 24, 146, 0.88), rgba(12, 24, 146, 0.92)), url("https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=1400&auto=format&fit=crop") center/cover no-repeat;
+    overflow: hidden;
+}
+
+    .left-panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(7, 18, 115, 0.22) 0%, rgba(7, 18, 115, 0.55) 100%);
+        pointer-events: none;
+    }
+
+    .left-panel > * {
+        position: relative;
+        z-index: 1;
+    }
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    font-size: 1.05rem;
+}
+
+.brand-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.left-content {
+    margin-top: 150px;
+}
+
+    .left-content h1 {
+        font-size: 3.3rem;
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -1px;
+    }
+
+.line {
+    width: 72px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    margin: 26px 0 34px;
+    border-radius: 999px;
+}
+
+.left-content p {
+    max-width: 300px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+    line-height: 1.8;
+    font-weight: 300;
+}
+
+.left-footer {
+    position: absolute;
+    left: 38px;
+    right: 38px;
+    bottom: 30px;
+    display: flex;
+    gap: 36px;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.85rem;
+}
+
+.right-panel {
+    background: #f8f8f9;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    padding: 30px 42px;
+}
+
+.form-wrap {
+    width: 100%;
+    max-width: 520px;
+    padding: 10px 10px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-wrap h2 {
+        font-size: 2.1rem;
+        color: var(--primary-dark);
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+.subtitle {
+    color: var(--text-soft);
+    font-size: 0.92rem;
+    letter-spacing: 2px;
+    margin-bottom: 52px;
+}
+
+.form-group {
+    margin-bottom: 34px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 14px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #4f566e;
+    }
+
+.input-line {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1.6px solid var(--line);
+    padding-bottom: 10px;
+}
+
+.input-icon {
+    color: #b7bcc7;
+    font-size: 1rem;
+    width: 18px;
+    text-align: center;
+}
+
+.input-line input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.98rem;
+    color: var(--text-main);
+    padding: 2px 0;
+}
+
+    .input-line input::placeholder {
+        color: #c3c6cf;
+    }
+
+.row-between {
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #5f6576;
+    font-size: 0.95rem;
+}
+
+    .remember input {
+        width: 14px;
+        height: 14px;
+        accent-color: var(--primary);
+    }
+
+.link {
+    color: var(--primary-dark);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+    .link:hover {
+        text-decoration: underline;
+    }
+
+.login-btn {
+    width: 100%;
+    height: 52px;
+    border: none;
+    border-radius: 4px;
+    background: var(--primary-dark);
+    color: var(--white);
+    font-weight: 800;
+    letter-spacing

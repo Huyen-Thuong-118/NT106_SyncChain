@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thêm người dùng mới</title>
+  <link rel="stylesheet" href="./users-modal.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>SyncChain</h2>
+        <p>RETAILOPS MANAGEMENT</p>
+      </div>
+
+      <nav>
+        <a>▦ Bảng điều khiển</a>
+        <a class="active">👥 Người dùng</a>
+        <a>▤ Sản phẩm</a>
+        <a>🛒 Đơn hàng</a>
+        <a>🚚 Đơn nhập hàng</a>
+        <a>▥ Thống kê</a>
+        <a>⚙ Cài đặt</a>
+      </nav>
+
+      <div class="profile">
+        <div class="avatar"></div>
+        <div>
+          <strong>Lê Minh Tuấn</strong>
+          <span>Quản lý kho</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main blur-bg">
+      <header class="topbar">
+        <input placeholder="Tìm kiếm người dùng, vai trò..." />
+        <div class="account">Tài khoản</div>
+      </header>
+
+      <section class="page-title">
+        <p>Hệ thống › Quản lý người dùng</p>
+        <h1>Danh sách Người dùng</h1>
+      </section>
+
+      <section class="fake-cards">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </section>
+
+      <section class="fake-table"></section>
+    </main>
+
+    <div class="overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <div>
+            <h2>Thêm người dùng mới</h2>
+            <p>Cung cấp thông tin tài khoản cho nhân viên mới.</p>
+          </div>
+          <button>×</button>
+        </div>
+
+        <div class="modal-body">
+          <label>HỌ VÀ TÊN</label>
+          <div class="input full">
+            <span>♙</span>
+            <input placeholder="Nhập tên nhân viên..." />
+          </div>
+
+          <div class="two-col">
+            <div>
+              <label>EMAIL CÔNG VIỆC</label>
+              <div class="input">
+                <span>✉</span>
+                <input placeholder="example@syncchain.com" />
+              </div>
+            </div>
+
+            <div>
+              <label>MẬT KHẨU TẠM THỜI</label>
+              <div class="input">
+                <span>🔒</span>
+                <input type="password" value="12345678" />
+              </div>
+            </div>
+          </div>
+
+          <label>VAI TRÒ HỆ THỐNG</label>
+          <div class="roles">
+            <button class="selected">
+              <span>♙</span>
+              <strong>Admin</strong>
+            </button>
+
+            <button>
+              <span>☊</span>
+              <strong>Manager</strong>
+            </button>
+
+            <button>
+              <span>♙</span>
+              <strong>Staff</strong>
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="cancel">Hủy bỏ</button>
+          <button class="create">Tạo tài khoản</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

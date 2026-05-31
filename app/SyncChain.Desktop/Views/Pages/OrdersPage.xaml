@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.OrdersPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SyncChain.Desktop.Models"
+             NavigationPage.HasNavigationBar="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="64,30" Spacing="24">
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 PAGE HEADER
+                 "Quản lý Đơn hàng" in DisplayXlLabel + "Xuất báo cáo" PillPrimaryButton
+            ═══════════════════════════════════════════════════════════════ -->
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                <Label Text="Quản lý Đơn hàng" Style="{StaticResource DisplayXlLabel}" VerticalOptions="Center" />
+                <HorizontalStackLayout Grid.Column="1" Spacing="12" VerticalOptions="Center">
+                    <Button Text="+ TẠO ĐƠN HÀNG" Style="{StaticResource PillSecondaryButton}" Clicked="OnCreateOrderClicked" />
+                    <Button Text="XUẤT BÁO CÁO" Style="{StaticResource PillPrimaryButton}" />
+                </HorizontalStackLayout>
+            </Grid>
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 OPERATIONAL VELOCITY + SUMMARY STATISTICS
+                 Two GlassCardBorder containers side by side
+            ═══════════════════════════════════════════════════════════════ -->
+            <Grid ColumnDefinitions="1.4*,*" ColumnSpacing="24">
+
+                <!-- Operational Velocity Card -->
+                <Border Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="16">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Tốc độ vận hành" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
+                            <!-- Real-time badge -->
+                            <Border Grid.Column="1" BackgroundColor="{DynamicResource StatusEmerald}" StrokeThickness="0" Padding="12,6" HorizontalOptions="End">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <Label Text="⚡ THỜI GIAN THỰC" Style="{StaticResource StatusBadgePill}" TextColor="{DynamicResource Primary}" Padding="0" />
+                            </Border>
+                        </Grid>
+
+                        <!-- Large metric value -->
+                        <HorizontalStackLayout Spacing="16" VerticalOptions="Center">
+                            <Label Text="1,284" FontSize="42" FontAttributes="Bold" FontFamily="SourceSerif4"
+                                   TextColor="{DynamicResource OnSurface}" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                            <!-- Percentage change indicator -->
+                            <Border BackgroundColor="{DynamicResource StatusEmerald}" StrokeThickness="0" Padding="10,4" VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <Label Text="↑ 12.5%" FontSize="13" FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
+                            </Border>
+                        </HorizontalStackLayout>
+                        <Label Text="Tổng đơn hàng đã xử lý trong tháng" Style="{StaticResource BodyMdLabel}" />
+
+                        <!-- Throughput and Latency sub-metrics -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="24" Margin="0,8,0,0">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="THÔNG LƯỢNG" Style="{StaticResource LabelCapsLabel}" />
+                                <Label Text="342 đơn/ngày" Style="{StaticResource DataTabularLabel}" FontSize="16" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="ĐỘ TRỄ" Style="{StaticResource LabelCapsLabel}" />
+                                <Label Text="2.4 giờ" Style="{StaticResource DataTabularLabel}" FontSize="16" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Summary Statistics Card -->
+                <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="20">
+                        <Label Text="Tổng quan nhanh" Style="{StaticResource LabelCapsLabel}" />
+
+                        <!-- Đơn đang vận chuyển -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Đơn đang vận chuyển" Style="{StaticResource BodyMdLabel}" />
+                            <Label Text="156" Style="{StaticResource DataTabularLabel}" FontSize="28"
+                                   VerticalOptions="Center" LineBreakMode="NoWrap" />
+                            <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" Margin="0,4,0,0" />
+                        </VerticalStackLayout>
+
+                        <!-- Chờ duyệt -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Chờ duyệt" Style="{StaticResource BodyMdLabel}" />
+                            <Label Text="42" Style="{StaticResource DataTabularLabel}" FontSize="28"
+                                   VerticalOptions="Center" LineBreakMode="NoWrap" />
+                            <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" Margin="0,4,0,0" />
+                        </VerticalStackLayout>
+
+                        <!-- Thời gian giao trung bình -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Thời gian giao trung bình" Style="{StaticResource BodyMdLabel}" />
+                            <Label Text="3.2 ngày" Style="{StaticResource DataTabularLabel}" FontSize="28"
+                                   VerticalOptions="Center" LineBreakMode="NoWrap" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 ORDER TABLE
+                 GlassCardBorder with columns: "Mã đơn", "Điểm đến",
+                 "Sản phẩm", "Trạng thái", "Giá trị (VNĐ)"
+            ═══════════════════════════════════════════════════════════════ -->
+            <Border Style="{StaticResource GlassCardBorder}">
+                <VerticalStackLayout Spacing="16">
+                    <!-- Table title -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Danh sách đơn hàng" Style="{StaticResource DataTabularLabel}" FontSize="17" />
+                        <Button Grid.Column="1" Text="LỌC DỮ LIỆU" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
+                    </Grid>
+
+                    <!-- Table header -->
+                    <Grid ColumnDefinitions="1.2*,1.5*,1.5*,1.2*,1.2*,Auto" ColumnSpacing="12" Padding="8,0">
+                        <Label Text="Mã đơn" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="1" Text="Điểm đến" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="2" Text="Sản phẩm" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="3" Text="Trạng thái" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="4" Text="Giá trị (VNĐ)" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="5" Text="" WidthRequest="80" />
+                    </Grid>
+                    <!-- Separator -->
+                    <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+
+                    <!-- Order rows -->
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Orders}" Spacing="8">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:OrderItem">
+                                <Border BackgroundColor="Transparent" StrokeThickness="0" Padding="8,12">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12" />
+                                    </Border.StrokeShape>
+                                    <Grid ColumnDefinitions="1.2*,1.5*,1.5*,1.2*,1.2*,Auto" ColumnSpacing="12">
+                                        <!-- Mã đơn -->
+                                        <Label Text="{Binding Code}" Style="{StaticResource DataTabularLabel}"
+                                               TextColor="{DynamicResource Primary}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                        <!-- Điểm đến (Customer) -->
+                                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                            <Label Text="{Binding Customer}" Style="{StaticResource DataTabularLabel}" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Email}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" LineBreakMode="TailTruncation" />
+                                        </VerticalStackLayout>
+                                        <!-- Sản phẩm (CreatedAt used as product info) -->
+                                        <Label Grid.Column="2" Text="{Binding CreatedAt}" Style="{StaticResource DataTabularLabel}"
+                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                        <!-- Trạng thái - StatusBadgePill -->
+                                        <Border Grid.Column="3" BackgroundColor="{Binding StatusColor}" StrokeThickness="0"
+                                                Padding="12,4" HorizontalOptions="Start" VerticalOptions="Center">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="12" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Status}" Style="{StaticResource StatusBadgePill}" Padding="0" LineBreakMode="TailTruncation" />
+                                        </Border>
+                                        <!-- Giá trị (VNĐ) -->
+                                        <Label Grid.Column="4" Text="{Binding Total}" Style="{StaticResource DataTabularLabel}"
+                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                        <!-- Detail button -->
+                                        <Button Grid.Column="5" Text="CHI TIẾT" Style="{StaticResource PillSecondaryButton}"
+                                                Padding="14,8" Clicked="OnOpenDetailClicked" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <!-- Pagination -->
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+                        <Label Text="Hiển thị 1 – 5 trong số 1,284 đơn hàng" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                            <Button Text="TRƯỚC" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
+                            <Button Text="1" Style="{StaticResource PillPrimaryButton}" Padding="14,10" />
+                            <Button Text="2" Style="{StaticResource PillSecondaryButton}" Padding="14,10" />
+                            <Button Text="3" Style="{StaticResource PillSecondaryButton}" Padding="14,10" />
+                            <Button Text="TIẾP" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 CONTEXTUAL INSIGHT CARDS
+                 2-column grid with icon, title, description
+            ═══════════════════════════════════════════════════════════════ -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="24">
+                <!-- Insight Card 1: Performance Report -->
+                <Border Style="{StaticResource GlassCardBorder}">
+                    <HorizontalStackLayout Spacing="16">
+                        <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" WidthRequest="48" HeightRequest="48">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+                            <Label Text="📊" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20" />
+                        </Border>
+                        <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                            <Label Text="Báo cáo hiệu suất" Style="{StaticResource DataTabularLabel}" FontSize="15" LineBreakMode="TailTruncation" />
+                            <Label Text="Doanh thu tăng 24% so với cùng kỳ. Xem phân tích chi tiết để tối ưu chiến lược."
+                                   Style="{StaticResource BodyMdLabel}" FontSize="13" LineBreakMode="TailTruncation" MaxLines="2" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Insight Card 2: Optimization Tip -->
+                <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
+                    <HorizontalStackLayout Spacing="16">
+                        <Border BackgroundColor="{DynamicResource StatusAmber}" StrokeThickness="0" WidthRequest="48" HeightRequest="48">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+                            <Label Text="💡" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20" />
+                        </Border>
+                        <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                            <Label Text="Tối ưu hóa kho hàng" Style="{StaticResource DataTabularLabel}" FontSize="15" LineBreakMode="TailTruncation" />
+                            <Label Text="Đơn 'Đang xử lý' mất trung bình 4 giờ. Tự động hóa có thể giảm 60% thời gian."
+                                   Style="{StaticResource BodyMdLabel}" FontSize="13" LineBreakMode="TailTruncation" MaxLines="2" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+
