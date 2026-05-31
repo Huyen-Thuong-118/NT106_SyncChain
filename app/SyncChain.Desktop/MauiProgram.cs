@@ -4,6 +4,11 @@ namespace SyncChain.Desktop;
 
 public static class MauiProgram
 {
+	// ═══════════════════════════════════════════════════════
+	//  BACKEND BASE URL — đổi thành địa chỉ server thật
+	// ═══════════════════════════════════════════════════════
+	public const string ApiBaseUrl = "http://localhost:3000/";
+
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
@@ -20,6 +25,13 @@ public static class MauiProgram
 				fonts.AddFont("Inter-Bold.ttf", "Inter");
 				fonts.AddFont("MaterialSymbolsOutlined.ttf", "MaterialSymbols");
 			});
+
+		// Đăng ký HttpClient dùng chung cho toàn app
+		builder.Services.AddSingleton(sp =>
+		{
+			var client = new HttpClient { BaseAddress = new Uri(ApiBaseUrl) };
+			return client;
+		});
 
 #if DEBUG
 		builder.Logging.AddDebug();

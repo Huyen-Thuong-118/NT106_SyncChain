@@ -48,19 +48,19 @@
                 <Border Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="HOẠT ĐỘNG HÔM NAY" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="128" Style="{StaticResource DataTabularLabel}" FontSize="28" />
+                        <Label Text="{Binding TodayActivities}" Style="{StaticResource DataTabularLabel}" FontSize="28" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="THAY ĐỔI DỮ LIỆU" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="42" Style="{StaticResource DataTabularLabel}" FontSize="28" />
+                        <Label Text="THAY ĐỔI KHO HÀNG" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="{Binding DataChanges}" Style="{StaticResource DataTabularLabel}" FontSize="28" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="CẢNH BÁO" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="06" Style="{StaticResource DataTabularLabel}" FontSize="28" />
+                        <Label Text="{Binding Warnings}" Style="{StaticResource DataTabularLabel}" FontSize="28" />
                     </VerticalStackLayout>
                 </Border>
             </Grid>
@@ -128,7 +128,7 @@
 
                     <!-- Pagination -->
                     <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
-                        <Label Text="Hiển thị 1 – 5 trong số 2,481 hoạt động" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
+                        <Label Text="{Binding PaginationText}" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
                         <HorizontalStackLayout Grid.Column="1" Spacing="8">
                             <Button Text="TRƯỚC" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
                             <Button Text="1" Style="{StaticResource PillPrimaryButton}" Padding="14,10" />

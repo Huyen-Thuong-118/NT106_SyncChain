@@ -1,37 +1,109 @@
-# ---- Node ----
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# ---- Secrets / môi trường ----
-.env
-*.env.local
-
-# ---- .NET / Visual Studio build output ----
-[Bb]in/
-[Oo]bj/
+# Build results
 [Dd]ebug/
 [Rr]elease/
 x64/
 x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
 build/
 bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
 
-# ---- Visual Studio IDE ----
+# Visual Studio
 .vs/
-*.user
 *.suo
+*.user
 *.userosscache
 *.sln.docstates
 *.userprefs
 
-# ---- Rider / JetBrains ----
-.idea/
+# Build artifacts
+*.dll
+*.exe
+*.pdb
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
 
-# ---- VS Code ----
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+project.nuget.cache
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# VS Code
 .vscode/
 
-# ---- OS rác ----
-.DS_Store
+# OS generated files
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# User-specific files
+*.rsuser
+
+# Backup & temp
+*.bak
+*.tmp
+*.log
+*.cache
+*.swp
+*~
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+*.env.local
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

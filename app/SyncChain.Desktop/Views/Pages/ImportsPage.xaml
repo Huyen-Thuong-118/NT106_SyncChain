@@ -21,43 +21,43 @@
                  GlassCardBorder containers with DisplayXlLabel numeric values
             ═══════════════════════════════════════════════════════════════ -->
             <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="24">
-                <!-- Tổng kiện hàng -->
+                <!-- Tổng giao dịch -->
                 <Border Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="TỔNG KIỆN HÀNG" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="1,847" Style="{StaticResource DisplayXlLabel}" FontSize="36"
+                        <Label Text="TỔNG GIAO DỊCH" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="{Binding TotalImports}" Style="{StaticResource DisplayXlLabel}" FontSize="36"
                                VerticalOptions="Center" LineBreakMode="NoWrap" />
-                        <Label Text="Tổng số kiện đã nhập" Style="{StaticResource BodyMdLabel}" FontSize="13" />
+                        <Label Text="Tổng số giao dịch nhập kho" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Đang trên biển -->
+                <!-- Tổng số lượng -->
                 <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="ĐANG TRÊN BIỂN" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="342" Style="{StaticResource DisplayXlLabel}" FontSize="36"
+                        <Label Text="TỔNG SỐ LƯỢNG" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="{Binding TotalQuantity}" Style="{StaticResource DisplayXlLabel}" FontSize="36"
                                TextColor="{DynamicResource Primary}" VerticalOptions="Center" LineBreakMode="NoWrap" />
-                        <Label Text="Đang vận chuyển" Style="{StaticResource BodyMdLabel}" FontSize="13" />
+                        <Label Text="Sản phẩm đã nhập" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Đợi thông quan -->
+                <!-- Tổng tiền nhập -->
                 <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="ĐỢI THÔNG QUAN" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="56" Style="{StaticResource DisplayXlLabel}" FontSize="36"
+                        <Label Text="TỔNG TIỀN NHẬP" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="{Binding TotalAmount}" Style="{StaticResource DisplayXlLabel}" FontSize="36"
                                VerticalOptions="Center" LineBreakMode="NoWrap" />
-                        <Label Text="Chờ xử lý hải quan" Style="{StaticResource BodyMdLabel}" FontSize="13" />
+                        <Label Text="Giá trị nhập kho" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Hoàn tất nhập kho -->
+                <!-- Placeholder -->
                 <Border Grid.Column="3" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="HOÀN TẤT NHẬP KHO" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="1,449" Style="{StaticResource DisplayXlLabel}" FontSize="36"
+                        <Label Text="THỐNG KÊ" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="--" Style="{StaticResource DisplayXlLabel}" FontSize="36"
                                TextColor="{DynamicResource Primary}" VerticalOptions="Center" LineBreakMode="NoWrap" />
-                        <Label Text="Đã nhập kho thành công" Style="{StaticResource BodyMdLabel}" FontSize="13" />
+                        <Label Text="Đang cập nhật" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                     </VerticalStackLayout>
                 </Border>
             </Grid>
@@ -302,7 +302,7 @@
 
                     <!-- Pagination -->
                     <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
-                        <Label Text="Hiển thị 1 – 5 trong số 342 vận đơn" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
+                        <Label Text="{Binding PaginationText}" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
                         <HorizontalStackLayout Grid.Column="1" Spacing="8">
                             <Button Text="TRƯỚC" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
                             <Button Text="1" Style="{StaticResource PillPrimaryButton}" Padding="14,10" />
