@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS NguoiDung (
     MatKhauHash TEXT NOT NULL,
     Email TEXT UNIQUE NOT NULL,
     MaVaiTro INTEGER,
+    KichHoat BOOLEAN NOT NULL DEFAULT TRUE,  -- admin bật/tắt tài khoản
     NgayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (MaVaiTro) REFERENCES PhanQuyen(MaVaiTro)
 );
@@ -20,9 +21,12 @@ CREATE TABLE IF NOT EXISTS SanPham (
     MaSanPham SERIAL PRIMARY KEY,
     TenSanPham TEXT NOT NULL,
     GiaBan NUMERIC(15,2) NOT NULL,
+    GiaNhap NUMERIC(15,2) NOT NULL DEFAULT 0,
     SoLuongTon INTEGER NOT NULL CHECK (SoLuongTon >= 0),
     MucTonThap INTEGER DEFAULT 10,
-    TrangThai TEXT DEFAULT 'Hoat dong'
+    TrangThai TEXT DEFAULT 'Hoat dong',
+    HinhAnhUrl TEXT NOT NULL DEFAULT '',
+    MoTa TEXT NOT NULL DEFAULT ''
 );
 
 -- 4. Đơn Hàng Chính
@@ -52,7 +56,9 @@ CREATE TABLE IF NOT EXISTS ChiTietDonHang (
 CREATE TABLE IF NOT EXISTS DonNhapHang (
     MaDonNhap SERIAL PRIMARY KEY,
     MaNhaPhanPhoi INTEGER,
-    TrangThaiDuyet TEXT DEFAULT 'Cho duyet',
+    -- Trạng thái duyệt lấy từ statusEnum.js (GRN_STATUS) - nguồn chân lý duy nhất.
+    TrangThaiDuyet TEXT NOT NULL DEFAULT 'Draft'
+        CHECK (TrangThaiDuyet IN ('Draft', 'Approved', 'Done')),
     NgayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (MaNhaPhanPhoi) REFERENCES NguoiDung(MaNguoiDung)
 );
@@ -65,4 +71,18 @@ CREATE TABLE IF NOT EXISTS ChiTietDonNhap (
     SoLuongYeuCau INTEGER NOT NULL CHECK (SoLuongYeuCau > 0),
     FOREIGN KEY (MaDonNhap) REFERENCES DonNhapHang(MaDonNhap),
     FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham)
+);
+
+-- 8. Giao Dịch Kho (sổ nhập/xuất/điều chỉnh tồn kho)
+CREATE TABLE IF NOT EXISTS GiaoDichKho (
+    MaGiaoDich SERIAL PRIMARY KEY,
+    MaSanPham INTEGER NOT NULL,
+    -- Loại giao dịch lấy từ statusEnum.js (INVENTORY_TXN_TYPE).
+    Loai TEXT NOT NULL CHECK (Loai IN ('IN', 'OUT', 'ADJUST')),
+    SoLuong INTEGER NOT NULL,
+    ThoiGian TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    MaNguoiDung INTEGER,
+    GhiChu TEXT NOT NULL DEFAULT '',
+    FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham),
+    FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung)
 );
