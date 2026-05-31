@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.AccountSettingsPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             NavigationPage.HasNavigationBar="False">
+    <ScrollView Background="{StaticResource AppPageBackgroundBrush}">
+        <VerticalStackLayout Padding="30" Spacing="22">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <VerticalStackLayout>
+                    <Label Text="CÀI ĐẶT TÀI KHOẢN" Style="{StaticResource PageTitleLabel}" />
+                    <Label Text="Thông tin cá nhân và bảo mật của tài khoản đang đăng nhập." Style="{StaticResource CaptionLabel}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="Đăng xuất" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnLogoutClicked" />
+            </Grid>
+
+            <Grid ColumnDefinitions="0.85*,1.15*" ColumnSpacing="18">
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="18">
+                        <Label Text="Thông tin cá nhân" Style="{StaticResource SectionTitleLabel}" />
+
+                        <Border WidthRequest="96" HeightRequest="96" HorizontalOptions="Start" BackgroundColor="{StaticResource PrimaryColor}" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="48" />
+                            </Border.StrokeShape>
+                            <Label x:Name="AvatarLabel" Text="ND" TextColor="White" FontSize="28" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                        </Border>
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Tên hiển thị" Style="{StaticResource CaptionLabel}" />
+                            <Entry x:Name="DisplayNameEntry" Placeholder="Tên hiển thị" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Email / Username" Style="{StaticResource CaptionLabel}" />
+                            <Entry x:Name="EmailEntry" IsReadOnly="True" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Chức vụ" Style="{StaticResource CaptionLabel}" />
+                            <Label x:Name="RoleLabel" Text="-" FontAttributes="Bold" />
+                        </VerticalStackLayout>
+
+                        <Label x:Name="AvatarHintLabel" Text="Chưa có ảnh đại diện. Hệ thống đang hiển thị ký tự đại diện từ tên tài khoản." Style="{StaticResource CaptionLabel}" />
+                        <Button x:Name="SaveProfileButton" Text="Lưu thông tin" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnSaveProfileClicked" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="Tài khoản" Style="{StaticResource SectionTitleLabel}" />
+                        <Label Text="Đổi mật khẩu định kỳ để giữ an toàn cho tài khoản." Style="{StaticResource CaptionLabel}" />
+
+                        <Entry x:Name="CurrentPasswordEntry" Placeholder="Mật khẩu hiện tại" IsPassword="True" />
+                        <Entry x:Name="NewPasswordEntry" Placeholder="Mật khẩu mới" IsPassword="True" />
+                        <Entry x:Name="ConfirmPasswordEntry" Placeholder="Nhập lại mật khẩu mới" IsPassword="True" />
+
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Button x:Name="ChangePasswordButton" Text="Đổi mật khẩu" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnChangePasswordClicked" />
+                            <Button Grid.Column="1" Text="Đăng xuất" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnLogoutClicked" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

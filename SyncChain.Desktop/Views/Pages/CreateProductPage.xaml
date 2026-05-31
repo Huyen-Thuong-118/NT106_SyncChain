@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.CreateProductPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             NavigationPage.HasNavigationBar="False">
+    <ScrollView Background="{StaticResource AppPageBackgroundBrush}">
+        <VerticalStackLayout Padding="30" Spacing="22">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                <Button Text="Quay lại sản phẩm" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBackClicked" />
+                <VerticalStackLayout Grid.Column="1">
+                    <Label Text="THÊM SẢN PHẨM" Style="{StaticResource PageTitleLabel}" />
+                    <Label Text="Tạo sản phẩm mới với hình ảnh, giá bán, tồn kho và mô tả." Style="{StaticResource CaptionLabel}" />
+                </VerticalStackLayout>
+                <Button x:Name="SaveButton"
+                        Grid.Column="2"
+                        Text="Tạo sản phẩm"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Clicked="OnSaveClicked" />
+            </Grid>
+
+            <Grid ColumnDefinitions="0.9*,1.1*" ColumnSpacing="18">
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="16">
+                        <Grid HeightRequest="320">
+                            <Border BackgroundColor="#E8EDF4" StrokeThickness="0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="18" />
+                                </Border.StrokeShape>
+                                <Grid>
+                                    <Image x:Name="PreviewImage"
+                                           Aspect="AspectFill"
+                                           HorizontalOptions="Fill"
+                                           VerticalOptions="Fill" />
+                                    <Label x:Name="PreviewLabel"
+                                           Text="Ảnh sản phẩm"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           TextColor="{StaticResource MutedColor}" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Entry x:Name="ImageEntry" Placeholder="URL/đường dẫn hình ảnh" />
+                            <Button Grid.Column="1"
+                                    Text="Chọn ảnh"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Clicked="OnPickImageClicked" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Thông tin sản phẩm" Style="{StaticResource SectionTitleLabel}" />
+                        <Entry x:Name="NameEntry" Placeholder="Tên sản phẩm" />
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                            <Entry x:Name="PriceEntry" Placeholder="Giá bán" Keyboard="Numeric" />
+                            <Entry x:Name="ImportPriceEntry" Grid.Column="1" Placeholder="Giá nhập" Keyboard="Numeric" />
+                            <Entry x:Name="StockEntry" Grid.Column="2" Placeholder="Tồn kho" Keyboard="Numeric" />
+                        </Grid>
+                        <Editor x:Name="DescriptionEditor"
+                                Placeholder="Mô tả sản phẩm"
+                                HeightRequest="150"
+                                AutoSize="TextChanges" />
+                        <Label Text="Nếu tồn kho bằng 0, sản phẩm sẽ ở trạng thái Ngừng bán." Style="{StaticResource CaptionLabel}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

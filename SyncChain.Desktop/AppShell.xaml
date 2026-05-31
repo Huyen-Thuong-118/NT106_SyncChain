@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="SyncChain.Desktop.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:SyncChain.Desktop.Views.Pages"
+    FlyoutBackgroundColor="{StaticResource SidebarColor}"
+    FlyoutBehavior="Flyout"
+    Shell.BackgroundColor="{StaticResource SidebarColor}"
+    Shell.ForegroundColor="White"
+    Shell.TitleColor="White"
+    Shell.UnselectedColor="{StaticResource SidebarMutedColor}">
+
+    <Shell.ItemTemplate>
+    <DataTemplate>
+        <Grid Padding="24,14">
+            <Label Text="{Binding Title}"
+                   TextColor="White"
+                   FontSize="14" />
+        </Grid>
+    </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <Shell.FlyoutHeader>
+        <Grid Padding="22,26,22,18">
+            <VerticalStackLayout Spacing="4">
+                <Label Text="SyncChain" TextColor="White" FontSize="22" FontAttributes="Bold" />
+                <Label Text="KHÔNG GIAN CHUỖI CUNG ỨNG" TextColor="{StaticResource SidebarMutedColor}" FontSize="10" CharacterSpacing="1.8" />
+            </VerticalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <Shell.FlyoutFooter>
+        <Grid Padding="16,12,16,18">
+            <Border BackgroundColor="#1E293B" StrokeThickness="0" Padding="12">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnAccountFooterTapped" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="44,*" ColumnSpacing="10">
+                    <Border WidthRequest="42" HeightRequest="42" BackgroundColor="{StaticResource PrimaryColor}" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="21" />
+                        </Border.StrokeShape>
+                        <Label x:Name="AvatarLabel" Text="ND" TextColor="White" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                        <Label x:Name="DisplayNameLabel" Text="Người dùng" TextColor="White" FontAttributes="Bold" FontSize="13" LineBreakMode="TailTruncation" />
+                        <Label x:Name="FooterRoleLabel" Text="Role" TextColor="{StaticResource SidebarMutedColor}" FontSize="11" LineBreakMode="TailTruncation" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+        </Grid>
+    </Shell.FlyoutFooter>
+
+    <FlyoutItem x:Name="DashboardItem" Title="Bảng điều khiển" Route="dashboard">
+        <ShellContent ContentTemplate="{DataTemplate pages:DashboardPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="ProductsItem" Title="Sản phẩm" Route="products">
+        <ShellContent ContentTemplate="{DataTemplate pages:ProductsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="OrdersItem" Title="Đơn hàng" Route="orders">
+        <ShellContent ContentTemplate="{DataTemplate pages:OrdersPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="CreateOrderItem" Title="Tạo đơn hàng" Route="create-order">
+        <ShellContent ContentTemplate="{DataTemplate pages:CreateOrderPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="ImportsItem" Title="Nhập hàng" Route="imports">
+        <ShellContent ContentTemplate="{DataTemplate pages:ImportsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="LogsItem" Title="Nhật ký" Route="logs">
+        <ShellContent ContentTemplate="{DataTemplate pages:LogsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="ChatItem" Title="Tin nhắn" Route="chat">
+        <ShellContent ContentTemplate="{DataTemplate pages:ChatPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="AccessItem" Title="Người dùng và phân quyền" Route="access">
+        <ShellContent ContentTemplate="{DataTemplate pages:UserAccessPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="AccountSettingsItem" Title="Cài đặt tài khoản" Route="account-settings">
+        <ShellContent ContentTemplate="{DataTemplate pages:AccountSettingsPage}" />
+    </FlyoutItem>
+</Shell>
