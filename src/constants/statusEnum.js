@@ -1,19 +1,23 @@
 // src/constants/statusEnum.js
 
+// Vòng đời đơn hàng theo luồng COD (thanh toán khi nhận hàng):
+// Đặt hàng -> Đại lý xử lý/xác nhận -> Vận chuyển -> Giao tới -> Khách xác nhận
 const ORDER_STATUS = {
-  DRAFT:      'Draft',
-  APPROVED:   'Approved',
-  PROCESSING: 'Processing',
-  DONE:       'Done',
-  CANCELLED:  'Cancelled',
+  DA_DAT_HANG:     'Da dat hang',     // khách vừa đặt, tồn kho đã được khóa
+  DANG_XU_LY:      'Dang xu ly',      // đại lý xác nhận, chuẩn bị hàng
+  DANG_VAN_CHUYEN: 'Dang van chuyen', // đã xuất mã vận đơn, giao cho đơn vị vận chuyển
+  DA_GIAO:         'Da giao',         // đơn vị vận chuyển giao tới khách
+  HOAN_TAT:        'Hoan tat',        // khách xác nhận nhận hàng & thu tiền COD
+  DA_HUY:          'Da huy',
 };
 
 const ORDER_STATUS_TRANSITIONS = {
-  Draft:      ['Approved', 'Cancelled'],
-  Approved:   ['Processing', 'Cancelled'],
-  Processing: ['Done', 'Cancelled'],
-  Done:       [],
-  Cancelled:  [],
+  'Da dat hang':     ['Dang xu ly', 'Da huy'],
+  'Dang xu ly':      ['Dang van chuyen', 'Da huy'],
+  'Dang van chuyen': ['Da giao'],
+  'Da giao':         ['Hoan tat'],
+  'Hoan tat':        [],
+  'Da huy':          [],
 };
 
 const GRN_STATUS = {

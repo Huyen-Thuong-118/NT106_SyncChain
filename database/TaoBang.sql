@@ -11,6 +11,9 @@ CREATE TABLE IF NOT EXISTS NguoiDung (
     MatKhauHash TEXT NOT NULL,
     Email TEXT UNIQUE NOT NULL,
     MaVaiTro INTEGER,
+    DaXacThucEmail BOOLEAN DEFAULT FALSE,
+    MaXacThuc TEXT,
+    LanDangNhapCuoi TIMESTAMP,
     NgayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (MaVaiTro) REFERENCES PhanQuyen(MaVaiTro)
 );
@@ -31,7 +34,14 @@ CREATE TABLE IF NOT EXISTS DonHang (
     MaKhachHang INTEGER,
     TongTien NUMERIC(15,2) NOT NULL,
     TrangThaiDon TEXT DEFAULT 'Da dat hang',
+    PhuongThucThanhToan TEXT DEFAULT 'COD',
+    NguoiNhan TEXT,
+    SoDienThoaiNhan TEXT,
+    DiaChiGiao TEXT,
+    MaVanDon TEXT,
+    DonViVanChuyen TEXT,
     NgayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    NgayCapNhat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (MaKhachHang) REFERENCES NguoiDung(MaNguoiDung)
 );
 
@@ -64,3 +74,30 @@ CREATE TABLE IF NOT EXISTS ChiTietDonNhap (
     FOREIGN KEY (MaDonNhap) REFERENCES DonNhapHang(MaDonNhap),
     FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham)
 );
+
+-- 8. Lịch Sử Hoạt Động (đăng nhập / thao tác hệ thống)
+CREATE TABLE IF NOT EXISTS LichSuHoatDong (
+    MaLichSu SERIAL PRIMARY KEY,
+    MaNguoiDung INTEGER,
+    HanhDong TEXT NOT NULL,
+    MoTa TEXT,
+    DiaChiIP TEXT,
+    ThoiGian TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung)
+);
+
+-- ============================================================
+-- MIGRATION: thêm cột mới cho DB đã tồn tại từ trước.
+-- ADD COLUMN IF NOT EXISTS nên an toàn chạy lại nhiều lần (idempotent).
+-- ============================================================
+ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS DaXacThucEmail BOOLEAN DEFAULT FALSE;
+ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS MaXacThuc TEXT;
+ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS LanDangNhapCuoi TIMESTAMP;
+
+ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS PhuongThucThanhToan TEXT DEFAULT 'COD';
+ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS NguoiNhan TEXT;
+ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS SoDienThoaiNhan TEXT;
+ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS DiaChiGiao TEXT;
+ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS MaVanDon TEXT;
+ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS DonViVanChuyen TEXT;
+ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS NgayCapNhat TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
