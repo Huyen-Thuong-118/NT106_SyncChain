@@ -5,6 +5,7 @@ x64/
 x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
+build/
 bld/
 [Bb]in/
 [Oo]bj/
@@ -28,7 +29,6 @@ bld/
 *.obj
 *.iobj
 *.pch
-*.pdb
 *.ipdb
 *.pgc
 *.pgd
@@ -76,6 +76,9 @@ _ReSharper*/
 .idea/
 *.sln.iml
 
+# VS Code
+.vscode/
+
 # OS generated files
 Thumbs.db
 ehthumbs.db
@@ -84,10 +87,6 @@ Desktop.ini
 
 # User-specific files
 *.rsuser
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
 
 # Backup & temp
 *.bak
@@ -101,6 +100,10 @@ Desktop.ini
 .env
 .env.local
 .env.*.local
+*.env.local
 
-# Node (if any frontend)
+# Node
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
