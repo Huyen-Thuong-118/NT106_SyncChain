@@ -45,7 +45,7 @@
    │   │   ├── routes/         # Định nghĩa các endpoint
    │   │   ├── models/         # Định nghĩa Schema/Query
    │   │   └── server.js
-   │   ├── database/           # Chứa file .db và các file Migration/Seed
+   │   ├── database/           # Schema PostgreSQL (TaoBang.sql) và các file Migration/Seed
    │   └── package.json
    ├── client/                 # Tạo mới - Project C# WinForms
    │   ├── RetailOps.sln

@@ -1,205 +1,153 @@
 const fs = require('fs');
-const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const { pool } = require('./db');
 
-const DB_FILE = './database/SyncChain.db';
-const SQL_SCHEMA_FILE = './TaoBang.sql';
+const SQL_SCHEMA_FILE = path.resolve(__dirname, '../database/TaoBang.sql');
 
-const db = new sqlite3.Database(DB_FILE, (err) => {
-  if (err) {
-    console.error('Lỗi kết nối SQLite:', err.message);
-    process.exit(1);
-  }
-  console.log('✅ Đã kết nối SQLite:', DB_FILE);
-  initDatabase();
-});
-
-function initDatabase() {
+async function initDatabase() {
   const sql = fs.readFileSync(SQL_SCHEMA_FILE, 'utf8');
-  db.exec(sql, (err) => {
-    if (err) {
-      console.error('Lỗi khởi tạo cấu trúc DB:', err.message);
-      process.exit(1);
-    }
-    console.log('✅ Đã khởi tạo bảng (nếu chưa có).');
-  });
+  await pool.query(sql);
+  console.log('✅ Đã khởi tạo bảng (nếu chưa có).');
 }
 
 /**
  * Hàm mẫu "Khách đặt hàng" (transaction bảo toàn).
  */
-function datDonHang(maKhachHang, maSanPham, soLuong) {
-  return new Promise((resolve, reject) => {
-    db.serialize(() => {
-      db.run('BEGIN TRANSACTION');
+async function datDonHang(maKhachHang, maSanPham, soLuong) {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
 
-      db.get(
-        'SELECT SoLuongTon, GiaBan FROM SanPham WHERE MaSanPham = ?',
-        [maSanPham],
-        (err, row) => {
-          if (err) {
-            db.run('ROLLBACK');
-            return reject(err);
-          }
-          if (!row) {
-            db.run('ROLLBACK');
-            return reject(new Error('Sản phẩm không tồn tại.'));
-          }
-          if (row.SoLuongTon < soLuong) {
-            db.run('ROLLBACK');
-            return reject(new Error('Tồn kho không đủ.'));
-          }
+    const { rows } = await client.query(
+      'SELECT SoLuongTon, GiaBan FROM SanPham WHERE MaSanPham = $1',
+      [maSanPham]
+    );
+    const row = rows[0];
+    if (!row) {
+      throw new Error('Sản phẩm không tồn tại.');
+    }
+    if (row.soluongton < soLuong) {
+      throw new Error('Tồn kho không đủ.');
+    }
 
-          const donGia = row.GiaBan;
-          const tongTien = donGia * soLuong;
+    const donGia = row.giaban;
+    const tongTien = donGia * soLuong;
 
-          // Giảm tồn kho
-          db.run(
-            'UPDATE SanPham SET SoLuongTon = SoLuongTon - ? WHERE MaSanPham = ?',
-            [soLuong, maSanPham],
-            function (err) {
-              if (err) {
-                db.run('ROLLBACK');
-                return reject(err);
-              }
+    // Giảm tồn kho
+    await client.query(
+      'UPDATE SanPham SET SoLuongTon = SoLuongTon - $1 WHERE MaSanPham = $2',
+      [soLuong, maSanPham]
+    );
 
-              // Tạo đơn hàng
-              db.run(
-                'INSERT INTO DonHang (MaKhachHang, TongTien, TrangThaiDon) VALUES (?, ?, ?)',
-                [maKhachHang, tongTien, 'DaDat'],
-                function (err) {
-                  if (err) {
-                    db.run('ROLLBACK');
-                    return reject(err);
-                  }
+    // Tạo đơn hàng (RETURNING để lấy ID vừa tạo thay cho this.lastID)
+    const insertDon = await client.query(
+      'INSERT INTO DonHang (MaKhachHang, TongTien, TrangThaiDon) VALUES ($1, $2, $3) RETURNING MaDonHang',
+      [maKhachHang, tongTien, 'DaDat']
+    );
+    const maDonHang = insertDon.rows[0].madonhang;
 
-                  const maDonHang = this.lastID;
-                  db.run(
-                    'INSERT INTO ChiTietDonHang (MaDonHang, MaSanPham, SoLuong, DonGia) VALUES (?, ?, ?, ?)',
-                    [maDonHang, maSanPham, soLuong, donGia],
-                    function (err) {
-                      if (err) {
-                        db.run('ROLLBACK');
-                        return reject(err);
-                      }
+    await client.query(
+      'INSERT INTO ChiTietDonHang (MaDonHang, MaSanPham, SoLuong, DonGia) VALUES ($1, $2, $3, $4)',
+      [maDonHang, maSanPham, soLuong, donGia]
+    );
 
-                      db.run('COMMIT', (err) => {
-                        if (err) {
-                          db.run('ROLLBACK');
-                          return reject(err);
-                        }
-                        resolve({ maDonHang, tongTien });
-                      });
-                    }
-                  );
-                }
-              );
-            }
-          );
-        }
-      );
-    });
-  });
+    await client.query('COMMIT');
+    return { maDonHang, tongTien };
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
 }
 
 // Example test (uncomment để chạy trực tiếp)
 // datDonHang(1, 1, 2).then(console.log).catch(console.error);
 
-module.exports = { db, datDonHang };
+module.exports = { pool, datDonHang };
 
 // ==========================================
 // CÁC HÀM XỬ LÝ LOGIC CHO APP SYNCCHAIN
 // ==========================================
 
 // 1. Hàm Thêm Sản Phẩm (Mô phỏng Nhà phân phối nhập hàng mới lên app)
-function themSanPham(ten, gia, soLuong) {
-    const sql = `INSERT INTO SanPham (TenSanPham, GiaBan, SoLuongTon) VALUES (?, ?, ?)`;
-    
-    // Dùng dấu ? để chống lỗi bảo mật SQL Injection
-    db.run(sql, [ten, gia, soLuong], function(err) {
-        if (err) {
-            console.error("❌ Lỗi khi thêm sản phẩm:", err.message);
-            return;
-        }
-        console.log(`✅ Đã thêm sản phẩm: [${ten}] - Mã SP: ${this.lastID} - Tồn kho: ${soLuong}`);
-    });
+async function themSanPham(ten, gia, soLuong) {
+  // Dùng $1, $2... để chống lỗi bảo mật SQL Injection
+  const sql = `INSERT INTO SanPham (TenSanPham, GiaBan, SoLuongTon) VALUES ($1, $2, $3) RETURNING MaSanPham`;
+  try {
+    const result = await pool.query(sql, [ten, gia, soLuong]);
+    const maSP = result.rows[0].masanpham;
+    console.log(`✅ Đã thêm sản phẩm: [${ten}] - Mã SP: ${maSP} - Tồn kho: ${soLuong}`);
+    return maSP;
+  } catch (err) {
+    console.error('❌ Lỗi khi thêm sản phẩm:', err.message);
+  }
 }
 
 // 2. Hàm Đặt Hàng An Toàn (Mô phỏng Khách hàng bấm mua)
 // Hàm này dùng TRANSACTION để đảm bảo không bị lỗi "bán lố hàng" khi nhiều người mua cùng lúc
-function datHang(maKhachHang, maSanPham, soLuongMua, donGia) {
-    console.log(`\n⏳ Đang xử lý đơn hàng cho Khách ID ${maKhachHang} mua SP ID ${maSanPham}...`);
-    
-    db.serialize(() => {
-        db.run("BEGIN TRANSACTION;"); // Bắt đầu khóa giao dịch
+async function datHang(maKhachHang, maSanPham, soLuongMua, donGia) {
+  console.log(`\n⏳ Đang xử lý đơn hàng cho Khách ID ${maKhachHang} mua SP ID ${maSanPham}...`);
 
-        // Bước 1: Trừ tồn kho (Chỉ trừ nếu số lượng tồn >= số lượng mua)
-        const sqlUpdateTonKho = `UPDATE SanPham SET SoLuongTon = SoLuongTon - ? WHERE MaSanPham = ? AND SoLuongTon >= ?`;
-        
-        db.run(sqlUpdateTonKho, [soLuongMua, maSanPham, soLuongMua], function(err) {
-            if (err) {
-                console.log("❌ Lỗi hệ thống:", err.message);
-                db.run("ROLLBACK;"); // Hủy bỏ toàn bộ thao tác
-                return;
-            }
-            
-            // Nếu không có dòng nào được cập nhật nghĩa là kho không đủ hàng
-            if (this.changes === 0) {
-                console.log("⚠️ Thất bại: Kho không đủ hàng hoặc sản phẩm không tồn tại!");
-                db.run("ROLLBACK;"); 
-                return;
-            }
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN'); // Bắt đầu khóa giao dịch
 
-            // Bước 2: Tạo Đơn hàng chính
-            let tongTien = soLuongMua * donGia;
-            const sqlInsertDonHang = `INSERT INTO DonHang (MaKhachHang, TongTien, TrangThaiDon) VALUES (?, ?, 'Da dat hang')`;
-            
-            db.run(sqlInsertDonHang, [maKhachHang, tongTien], function(err) {
-                if (err) {
-                    console.log("❌ Lỗi tạo đơn hàng:", err.message);
-                    db.run("ROLLBACK;");
-                    return;
-                }
-                
-                let maDonHangMoi = this.lastID; // Lấy ID của đơn hàng vừa tạo
+    // Bước 1: Trừ tồn kho (Chỉ trừ nếu số lượng tồn >= số lượng mua)
+    const sqlUpdateTonKho = `UPDATE SanPham SET SoLuongTon = SoLuongTon - $1 WHERE MaSanPham = $2 AND SoLuongTon >= $3`;
+    const updateResult = await client.query(sqlUpdateTonKho, [soLuongMua, maSanPham, soLuongMua]);
 
-                // Bước 3: Lưu Chi tiết đơn hàng
-                const sqlInsertChiTiet = `INSERT INTO ChiTietDonHang (MaDonHang, MaSanPham, SoLuong, DonGia) VALUES (?, ?, ?, ?)`;
-                
-                db.run(sqlInsertChiTiet, [maDonHangMoi, maSanPham, soLuongMua, donGia], function(err) {
-                    if (err) {
-                        console.log("❌ Lỗi tạo chi tiết đơn:", err.message);
-                        db.run("ROLLBACK;");
-                        return;
-                    }
-                    
-                    // Bước 4: Chốt giao dịch thành công
-                    db.run("COMMIT;");
-                    console.log(`🎉 THÀNH CÔNG: Đã chốt đơn hàng #${maDonHangMoi}. Tồn kho đã được trừ an toàn!`);
-                });
-            });
-        });
-    });
+    // Nếu không có dòng nào được cập nhật nghĩa là kho không đủ hàng
+    if (updateResult.rowCount === 0) {
+      console.log('⚠️ Thất bại: Kho không đủ hàng hoặc sản phẩm không tồn tại!');
+      await client.query('ROLLBACK');
+      return;
+    }
+
+    // Bước 2: Tạo Đơn hàng chính
+    const tongTien = soLuongMua * donGia;
+    const sqlInsertDonHang = `INSERT INTO DonHang (MaKhachHang, TongTien, TrangThaiDon) VALUES ($1, $2, 'Da dat hang') RETURNING MaDonHang`;
+    const insertDon = await client.query(sqlInsertDonHang, [maKhachHang, tongTien]);
+    const maDonHangMoi = insertDon.rows[0].madonhang; // Lấy ID của đơn hàng vừa tạo
+
+    // Bước 3: Lưu Chi tiết đơn hàng
+    const sqlInsertChiTiet = `INSERT INTO ChiTietDonHang (MaDonHang, MaSanPham, SoLuong, DonGia) VALUES ($1, $2, $3, $4)`;
+    await client.query(sqlInsertChiTiet, [maDonHangMoi, maSanPham, soLuongMua, donGia]);
+
+    // Bước 4: Chốt giao dịch thành công
+    await client.query('COMMIT');
+    console.log(`🎉 THÀNH CÔNG: Đã chốt đơn hàng #${maDonHangMoi}. Tồn kho đã được trừ an toàn!`);
+  } catch (err) {
+    console.log('❌ Lỗi hệ thống:', err.message);
+    await client.query('ROLLBACK'); // Hủy bỏ toàn bộ thao tác
+  } finally {
+    client.release();
+  }
 }
 
 // ==========================================
 // KHU VỰC CHẠY THỬ NGHIỆM (TESTING)
 // ==========================================
 
-// Đặt trong setTimeout để đảm bảo database kết nối xong mới chạy lệnh
-setTimeout(() => {
-    // Thử thêm 1 sản phẩm vào kho (Giá 500k, Tồn kho 10 cái)
-    themSanPham("Bàn phím cơ Logitech", 500000, 10);
+async function chayThuNghiem() {
+  await initDatabase();
 
-    // Chờ 1 giây sau đó cho khách hàng nhảy vào mua 2 cái
-    setTimeout(() => {
-        // Khách hàng ID: 1, mua Sản phẩm ID: 1, số lượng: 2 cái, giá: 500000
-        datHang(1, 1, 2, 500000);
-        
-        // Cố tình cho một khách khác đặt lố 100 cái để xem hệ thống có chặn lại không nhé
-        setTimeout(() => {
-            datHang(2, 1, 100, 500000); 
-        }, 500);
+  // Thử thêm 1 sản phẩm vào kho (Giá 500k, Tồn kho 10 cái)
+  await themSanPham('Bàn phím cơ Logitech', 500000, 10);
 
-    }, 1000);
-    
-}, 1000);
+  // Khách hàng ID: 1, mua Sản phẩm ID: 1, số lượng: 2 cái, giá: 500000
+  await datHang(1, 1, 2, 500000);
+
+  // Cố tình cho một khách khác đặt lố 100 cái để xem hệ thống có chặn lại không nhé
+  await datHang(2, 1, 100, 500000);
+
+  await pool.end();
+}
+
+// Chỉ chạy thử nghiệm khi gọi trực tiếp `node src/index.js`
+if (require.main === module) {
+  chayThuNghiem().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

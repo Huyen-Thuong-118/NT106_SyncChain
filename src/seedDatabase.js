@@ -1,74 +1,79 @@
 // src/seedDatabase.js
-const admin = require('firebase-admin');
-const serviceAccount = require('../serviceAccountKey.json');
+// Nạp dữ liệu mẫu vào PostgreSQL, khớp với schema trong database/TaoBang.sql.
+// Chạy: node src/seedDatabase.js
+const fs = require('fs');
+const path = require('path');
+const { pool } = require('./db');
 
-admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-const db = admin.firestore();
+const SQL_SCHEMA_FILE = path.resolve(__dirname, '../database/TaoBang.sql');
 
 async function seed() {
-  console.log('Bắt đầu seed dữ liệu...');
+  const client = await pool.connect();
+  try {
+    console.log('Bắt đầu seed dữ liệu PostgreSQL...');
 
-  // --- Users ---
-  const users = {
-    'user-admin-001': { uid: 'user-admin-001', email: 'admin@syncchain.vn', displayName: 'Admin Hệ thống', role: 'admin', isActive: true, createdAt: admin.firestore.FieldValue.serverTimestamp() },
-    'user-staff-001': { uid: 'user-staff-001', email: 'staff@syncchain.vn', displayName: 'Nhân viên Kho', role: 'warehouse_staff', isActive: true, createdAt: admin.firestore.FieldValue.serverTimestamp() },
-    'user-sup-001':   { uid: 'user-sup-001',   email: 'supplier@abc.com',  displayName: 'NCC Công ty ABC',  role: 'supplier', isActive: true, createdAt: admin.firestore.FieldValue.serverTimestamp() },
-    'user-cus-001':   { uid: 'user-cus-001',   email: 'customer@gmail.com', displayName: 'Khách Nguyễn Văn A', role: 'customer', isActive: true, createdAt: admin.firestore.FieldValue.serverTimestamp() },
-  };
-  for (const [id, data] of Object.entries(users)) {
-    await db.collection('users').doc(id).set(data);
+    // Đảm bảo các bảng đã tồn tại
+    const schema = fs.readFileSync(SQL_SCHEMA_FILE, 'utf8');
+    await client.query(schema);
+
+    await client.query('BEGIN');
+
+    // --- Vai trò (PhanQuyen) ---
+    // ON CONFLICT để chạy lại nhiều lần không bị lỗi trùng (idempotent).
+    const vaiTro = ['Admin', 'NhanVienKho', 'NhaPhanPhoi', 'KhachHang'];
+    for (const ten of vaiTro) {
+      await client.query(
+        'INSERT INTO PhanQuyen (TenVaiTro) VALUES ($1) ON CONFLICT (TenVaiTro) DO NOTHING',
+        [ten]
+      );
+    }
+
+    // --- Người dùng (NguoiDung) ---
+    // MatKhauHash ở đây chỉ là chuỗi giả lập cho dữ liệu mẫu.
+    const nguoiDung = [
+      ['admin',    'hash_admin',    'admin@syncchain.vn',    'Admin'],
+      ['nvkho01',  'hash_nvkho',    'kho@syncchain.vn',      'NhanVienKho'],
+      ['nppabc',   'hash_npp',      'supplier@abc.com',      'NhaPhanPhoi'],
+      ['khachA',   'hash_khach',    'customer@gmail.com',    'KhachHang'],
+    ];
+    for (const [tenDangNhap, matKhauHash, email, tenVaiTro] of nguoiDung) {
+      await client.query(
+        `INSERT INTO NguoiDung (TenDangNhap, MatKhauHash, Email, MaVaiTro)
+         VALUES ($1, $2, $3, (SELECT MaVaiTro FROM PhanQuyen WHERE TenVaiTro = $4))
+         ON CONFLICT (TenDangNhap) DO NOTHING`,
+        [tenDangNhap, matKhauHash, email, tenVaiTro]
+      );
+    }
+
+    // --- Sản phẩm (SanPham) ---
+    // TenSanPham không có ràng buộc UNIQUE nên chỉ seed khi bảng còn rỗng,
+    // tránh nhân đôi dữ liệu khi chạy lại script.
+    const { rows: spCount } = await client.query('SELECT COUNT(*)::int AS n FROM SanPham');
+    if (spCount[0].n === 0) {
+      const sanPham = [
+        ['Samsung Galaxy S24',     20000000, 100, 10],
+        ['Bàn phím cơ Logitech',     500000,  50, 10],
+        ['Chuột không dây',          300000,   8, 10], // dưới mức tồn thấp để test cảnh báo
+      ];
+      for (const [ten, gia, ton, mucThap] of sanPham) {
+        await client.query(
+          `INSERT INTO SanPham (TenSanPham, GiaBan, SoLuongTon, MucTonThap)
+           VALUES ($1, $2, $3, $4)`,
+          [ten, gia, ton, mucThap]
+        );
+      }
+    }
+
+    await client.query('COMMIT');
+    console.log('Seed hoàn tất!');
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Lỗi khi seed:', err.message);
+    process.exitCode = 1;
+  } finally {
+    client.release();
+    await pool.end();
   }
-
-  // --- Categories & Brands ---
-  await db.collection('categories').doc('cat-001').set({ name: 'Điện thoại', description: 'Thiết bị di động', createdAt: admin.firestore.FieldValue.serverTimestamp() });
-  await db.collection('brands').doc('brand-001').set({ name: 'Samsung', categoryId: 'cat-001', createdAt: admin.firestore.FieldValue.serverTimestamp() });
-
-  // --- Suppliers ---
-  await db.collection('suppliers').doc('sup-001').set({ name: 'Công ty ABC Electronics', contactEmail: 'supplier@abc.com', phone: '0901234567', address: 'Q1, TP.HCM', isActive: true });
-
-  // --- Warehouses ---
-  await db.collection('warehouses').doc('wh-001').set({ name: 'Kho chính HCM', address: 'Q7, TP.HCM', bins: ['A1', 'A2', 'B1', 'B2'] });
-
-  // --- SKUs ---
-  await db.collection('skus').doc('sku-001').set({
-    code: 'SKU-001', name: 'Samsung Galaxy S24', categoryId: 'cat-001', brandId: 'brand-001',
-    supplierId: 'sup-001', unit: 'chiếc', price: 20000000, stockQty: 100,
-    lowStockThreshold: 10, warehouseId: 'wh-001', binLocation: 'A1', isActive: true,
-    createdAt: admin.firestore.FieldValue.serverTimestamp()
-  });
-
-  // --- Purchase Orders (PO) — đủ các trạng thái ---
-  const poStatuses = ['Draft', 'Approved', 'Processing', 'Done', 'Cancelled'];
-  for (let i = 0; i < poStatuses.length; i++) {
-    await db.collection('purchaseOrders').doc(`po-00${i+1}`).set({
-      poCode: `PO-2024-00${i+1}`, supplierId: 'sup-001', warehouseId: 'wh-001',
-      status: poStatuses[i],
-      items: [{ skuId: 'sku-001', qty: 50, unitPrice: 18000000 }],
-      totalAmount: 900000000,
-      createdBy: 'user-admin-001', approvedBy: i >= 1 ? 'user-admin-001' : null,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      note: `Đơn mẫu trạng thái ${poStatuses[i]}`
-    });
-  }
-
-  // --- Sales Orders (SO) ---
-  const soStatuses = ['Draft', 'Approved', 'Processing', 'Done', 'Cancelled'];
-  for (let i = 0; i < soStatuses.length; i++) {
-    await db.collection('salesOrders').doc(`so-00${i+1}`).set({
-      soCode: `SO-2024-00${i+1}`, customerId: 'user-cus-001',
-      status: soStatuses[i],
-      items: [{ skuId: 'sku-001', qty: 2, unitPrice: 20000000 }],
-      totalAmount: 40000000,
-      shippingAddress: '123 Nguyễn Huệ, Q1, TP.HCM',
-      createdBy: 'user-staff-001',
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
-    });
-  }
-
-  console.log('Seed hoàn tất!');
-  process.exit(0);
 }
 
-seed().catch(err => { console.error(err); process.exit(1); });
+seed();
