@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SyncChain.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dc02d30eded11fc53c6085c2e31f229df0f2e045")]
 [assembly: System.Reflection.AssemblyProductAttribute("SyncChain.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SyncChain.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
