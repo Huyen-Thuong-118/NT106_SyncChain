@@ -3,7 +3,11 @@
 // Chạy: node src/seedDatabase.js
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 const { pool } = require('./db');
+
+// Mật khẩu mặc định cho mọi tài khoản seed (dùng để test đăng nhập).
+const MAT_KHAU_MAC_DINH = '123456';
 
 const SQL_SCHEMA_FILE = path.resolve(__dirname, '../database/TaoBang.sql');
 
@@ -29,18 +33,19 @@ async function seed() {
     }
 
     // --- Người dùng (NguoiDung) ---
-    // MatKhauHash ở đây chỉ là chuỗi giả lập cho dữ liệu mẫu.
+    // Mật khẩu băm bằng bcrypt; DO UPDATE để cập nhật hash cho tài khoản đã seed trước đó.
+    const matKhauHash = await bcrypt.hash(MAT_KHAU_MAC_DINH, 10);
     const nguoiDung = [
-      ['admin',    'hash_admin',    'admin@syncchain.vn',    'Admin'],
-      ['nvkho01',  'hash_nvkho',    'kho@syncchain.vn',      'NhanVienKho'],
-      ['nppabc',   'hash_npp',      'supplier@abc.com',      'NhaPhanPhoi'],
-      ['khachA',   'hash_khach',    'customer@gmail.com',    'KhachHang'],
+      ['admin',    'admin@syncchain.vn',  'Admin'],
+      ['nvkho01',  'kho@syncchain.vn',    'NhanVienKho'],
+      ['nppabc',   'supplier@abc.com',    'NhaPhanPhoi'],
+      ['khachA',   'customer@gmail.com',  'KhachHang'],
     ];
-    for (const [tenDangNhap, matKhauHash, email, tenVaiTro] of nguoiDung) {
+    for (const [tenDangNhap, email, tenVaiTro] of nguoiDung) {
       await client.query(
         `INSERT INTO NguoiDung (TenDangNhap, MatKhauHash, Email, MaVaiTro)
          VALUES ($1, $2, $3, (SELECT MaVaiTro FROM PhanQuyen WHERE TenVaiTro = $4))
-         ON CONFLICT (TenDangNhap) DO NOTHING`,
+         ON CONFLICT (TenDangNhap) DO UPDATE SET MatKhauHash = EXCLUDED.MatKhauHash`,
         [tenDangNhap, matKhauHash, email, tenVaiTro]
       );
     }
@@ -66,6 +71,7 @@ async function seed() {
 
     await client.query('COMMIT');
     console.log('Seed hoàn tất!');
+    console.log(`👤 Tài khoản seed: admin / nvkho01 / nppabc / khachA — mật khẩu: ${MAT_KHAU_MAC_DINH}`);
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('Lỗi khi seed:', err.message);

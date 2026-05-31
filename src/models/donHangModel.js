@@ -8,13 +8,15 @@ const COLS = `
   MaKhachHang  AS "MaKhachHang",
   TongTien     AS "TongTien",
   TrangThaiDon AS "TrangThaiDon",
+  MaVanDon     AS "MaVanDon",
+  DonViVanChuyen AS "DonViVanChuyen",
   NgayTao      AS "NgayTao"
 `;
 
 // Tạo đơn hàng trong 1 TRANSACTION: trừ tồn kho an toàn khi nhiều client
 // mua cùng lúc, lấy GiaBan từ DB (không tin giá client gửi lên).
 // Ném lỗi có .status = 409 nếu không đủ tồn / sản phẩm không tồn tại.
-async function taoDonHang({ MaKhachHang, items }) {
+async function taoDonHang({ MaKhachHang, items, NguoiNhan, SoDienThoaiNhan, DiaChiGiao }) {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -41,10 +43,10 @@ async function taoDonHang({ MaKhachHang, items }) {
     }
 
     const insDon = await client.query(
-      `INSERT INTO DonHang (MaKhachHang, TongTien, TrangThaiDon)
-       VALUES ($1, $2, $3)
+      `INSERT INTO DonHang (MaKhachHang, TongTien, TrangThaiDon, NguoiNhan, SoDienThoaiNhan, DiaChiGiao)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING MaDonHang`,
-      [MaKhachHang, tongTien, ORDER_STATUS.DA_DAT_HANG]
+      [MaKhachHang, tongTien, ORDER_STATUS.DA_DAT_HANG, NguoiNhan || null, SoDienThoaiNhan || null, DiaChiGiao || null]
     );
     const maDonHang = insDon.rows[0].madonhang;
 
@@ -66,7 +68,15 @@ async function taoDonHang({ MaKhachHang, items }) {
   }
 }
 
-async function layTatCa() {
+// Lấy danh sách đơn. Nếu truyền maKhachHang -> chỉ đơn của khách đó (khách chỉ xem đơn mình).
+async function layTatCa(maKhachHang = null) {
+  if (maKhachHang) {
+    const { rows } = await pool.query(
+      `SELECT ${COLS} FROM DonHang WHERE MaKhachHang = $1 ORDER BY MaDonHang DESC`,
+      [maKhachHang]
+    );
+    return rows;
+  }
   const { rows } = await pool.query(`SELECT ${COLS} FROM DonHang ORDER BY MaDonHang DESC`);
   return rows;
 }
@@ -89,4 +99,19 @@ async function layTheoId(maDonHang) {
   return { ...don.rows[0], items: ct.rows };
 }
 
-module.exports = { taoDonHang, layTatCa, layTheoId };
+// Cập nhật trạng thái đơn (kèm thông tin vận đơn khi chuyển sang vận chuyển).
+async function capNhatTrangThai(maDonHang, trangThaiMoi, { MaVanDon = null, DonViVanChuyen = null } = {}) {
+  const { rows } = await pool.query(
+    `UPDATE DonHang
+       SET TrangThaiDon   = $1,
+           MaVanDon       = COALESCE($2, MaVanDon),
+           DonViVanChuyen = COALESCE($3, DonViVanChuyen),
+           NgayCapNhat    = CURRENT_TIMESTAMP
+     WHERE MaDonHang = $4
+     RETURNING ${COLS}`,
+    [trangThaiMoi, MaVanDon, DonViVanChuyen, maDonHang]
+  );
+  return rows[0];
+}
+
+module.exports = { taoDonHang, layTatCa, layTheoId, capNhatTrangThai };

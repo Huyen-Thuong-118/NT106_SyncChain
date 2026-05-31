@@ -3,6 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const { initDatabase } = require('./db');
+const authRoutes = require('./routes/authRoutes');
 const sanPhamRoutes = require('./routes/sanPhamRoutes');
 const donHangRoutes = require('./routes/donHangRoutes');
 
@@ -11,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 // Gắn các nhóm route
+app.use('/api/auth', authRoutes);
 app.use('/api/sanpham', sanPhamRoutes);
 app.use('/api/donhang', donHangRoutes);
 
