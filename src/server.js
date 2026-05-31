@@ -3,6 +3,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const { pool } = require('./db');
+const { ORDER_STATUS } = require('./constants/statusEnum');
 
 // Khởi tạo app Express
 const app = express();
@@ -134,12 +135,12 @@ app.post('/api/donhang', async (req, res) => {
       chiTiet.push({ MaSanPham, SoLuong, DonGia: donGia });
     }
 
-    // Tạo đơn hàng chính
+    // Tạo đơn hàng chính - trạng thái khởi tạo lấy từ statusEnum.js (Draft).
     const insDon = await client.query(
       `INSERT INTO DonHang (MaKhachHang, TongTien, TrangThaiDon)
-       VALUES ($1, $2, 'Da dat hang')
+       VALUES ($1, $2, $3)
        RETURNING MaDonHang`,
-      [MaKhachHang, tongTien]
+      [MaKhachHang, tongTien, ORDER_STATUS.DRAFT]
     );
     const maDonHang = insDon.rows[0].madonhang;
 

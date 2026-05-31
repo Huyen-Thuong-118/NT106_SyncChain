@@ -30,7 +30,9 @@ CREATE TABLE IF NOT EXISTS DonHang (
     MaDonHang SERIAL PRIMARY KEY,
     MaKhachHang INTEGER,
     TongTien NUMERIC(15,2) NOT NULL,
-    TrangThaiDon TEXT DEFAULT 'Da dat hang',
+    -- Trạng thái đơn lấy từ statusEnum.js (ORDER_STATUS) - nguồn chân lý duy nhất.
+    TrangThaiDon TEXT NOT NULL DEFAULT 'Draft'
+        CHECK (TrangThaiDon IN ('Draft', 'Approved', 'Processing', 'Done', 'Cancelled')),
     NgayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (MaKhachHang) REFERENCES NguoiDung(MaNguoiDung)
 );
