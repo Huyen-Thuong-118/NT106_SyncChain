@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tin nhắn nội bộ</title>
+  <link rel="stylesheet" href="messages.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="header">
+      <div>
+        <h1>TIN NHẮN NỘI BỘ</h1>
+        <p>Trao đổi nhanh giữa các nhân viên trong hệ thống.</p>
+      </div>
+
+      <button class="btn-primary">+ Tin nhắn mới</button>
+    </section>
+
+    <section class="chat-layout">
+      <!-- LEFT -->
+      <div class="sidebar">
+        <div class="search">
+          <input placeholder="Tìm kiếm..." />
+        </div>
+
+        <div class="chat-item active">
+          <div class="avatar">LM</div>
+          <div class="info">
+            <strong>Lê Minh Tuấn</strong>
+            <p>Đã xử lý đơn #8942</p>
+          </div>
+          <span>2m</span>
+        </div>
+
+        <div class="chat-item">
+          <div class="avatar">NT</div>
+          <div class="info">
+            <strong>Nguyễn Thảo</strong>
+            <p>Đã nhập hàng mới</p>
+          </div>
+          <span>15m</span>
+        </div>
+
+        <div class="chat-item">
+          <div class="avatar">QA</div>
+          <div class="info">
+            <strong>Quang Anh</strong>
+            <p>Check tồn kho giúp mình</p>
+          </div>
+          <span>1h</span>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="chat-box">
+        <div class="chat-header">
+          <div class="user">
+            <div class="avatar">LM</div>
+            <div>
+              <strong>Lê Minh Tuấn</strong>
+              <p>Đang hoạt động</p>
+            </div>
+          </div>
+
+          <button>⋯</button>
+        </div>
+
+        <div class="messages">
+          <div class="msg left">
+            <p>Đơn hàng #8942 đã xử lý xong nhé.</p>
+            <span>10:24</span>
+          </div>
+
+          <div class="msg right">
+            <p>Ok, mình sẽ giao cho bên vận chuyển.</p>
+            <span>10:25</span>
+          </div>
+
+          <div class="msg left">
+            <p>Nhớ kiểm tra lại sản phẩm trước khi gửi.</p>
+            <span>10:26</span>
+          </div>
+        </div>
+
+        <div class="chat-input">
+          <input placeholder="Nhập tin nhắn..." />
+          <button>➤</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

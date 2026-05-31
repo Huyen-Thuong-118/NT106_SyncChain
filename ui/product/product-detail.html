@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi tiết sản phẩm</title>
+  <link rel="stylesheet" href="product-detail.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="top">
+      <a href="#">← Quay lại sản phẩm</a>
+
+      <div class="actions">
+        <button class="light">Nhân bản</button>
+        <button class="primary">Chỉnh sửa</button>
+      </div>
+    </section>
+
+    <section class="product-layout">
+      <div class="image-card">
+        <div class="main-image">
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600" />
+          <span>Sắp hết hàng</span>
+        </div>
+
+        <div class="thumbs">
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=120" />
+          <img src="https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=120" />
+          <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=120" />
+        </div>
+      </div>
+
+      <div class="info-card">
+        <p class="sku">WTC-0012</p>
+        <h1>Đồng hồ thông minh S3</h1>
+        <p class="desc">
+          Thiết bị đeo thông minh hỗ trợ theo dõi sức khỏe, đo nhịp tim,
+          đếm bước chân và nhận thông báo từ điện thoại.
+        </p>
+
+        <div class="price-box">
+          <div>
+            <span>Giá bán</span>
+            <strong>890,000 đ</strong>
+          </div>
+
+          <div>
+            <span>Giá nhập</span>
+            <strong>620,000 đ</strong>
+          </div>
+        </div>
+
+        <div class="stock-box">
+          <div>
+            <span>Tồn kho hiện tại</span>
+            <strong>02</strong>
+          </div>
+
+          <div>
+            <span>Hạn mức cảnh báo</span>
+            <strong>10</strong>
+          </div>
+
+          <div>
+            <span>Đã bán</span>
+            <strong>342</strong>
+          </div>
+        </div>
+
+        <div class="status-line">
+          <span>Trạng thái</span>
+          <b>Đang bán</b>
+        </div>
+
+        <div class="buttons">
+          <button class="primary">Nhập thêm hàng</button>
+          <button class="danger">Ngừng bán</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="details-grid">
+      <div class="card">
+        <h3>Thông tin sản phẩm</h3>
+
+        <div class="row">
+          <span>Danh mục</span>
+          <strong>Điện tử</strong>
+        </div>
+
+        <div class="row">
+          <span>Thương hiệu</span>
+          <strong>SyncWatch</strong>
+        </div>
+
+        <div class="row">
+          <span>Đơn vị tính</span>
+          <strong>Cái</strong>
+        </div>
+
+        <div class="row">
+          <span>Ngày tạo</span>
+          <strong>12/08/2023</strong>
+        </div>
+
+        <div class="row">
+          <span>Cập nhật gần nhất</span>
+          <strong>14/10/2023</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Hiệu suất bán hàng</h3>
+
+        <div class="performance">
+          <div>
+            <strong>342</strong>
+            <span>Đã bán</span>
+          </div>
+
+          <div>
+            <strong>304,3tr</strong>
+            <span>Doanh thu</span>
+          </div>
+
+          <div>
+            <strong>92%</strong>
+            <span>Đánh giá tốt</span>
+          </div>
+        </div>
+
+        <div class="bar-block">
+          <div class="bar-title">
+            <span>Mức tiêu thụ</span>
+            <b>78%</b>
+          </div>
+          <div class="bar">
+            <i></i>
+          </div>
+        </div>
+
+        <p class="hint">
+          Sản phẩm đang bán tốt nhưng tồn kho thấp. Nên tạo phiếu nhập mới.
+        </p>
+      </div>
+    </section>
+
+    <section class="history-card">
+      <div class="section-head">
+        <h3>Lịch sử nhập / xuất kho</h3>
+        <button>Xem tất cả</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>THỜI GIAN</th>
+            <th>LOẠI</th>
+            <th>SỐ LƯỢNG</th>
+            <th>NGƯỜI THỰC HIỆN</th>
+            <th>GHI CHÚ</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>14/10/2023</td>
+            <td><span class="tag red">Xuất kho</span></td>
+            <td>-1</td>
+            <td>Nguyễn Văn A</td>
+            <td>Đơn hàng #ORD-8942</td>
+          </tr>
+
+          <tr>
+            <td>10/10/2023</td>
+            <td><span class="tag green">Nhập kho</span></td>
+            <td>+20</td>
+            <td>Lê Minh Tuấn</td>
+            <td>Phiếu nhập #IMP-0021</td>
+          </tr>
+
+          <tr>
+            <td>02/10/2023</td>
+            <td><span class="tag red">Xuất kho</span></td>
+            <td>-3</td>
+            <td>Hệ thống</td>
+            <td>Bán hàng online</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

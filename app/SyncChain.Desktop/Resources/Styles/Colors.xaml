@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Liquid Blue Palette - Primary Colors -->
+    <Color x:Key="Primary">#213145</Color>
+    <Color x:Key="PrimaryContainer">#e0f2fe</Color>
+    <Color x:Key="OnPrimaryContainer">#384953</Color>
+    <Color x:Key="Surface">#f8f9ff</Color>
+    <Color x:Key="OnSurface">#0b1c30</Color>
+    <Color x:Key="OnSurfaceVariant">#43474b</Color>
+    <Color x:Key="Outline">#73787b</Color>
+    <Color x:Key="OutlineVariant">#c3c7cb</Color>
+    <Color x:Key="Error">#ba1a1a</Color>
+    <Color x:Key="Secondary">#565e74</Color>
+    <Color x:Key="SecondaryContainer">#dae2fd</Color>
+    <Color x:Key="TertiaryContainer">#eef0f2</Color>
+
+    <!-- Liquid Blue Palette - Surface Container Variants -->
+    <Color x:Key="SurfaceContainerLowest">#ffffff</Color>
+    <Color x:Key="SurfaceContainerLow">#eff4ff</Color>
+    <Color x:Key="SurfaceContainer">#e5eeff</Color>
+    <Color x:Key="SurfaceContainerHigh">#dce9ff</Color>
+    <Color x:Key="SurfaceContainerHighest">#d3e4fe</Color>
+
+    <!-- Liquid Blue Palette - Glass Effect Colors -->
+    <Color x:Key="GlassWhite60">#B3FFFFFF</Color>
+    <Color x:Key="GlassWhite80">#CCFFFFFF</Color>
+    <Color x:Key="GlassBorder30">#66FFFFFF</Color>
+
+    <!-- Liquid Blue Palette - Status Colors -->
+    <Color x:Key="StatusSuccess">#d3e5f1</Color>
+    <Color x:Key="StatusWarning">#dae2fd</Color>
+    <Color x:Key="StatusBlue">#dbeafe</Color>
+    <Color x:Key="StatusSlate">#eef0f2</Color>
+    <Color x:Key="StatusCritical">#ffdad6</Color>
+    <Color x:Key="StatusEmerald">#d3e5f1</Color>
+    <Color x:Key="StatusAmber">#dae2fd</Color>
+
+    <!-- Cool accent scale: keep the UI in the sample's sapphire/porcelain family. -->
+    <Color x:Key="AccentSapphire">#213145</Color>
+    <Color x:Key="AccentBlue">#50616b</Color>
+    <Color x:Key="AccentIce">#b7c9d5</Color>
+    <Color x:Key="AccentMist">#5c647a</Color>
+
+    <!-- Spacing Constants -->
+    <x:Double x:Key="GutterSpacing">24</x:Double>
+    <x:Double x:Key="MarginDesktop">64</x:Double>
+    <x:Double x:Key="MarginMobile">16</x:Double>
+
+    <!-- Corner Radius Values -->
+    <x:Double x:Key="CornerRadiusSm">4</x:Double>
+    <x:Double x:Key="CornerRadiusDefault">8</x:Double>
+    <x:Double x:Key="CornerRadiusMd">12</x:Double>
+    <x:Double x:Key="CornerRadiusLg">16</x:Double>
+    <x:Double x:Key="CornerRadiusXl">24</x:Double>
+    <x:Double x:Key="CornerRadiusFull">9999</x:Double>
+
+</ResourceDictionary>

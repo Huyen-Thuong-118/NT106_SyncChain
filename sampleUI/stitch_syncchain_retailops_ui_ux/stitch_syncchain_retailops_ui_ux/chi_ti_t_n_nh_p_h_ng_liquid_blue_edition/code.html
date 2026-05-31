@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SyncChain | Shipment Tracking #SC-INB-1024</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#d3e5f1",
+                    "on-secondary": "#ffffff",
+                    "surface-container-high": "#dce9ff",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#d3e4fe",
+                    "tertiary-fixed": "#e0e3e5",
+                    "surface-tint": "#50616b",
+                    "outline-variant": "#c3c7cb",
+                    "tertiary-fixed-dim": "#c4c7c9",
+                    "outline": "#73787b",
+                    "on-primary-container": "#5e6f79",
+                    "tertiary": "#5c5f61",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#5c647a",
+                    "secondary-container": "#dae2fd",
+                    "primary-fixed-dim": "#b7c9d5",
+                    "secondary-fixed": "#dae2fd",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "surface-dim": "#cbdbf5",
+                    "on-tertiary-container": "#6a6d6f",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#eff4ff",
+                    "surface-container": "#e5eeff",
+                    "on-primary-fixed": "#0c1e26",
+                    "on-error-container": "#93000a",
+                    "background": "#f8f9ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "secondary": "#565e74",
+                    "on-tertiary-fixed": "#191c1e",
+                    "on-error": "#ffffff",
+                    "surface-bright": "#f8f9ff",
+                    "on-primary-fixed-variant": "#384953",
+                    "on-background": "#0b1c30",
+                    "on-secondary-fixed": "#131b2e",
+                    "inverse-surface": "#213145",
+                    "on-surface-variant": "#43474b",
+                    "primary": "#50616b",
+                    "on-surface": "#0b1c30",
+                    "inverse-primary": "#b7c9d5",
+                    "error-container": "#ffdad6",
+                    "tertiary-container": "#eef0f2",
+                    "surface": "#f8f9ff",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "primary-container": "#e0f2fe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "fluid-gap": "clamp(2rem, 5vw, 6rem)",
+                    "margin-desktop": "64px",
+                    "margin-mobile": "16px",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Source Serif 4"],
+                    "headline-lg-mobile": ["Source Serif 4"],
+                    "label-caps": ["Inter"],
+                    "data-tabular": ["Inter"],
+                    "display-xl": ["Source Serif 4"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["48px", {"lineHeight": "56px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "500"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "data-tabular": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-xl": ["72px", {"lineHeight": "80px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .liquid-gradient {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e0f2fe 100%);
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #b7c9d5;
+            border-radius: 10px;
+        }
+        .map-dot-pulse::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #50616b;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-20 hover:w-64 z-50 transition-all duration-500 ease-in-out group bg-surface-container-low/60 backdrop-blur-3xl border-r border-white/30 shadow-[40px_0px_60px_rgba(80,97,107,0.05)] flex flex-col py-8 px-4 overflow-hidden">
+<div class="mb-12 flex items-center gap-4 px-2">
+<span class="material-symbols-outlined text-primary text-3xl shrink-0" style="font-variation-settings: 'FILL' 1;">dataset</span>
+<span class="font-headline-lg text-primary text-2xl tracking-tight opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">SyncChain</span>
+</div>
+<nav class="flex flex-col gap-2 flex-1">
+<div class="flex items-center gap-4 bg-primary-container/80 text-on-primary-container rounded-xl p-3 shadow-sm cursor-pointer active:scale-95 duration-200">
+<span class="material-symbols-outlined shrink-0">local_shipping</span>
+<span class="font-label-caps opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Supply Chain</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant hover:text-primary hover:bg-white/40 hover:scale-[1.02] p-3 transition-all cursor-pointer active:scale-95">
+<span class="material-symbols-outlined shrink-0">dashboard</span>
+<span class="font-label-caps opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Dashboard</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant hover:text-primary hover:bg-white/40 hover:scale-[1.02] p-3 transition-all cursor-pointer active:scale-95">
+<span class="material-symbols-outlined shrink-0">inventory_2</span>
+<span class="font-label-caps opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Inventory</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant hover:text-primary hover:bg-white/40 hover:scale-[1.02] p-3 transition-all cursor-pointer active:scale-95">
+<span class="material-symbols-outlined shrink-0">receipt_long</span>
+<span class="font-label-caps opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Orders</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant hover:text-primary hover:bg-white/40 hover:scale-[1.02] p-3 transition-all cursor-pointer active:scale-95">
+<span class="material-symbols-outlined shrink-0">leaderboard</span>
+<span class="font-label-caps opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Analytics</span>
+</div>
+</nav>
+<div class="mt-auto flex items-center gap-4 p-3 hover:bg-white/40 rounded-xl transition-all cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant shrink-0">settings</span>
+<span class="font-label-caps opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Settings</span>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-20 min-h-screen">
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-5rem)] z-40 bg-surface/40 backdrop-blur-2xl border-b border-white/30 flex justify-between items-center h-20 px-gutter">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-lg text-xl font-bold text-primary">Shipment #SC-INB-1024</h1>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-caps text-[10px]">In Transit</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-low border-none focus:ring-2 focus:ring-primary/20 rounded-full pl-10 pr-4 py-2 w-64 text-sm font-body-md transition-all" placeholder="Search manifest..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors">notifications_unread</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors">grid_view</span>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed">
+<img alt="User" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a corporate operations manager in a high-key office environment. The person has a friendly expression, wearing minimalist spectacles. The lighting is soft and airy, reflecting a clean light-mode aesthetic with a palette of whites and soft blues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPldRSUUshwtQMle49vdgUUHA_XihAGAyaFG6dGDc0zMKIQKwbC4F0INnjbgdGrqFjfRObbKL_s9PeirKK_0TVVa9gvTBSQ6ZGd1BMj8jncmPfnwhxRjYMgAAuu3qtsbLKPWWqjhKdBaSyMbW0kbm95G6EiQwoDf7jCLWIW28eRPMtcwNeKN4xZmpmL_0UWEx5JvXcPAPVDvoXJsyRy9vpBrNtISiARJHOZEwkdTL6BgqqjRS1qC0CK37NI07Zye-rxT9gF2uDb6I"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Body -->
+<div class="pt-24 px-gutter pb-gutter max-w-container-max mx-auto space-y-8">
+<!-- Hero Grid: Map & Status -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Live Vessel Tracking Map -->
+<section class="lg:col-span-8 group relative overflow-hidden rounded-3xl glass-card h-[500px] shadow-[40px_0px_60px_rgba(80,97,107,0.05)] border-white/40">
+<div class="absolute inset-0 bg-surface-container-low overflow-hidden">
+<!-- Simulated Map Image -->
+<img alt="Map" class="w-full h-full object-cover grayscale-[20%] opacity-80 transition-transform duration-1000 group-hover:scale-105" data-alt="A high-detail cartographic satellite view of the deep blue ocean with subtle coastal lines visible in the far distance. The water is a rich sapphire blue with delicate white ripple patterns. The style is clean, clinical, and data-driven, fitting a premium supply chain dashboard." data-location="Oceania" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbC6cqmU_49L2KD_Gli0jkSI7Soe1U1Wy9QjH02XQsOaFn2z4t2h5yQ4kyOSmZ6pPtr9vW_lCupjJxI0H1oThtYDeidGCX2lQ19oNgZnLB-tHq5GzbLzqgm2tLtHa3dwTqW6oOHqjHoeB0qcflmlbsl43wqNKRe2Wr4l2FWcF9vwkrfCUi1ySe28PdDnnMb3dg6o_-Ahdv1qtb8WWP4Pyw3U3wpK8vV2dHw1JW8_dQFCAY3N0eASs5gh8dUNA6coLWG9V0v0x0jU8"/>
+<!-- Floating Data Overlays -->
+<div class="absolute top-8 left-8 p-6 glass-card rounded-2xl space-y-2 border-white/50">
+<p class="font-label-caps text-primary">Vessel Identity</p>
+<h2 class="font-headline-lg text-2xl text-on-background">Ocean Sapphire</h2>
+<div class="flex items-center gap-2 text-on-surface-variant font-data-tabular">
+<span class="material-symbols-outlined text-sm">speed</span>
+                                18.4 Knots
+                            </div>
+</div>
+<!-- Pulsing Ship Location -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+<div class="relative w-4 h-4 bg-primary rounded-full map-dot-pulse"></div>
+<div class="absolute top-6 left-1/2 -translate-x-1/2 glass-card px-3 py-1 rounded-full whitespace-nowrap">
+<span class="font-label-caps text-[10px] text-primary">Current Location</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Milestone Sidebar -->
+<section class="lg:col-span-4 flex flex-col gap-6">
+<div class="glass-card p-8 rounded-3xl flex-1 shadow-lg border-white/50">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-headline-lg text-xl">Journey Milestones</h3>
+<span class="material-symbols-outlined text-primary">route</span>
+</div>
+<div class="space-y-8 relative">
+<!-- Vertical Line -->
+<div class="absolute left-[11px] top-2 bottom-2 w-0.5 bg-primary-fixed/50"></div>
+<!-- Milestone 1 -->
+<div class="flex gap-4 relative">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center shrink-0 z-10 border-4 border-white shadow-sm">
+<span class="material-symbols-outlined text-white text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<h4 class="font-data-tabular text-on-surface leading-tight">Departed Port</h4>
+<p class="font-body-md text-xs text-on-surface-variant">Singapore Hub • Oct 12, 09:14 AM</p>
+</div>
+</div>
+<!-- Milestone 2 -->
+<div class="flex gap-4 relative">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center shrink-0 z-10 border-4 border-white shadow-sm">
+<span class="material-symbols-outlined text-white text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<h4 class="font-data-tabular text-on-surface leading-tight">Mid-Ocean Transition</h4>
+<p class="font-body-md text-xs text-on-surface-variant">Indian Ocean • Oct 15, 02:45 PM</p>
+</div>
+</div>
+<!-- Milestone 3 (Active) -->
+<div class="flex gap-4 relative">
+<div class="w-6 h-6 rounded-full bg-primary-fixed border-2 border-primary flex items-center justify-center shrink-0 z-10 shadow-[0_0_15px_rgba(80,97,107,0.3)]">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+</div>
+<div>
+<h4 class="font-data-tabular text-primary font-bold leading-tight">Approaching Customs</h4>
+<p class="font-body-md text-xs text-on-surface-variant">ETA: Rotterdam • Oct 20, 11:00 PM</p>
+</div>
+</div>
+<!-- Milestone 4 (Pending) -->
+<div class="flex gap-4 relative">
+<div class="w-6 h-6 rounded-full bg-white border-2 border-outline-variant flex items-center justify-center shrink-0 z-10">
+</div>
+<div>
+<h4 class="font-data-tabular text-outline leading-tight">Arrived at Hub</h4>
+<p class="font-body-md text-xs text-on-surface-variant">Berlin Logistics Center • Oct 22</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Rapid Stats -->
+<div class="bg-primary-container/40 p-6 rounded-3xl border border-primary-fixed/30 flex justify-between items-center group cursor-pointer hover:scale-[1.02] transition-transform">
+<div>
+<p class="font-label-caps text-on-primary-container">Integrity Check</p>
+<p class="font-headline-lg text-lg text-primary">Temperature: 21°C</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl group-hover:rotate-12 transition-transform">thermostat</span>
+</div>
+</section>
+</div>
+<!-- Bottom Grid: Manifest & Asset Info -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Manifest Listing -->
+<section class="lg:col-span-8 glass-card rounded-3xl p-8 border-white/50 shadow-lg">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h3 class="font-headline-lg text-2xl mb-1">Manifest Listing</h3>
+<p class="font-body-md text-on-surface-variant">Container ID: CX-889201-B</p>
+</div>
+<button class="bg-primary text-white px-6 py-2 rounded-xl font-label-caps hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">download</span>
+                            Full PDF
+                        </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-primary-fixed/30">
+<th class="pb-4 font-label-caps text-on-surface-variant">Item Description</th>
+<th class="pb-4 font-label-caps text-on-surface-variant">Category</th>
+<th class="pb-4 font-label-caps text-on-surface-variant">Units</th>
+<th class="pb-4 font-label-caps text-on-surface-variant">Weight</th>
+<th class="pb-4 font-label-caps text-on-surface-variant">Status</th>
+</tr>
+</thead>
+<tbody class="font-data-tabular">
+<tr class="border-b border-primary-fixed/10 hover:bg-primary-container/20 transition-colors group">
+<td class="py-6 flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden shrink-0">
+<img alt="Product" class="w-full h-full object-cover" data-alt="A high-tech macro photography shot of an A-Series mainboard circuit. The image features golden pathways and dark crystalline components against a deep blue background. The aesthetic is clean, precise, and sophisticated, illuminated by a single cool-toned source of light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDktEKRF7pSYfjvGgh-bO4SFklEhJyC-JwjNONu2xMLm1L3KufDiRnTewIU48e1REhFr-QZO1YemRGSg-aEsZUxRHAIOaiAL9ssJ3frprQuOz-8tuMmCVcRGWKhcYy3Z-8qkFoimZdMapueUev1EVOs90kOfUEuyT2fpsGE3_8ZZQ8nGWUSuI0iCUiHHvmozeZ_nycw8csUgqYn2Sjzq2kPY5RTRtMfYFMQEsEVZ4IP3AZdDdhQd_geim5tZvMw81PeOCPmFoLs4E4"/>
+</div>
+<span class="font-bold">Mainboards A-Series</span>
+</td>
+<td class="py-6 text-on-surface-variant">Electronics</td>
+<td class="py-6">500 units</td>
+<td class="py-6">1,240 kg</td>
+<td class="py-6">
+<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">VERIFIED</span>
+</td>
+</tr>
+<tr class="border-b border-primary-fixed/10 hover:bg-primary-container/20 transition-colors group">
+<td class="py-6 flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden shrink-0">
+<img alt="Product" class="w-full h-full object-cover" data-alt="Close-up of industrial electrical cables with polished metal ends and translucent insulation. The lighting is ethereal and bright, highlighting the texture of the copper and the smooth white plastic. The mood is clinical and high-end, perfectly aligned with a light-mode luxury interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAapebqcYgiRo4cC4qQ3-ARASASrhVVaWPr9O37X55XkMzhP7lBtdHRneyPLkIaPEffnhHaVruBeL3Z_HnrX3I3mWMOo-LnwfKP9Rvv23wvFW11za-NlC3JXCNUHabprnjnDltIobQPC58knEhBGEPbMZg7QeubLuoy5waUU2GekGq6tRziNehGtVEzsCwPYO4ImTH_mDUVmCEg5jtUtz3suHw4R-9skzsSkvXjvJmRq-mjHlp6X9iY5yhA_-C3Yh-3__SeDdLBatg"/>
+</div>
+<span class="font-bold">Interconnect Cables (2m)</span>
+</td>
+<td class="py-6 text-on-surface-variant">Hardware</td>
+<td class="py-6">2,000 units</td>
+<td class="py-6">850 kg</td>
+<td class="py-6">
+<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">VERIFIED</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Documents & Quick Actions -->
+<section class="lg:col-span-4 space-y-6">
+<div class="glass-card p-8 rounded-3xl border-white/50 shadow-lg">
+<h3 class="font-label-caps text-on-surface-variant mb-6">Related Assets</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 bg-white/40 rounded-2xl hover:bg-white transition-all cursor-pointer border border-transparent hover:border-primary-fixed">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">description</span>
+<span class="font-data-tabular text-sm">Bill of Lading</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-sm">open_in_new</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/40 rounded-2xl hover:bg-white transition-all cursor-pointer border border-transparent hover:border-primary-fixed">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+<span class="font-data-tabular text-sm">Customs Declaration</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-sm">open_in_new</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/40 rounded-2xl hover:bg-white transition-all cursor-pointer border border-transparent hover:border-primary-fixed">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">policy</span>
+<span class="font-data-tabular text-sm">Insurance Certificate</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-sm">open_in_new</span>
+</div>
+</div>
+</div>
+<div class="p-8 rounded-3xl bg-secondary-fixed text-on-secondary-fixed shadow-xl relative overflow-hidden group">
+<!-- Decorative Pattern -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+<div class="relative z-10">
+<h4 class="font-headline-lg text-lg mb-4">Contact Port Agent</h4>
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 rounded-full border-2 border-white overflow-hidden">
+<img alt="Agent" class="w-full h-full object-cover" data-alt="A portrait of a male professional maritime agent wearing a clean white uniform shirt. He is standing in a brightly lit control center with blurred monitors in the background. The aesthetic is high-key, professional, and sophisticated, emphasizing a sense of trust and efficiency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClt63MUbvEfLIJDAg8YItHFEmzFPZZ84BrBuvOn34s-XzZ8tCfzfAmuZ0ycbnoHcdf4_3j9HIvEQBuHvkGQXfKxNMmkH1M83PyNEtYL1lT7U7E8FuszI42_AWSpa0iqe-oCET_vI6RXlZlORHEF9x6Kl5CHwbCzDHRL9-evFB4e8yzBRA6AvzkFIk4hkOjVSlP_Tlc7kZs23cr6aPgxIDtR7-wovE48-_30uMsCz_dLoicgjOE4f4cPBSMAWrRVCNyY4mIiBFJRcU"/>
+</div>
+<div>
+<p class="font-data-tabular leading-tight">Marcus Thorne</p>
+<p class="text-[10px] font-label-caps opacity-70">Rotterdam Terminal 4</p>
+</div>
+</div>
+<button class="w-full bg-on-secondary-fixed text-white py-3 rounded-xl font-label-caps hover:bg-opacity-90 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">chat_bubble</span>
+                                Secure Message
+                            </button>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) - Contextual for Dashboard -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group">
+<span class="material-symbols-outlined text-3xl">add</span>
+<div class="absolute right-20 bg-primary text-white px-4 py-2 rounded-xl font-label-caps opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            New Report
+        </div>
+</button>
+<script>
+        // Subtle Mouse Interaction for Glass Cards
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                if(x > 0 && x < rect.width && y > 0 && y < rect.height) {
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                }
+            });
+        });
+
+        // Toggle Sidebar state logic
+        const sidebar = document.querySelector('aside');
+        const main = document.querySelector('main');
+        const header = document.querySelector('header');
+
+        sidebar.addEventListener('mouseenter', () => {
+            header.style.width = 'calc(100% - 16rem)';
+            header.style.transition = 'width 0.5s ease-in-out';
+        });
+
+        sidebar.addEventListener('mouseleave', () => {
+            header.style.width = 'calc(100% - 5rem)';
+        });
+    </script>
+</body></html>

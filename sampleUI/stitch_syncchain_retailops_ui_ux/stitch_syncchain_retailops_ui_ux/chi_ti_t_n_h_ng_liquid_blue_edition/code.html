@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order Summary #SC-9021-X | SyncChain</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#d3e5f1",
+                      "on-secondary": "#ffffff",
+                      "surface-container-high": "#dce9ff",
+                      "on-tertiary-fixed-variant": "#444749",
+                      "error": "#ba1a1a",
+                      "surface-variant": "#d3e4fe",
+                      "tertiary-fixed": "#e0e3e5",
+                      "surface-tint": "#50616b",
+                      "outline-variant": "#c3c7cb",
+                      "tertiary-fixed-dim": "#c4c7c9",
+                      "outline": "#73787b",
+                      "on-primary-container": "#5e6f79",
+                      "tertiary": "#5c5f61",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "on-secondary-container": "#5c647a",
+                      "secondary-container": "#dae2fd",
+                      "primary-fixed-dim": "#b7c9d5",
+                      "secondary-fixed": "#dae2fd",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "surface-dim": "#cbdbf5",
+                      "on-tertiary-container": "#6a6d6f",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-low": "#eff4ff",
+                      "surface-container": "#e5eeff",
+                      "on-primary-fixed": "#0c1e26",
+                      "on-error-container": "#93000a",
+                      "background": "#f8f9ff",
+                      "surface-container-highest": "#d3e4fe",
+                      "secondary": "#565e74",
+                      "on-tertiary-fixed": "#191c1e",
+                      "on-error": "#ffffff",
+                      "surface-bright": "#f8f9ff",
+                      "on-primary-fixed-variant": "#384953",
+                      "on-background": "#0b1c30",
+                      "on-secondary-fixed": "#131b2e",
+                      "inverse-surface": "#213145",
+                      "on-surface-variant": "#43474b",
+                      "primary": "#50616b",
+                      "on-surface": "#0b1c30",
+                      "inverse-primary": "#b7c9d5",
+                      "error-container": "#ffdad6",
+                      "tertiary-container": "#eef0f2",
+                      "surface": "#f8f9ff",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "primary-container": "#e0f2fe"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "fluid-gap": "clamp(2rem, 5vw, 6rem)",
+                      "margin-desktop": "64px",
+                      "margin-mobile": "16px",
+                      "container-max": "1440px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Source Serif 4"],
+                      "headline-lg-mobile": ["Source Serif 4"],
+                      "label-caps": ["Inter"],
+                      "data-tabular": ["Inter"],
+                      "display-xl": ["Source Serif 4"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["48px", { "lineHeight": "56px", "fontWeight": "500" }],
+                      "headline-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                      "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                      "data-tabular": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                      "display-xl": ["72px", { "lineHeight": "80px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                      "body-md": ["16px", { "lineHeight": "28px", "fontWeight": "400" }]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 40px 60px rgba(80, 97, 107, 0.05);
+        }
+        .liquid-bg {
+            background: radial-gradient(circle at 0% 0%, #e0f2fe 0%, #f8f9ff 50%, #eff4ff 100%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .nav-active {
+            background: rgba(224, 242, 254, 0.8);
+            color: #5e6f79;
+        }
+    </style>
+</head>
+<body class="liquid-bg min-h-screen text-on-background font-body-md overflow-x-hidden">
+<!-- SideNavBar (Fixed Icon-Only Overlay) -->
+<aside class="fixed left-0 top-0 h-full w-20 hover:w-64 z-50 transition-all duration-500 ease-in-out group bg-surface-container-low/60 backdrop-blur-3xl border-r border-white/30 shadow-[40px_0px_60px_rgba(80,97,107,0.05)] flex flex-col py-8 px-4 overflow-hidden">
+<div class="flex items-center gap-4 mb-12 px-2">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-2xl">sync_alt</span>
+</div>
+<span class="font-headline-lg text-primary text-2xl tracking-tight opacity-0 group-hover:opacity-100 transition-opacity duration-300">SyncChain</span>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<!-- Orders is Active -->
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary p-3 transition-colors hover:bg-white/40 rounded-xl" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 whitespace-nowrap">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary p-3 transition-colors hover:bg-white/40 rounded-xl" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 whitespace-nowrap">Inventory</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary p-3 transition-colors hover:bg-white/40 rounded-xl" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 whitespace-nowrap">Supply Chain</span>
+</a>
+<a class="flex items-center gap-4 bg-primary-container/80 text-on-primary-container rounded-xl p-3 shadow-sm scale-105" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 whitespace-nowrap">Orders</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary p-3 transition-colors hover:bg-white/40 rounded-xl" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 whitespace-nowrap">Analytics</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary p-3 transition-colors hover:bg-white/40 rounded-xl mt-auto" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps opacity-0 group-hover:opacity-100 whitespace-nowrap">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pl-20 md:pl-24 pr-4 md:pr-12 pt-8 pb-20 max-w-[1600px] mx-auto">
+<!-- Header Section -->
+<header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<nav class="flex items-center gap-2 mb-4 text-on-surface-variant">
+<span class="font-label-caps text-label-caps">Orders</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="font-label-caps text-label-caps text-primary">Details</span>
+</nav>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Order #SC-9021-X</h1>
+<p class="text-on-surface-variant mt-2 font-body-md">Placed on October 24, 2023 • Express International Shipping</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-3 rounded-full border border-primary/20 text-primary font-label-caps text-label-caps hover:bg-primary-container/30 transition-all active:scale-95">Download Invoice</button>
+<button class="px-6 py-3 rounded-full bg-primary text-white font-label-caps text-label-caps shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all active:scale-95">Support Ticket</button>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- LEFT COLUMN: Timeline and Items -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Shipping Progress Timeline -->
+<section class="glass-card rounded-[2rem] p-8 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+<h2 class="font-label-caps text-label-caps text-primary mb-10 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">local_shipping</span>
+                        Shipping Progress
+                    </h2>
+<div class="relative flex justify-between items-start">
+<!-- Connecting Line -->
+<div class="absolute top-5 left-0 w-full h-0.5 bg-surface-variant z-0">
+<div class="h-full bg-primary w-2/3 transition-all duration-1000"></div>
+</div>
+<!-- Step 1: Placed -->
+<div class="relative z-10 flex flex-col items-center text-center max-w-[120px]">
+<div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface mb-1">Order Placed</span>
+<span class="text-[10px] text-on-surface-variant">Oct 24, 09:12</span>
+</div>
+<!-- Step 2: Processing -->
+<div class="relative z-10 flex flex-col items-center text-center max-w-[120px]">
+<div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface mb-1">Processing</span>
+<span class="text-[10px] text-on-surface-variant">Oct 24, 14:45</span>
+</div>
+<!-- Step 3: In Transit (Active) -->
+<div class="relative z-10 flex flex-col items-center text-center max-w-[120px]">
+<div class="w-10 h-10 rounded-full bg-primary-container border-2 border-primary text-primary flex items-center justify-center mb-4 animate-pulse">
+<span class="material-symbols-outlined text-xl">transit_enterexit</span>
+</div>
+<span class="font-label-caps text-label-caps text-primary mb-1">In Transit</span>
+<span class="text-[10px] text-on-surface-variant">Expected Oct 27</span>
+</div>
+<!-- Step 4: Delivered -->
+<div class="relative z-10 flex flex-col items-center text-center max-w-[120px]">
+<div class="w-10 h-10 rounded-full bg-surface-variant text-outline flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-xl">location_on</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1">Delivered</span>
+<span class="text-[10px] text-on-surface-variant">---</span>
+</div>
+</div>
+</section>
+<!-- Itemized List -->
+<section class="glass-card rounded-[2rem] overflow-hidden">
+<div class="p-8 border-b border-white/30 flex justify-between items-center">
+<h2 class="font-label-caps text-label-caps text-primary">Shipment Contents (3)</h2>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-caps text-[10px]">Package 1 of 1</span>
+</div>
+<div class="divide-y divide-white/20">
+<!-- Item 1 -->
+<div class="p-8 flex flex-col sm:flex-row items-center gap-6 hover:bg-white/20 transition-colors">
+<div class="w-24 h-24 rounded-2xl bg-white p-2 flex-shrink-0 shadow-sm overflow-hidden">
+<img alt="Product 1" class="w-full h-full object-contain" data-alt="A high-end professional studio shot of a sleek red running shoe floating in a minimalist white space. The lighting is crisp and editorial, highlighting the premium fabric textures and modern design. The aesthetic is clean, luxurious, and technologically focused, fitting a high-performance retail environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF4878hQj_Wz-kU6AP6GbP-XtGSVXRTWxWcYjM5fEsvlaodMR5mZNKSB9TjNyLs0aPsjByTwuXUdEiHNr8NVVrle3Hvic7Hkd9GKRZq_ON_Upv--rvxH6xZrF58O5MRSd3abrrcoRqTX_PbM_15ZEiUpCNWRRjNX87m1hBcYX9SCTXsh1nQp0_HhhYVRINWzEX4LObiyUDRsUpkt8q-fKqEHXfiT08O8S56IF7UOn3F6d0-BQvJKyMC8zE23kfv_VDaa6TeF1YObg"/>
+</div>
+<div class="flex-grow text-center sm:text-left">
+<h3 class="font-label-caps text-on-surface text-sm">AeroStride Pro - Cobalt Crimson</h3>
+<p class="text-xs text-on-surface-variant mt-1">Size: 42 EU | SKU: AS-9920-R</p>
+</div>
+<div class="text-center sm:text-right">
+<p class="font-data-tabular text-on-surface">$240.00</p>
+<p class="text-[10px] text-on-surface-variant">Qty: 1</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-8 flex flex-col sm:flex-row items-center gap-6 hover:bg-white/20 transition-colors">
+<div class="w-24 h-24 rounded-2xl bg-white p-2 flex-shrink-0 shadow-sm overflow-hidden">
+<img alt="Product 2" class="w-full h-full object-contain" data-alt="A luxury white minimalist watch displayed on a textured porcelain surface. The lighting is soft and atmospheric, creating elegant shadows that emphasize the watch's clean lines and high-end materials. The scene is dominated by a cool-toned palette of whites and soft blues, conveying a sense of timeless sophistication." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSEUTZ05K_K1wR2PiiooKKtc481x7s2DeZVH3zvbye-hmgwWR9yE0Ngf_MbkzC1ooUAShgJFt6fIP-mQxQgmfUeWp7CnlwSYRI9IyMo1uBM4MsbARUlEUggi2B_vu_1XS1M04EbBDqGEjEKr720hMO_KTGMq9E8gChDBdkuuLiGKra-LgsnuwkK8jE4UZhOWugIFzrm1Oj03S6OOuK-0lVs-f8b0bNdaLx_p9PL3lWNiUUak0tDcABULL90pS63-iKTEwJjRKz8bk"/>
+</div>
+<div class="flex-grow text-center sm:text-left">
+<h3 class="font-label-caps text-on-surface text-sm">Lumina Chronograph - Frost Edition</h3>
+<p class="text-xs text-on-surface-variant mt-1">Case: 40mm | SKU: LC-201-W</p>
+</div>
+<div class="text-center sm:text-right">
+<p class="font-data-tabular text-on-surface">$450.00</p>
+<p class="text-[10px] text-on-surface-variant">Qty: 1</p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="p-8 flex flex-col sm:flex-row items-center gap-6 hover:bg-white/20 transition-colors">
+<div class="w-24 h-24 rounded-2xl bg-white p-2 flex-shrink-0 shadow-sm overflow-hidden">
+<img alt="Product 3" class="w-full h-full object-contain" data-alt="Professional over-ear wireless headphones in a deep sapphire blue matte finish. The product is shot with soft side-lighting that catches the metallic accents and premium leather ear cushions. The background is a subtle gradient of light blue, maintaining a serene and premium high-tech look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2zlhBoqpizRLppM2lBFauPUrWBHOgXfxvuM2rv3rK578JSW0c-L_lrelKAhV0I-dVFflWSRo8Led5SG_EUQ1Sjcr0dNLUsz5bW7MCMN8SXwZEEhUh0j6QY_NTULtopry0_Cm9pnP-rjvUfyf0uYpMbCGTzZKMzVeUxyVJygvLZYY7nSWoORKEUBQriajfz5GomSjYI6obVMqCR_9_nhs5Vh38NaC48guahqj7c1wy-1Qd4ub91gIGzCzDNm1md9cB4nX3qxaOTis"/>
+</div>
+<div class="flex-grow text-center sm:text-left">
+<h3 class="font-label-caps text-on-surface text-sm">Zenith Audio H1 - Deep Blue</h3>
+<p class="text-xs text-on-surface-variant mt-1">Limited Edition | SKU: ZA-H1-DB</p>
+</div>
+<div class="text-center sm:text-right">
+<p class="font-data-tabular text-on-surface">$320.00</p>
+<p class="text-[10px] text-on-surface-variant">Qty: 1</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- RIGHT COLUMN: Summary and Details -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Recipient Card -->
+<section class="glass-card rounded-[2rem] p-8">
+<h2 class="font-label-caps text-label-caps text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">location_on</span>
+                        Delivery Details
+                    </h2>
+<div class="space-y-4">
+<div>
+<p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-widest">Recipient</p>
+<p class="font-headline-lg text-xl text-on-surface">Mads Christensen</p>
+</div>
+<div>
+<p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-widest">Address</p>
+<p class="text-on-surface font-body-md leading-relaxed">
+                                Østerbrogade 124, 2. th<br/>
+                                2100 Copenhagen Ø<br/>
+                                Denmark
+                            </p>
+</div>
+<div class="pt-4 border-t border-white/20">
+<p class="text-xs text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">phone</span>
+                                +45 20 40 60 80
+                            </p>
+</div>
+</div>
+</section>
+<!-- Order Breakdown -->
+<section class="glass-card rounded-[2rem] p-8 bg-primary/5">
+<h2 class="font-label-caps text-label-caps text-primary mb-6">Financial Summary</h2>
+<div class="space-y-3">
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Subtotal</span>
+<span class="font-data-tabular text-on-surface">$1,010.00</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Shipping</span>
+<span class="font-data-tabular text-on-surface">$25.00</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Import Tax (VAT)</span>
+<span class="font-data-tabular text-on-surface">$252.50</span>
+</div>
+<div class="pt-4 mt-2 border-t border-primary/20 flex justify-between items-end">
+<span class="font-label-caps text-on-surface">Total Amount</span>
+<span class="font-headline-lg text-3xl text-primary">$1,287.50</span>
+</div>
+</div>
+<div class="mt-8 flex items-center gap-3 bg-white/40 p-3 rounded-xl">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+<p class="text-[10px] text-on-surface-variant leading-tight">Paid via Amex Corporate Platinum ****9021. Secure transaction finalized.</p>
+</div>
+</section>
+<!-- Operational Notes -->
+<section class="glass-card rounded-[2rem] p-8">
+<h2 class="font-label-caps text-label-caps text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">description</span>
+                        Internal Fulfillment Notes
+                    </h2>
+<div class="space-y-4">
+<div class="bg-surface-container-low p-4 rounded-2xl border-l-4 border-primary">
+<p class="text-xs text-on-surface leading-relaxed italic">
+                                "Fragile handling requested for Lumina Chronograph. Double-padded protective wrapping applied at Cologne Hub. Customer requested delivery after 4 PM local time."
+                            </p>
+<div class="mt-2 flex justify-between items-center">
+<span class="text-[10px] font-bold text-primary">J. Müller, Logistics Ops</span>
+<span class="text-[10px] text-on-surface-variant">2 hours ago</span>
+</div>
+</div>
+<div class="p-2">
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Status Flags</p>
+<div class="flex gap-2">
+<span class="px-2 py-0.5 bg-surface-variant rounded-md text-[9px] font-bold">FRAGILE</span>
+<span class="px-2 py-0.5 bg-surface-variant rounded-md text-[9px] font-bold">EXPEDITED</span>
+<span class="px-2 py-0.5 bg-surface-variant rounded-md text-[9px] font-bold">INSURED</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Floating Atmosphere Elements -->
+<div class="fixed top-1/4 -left-20 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+<div class="fixed bottom-0 -right-20 w-[500px] h-[500px] bg-secondary-container/20 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+<script>
+        // Micro-interaction for sidebar expansion
+        const sidebar = document.querySelector('aside');
+        sidebar.addEventListener('mouseenter', () => {
+            // Potential for sound or specific GSAP triggers here
+        });
+
+        // Simple parallax for glass cards on scroll
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.glass-card');
+            const scrolled = window.pageYOffset;
+            cards.forEach((card, index) => {
+                const speed = 0.02 + (index * 0.005);
+                card.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
+</body></html>

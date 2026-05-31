@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --liquid-gradient: linear-gradient(135deg, #f8f9ff 0%, #e0f2fe 50%, #eff4ff 100%);
+            --sidebar-collapsed: 80px;
+            --sidebar-expanded: 280px;
+        }
+        body {
+            background: var(--liquid-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .glass-card {
+            backdrop-filter: blur(24px);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            backdrop-filter: blur(32px);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        aside {
+            width: var(--sidebar-collapsed);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+            z-index: 60 !important;
+        }
+        aside:hover {
+            width: var(--sidebar-expanded);
+        }
+        .nav-label {
+            opacity: 0;
+            white-space: nowrap;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+            width: 0;
+            overflow: hidden;
+        }
+        aside:hover .nav-label {
+            opacity: 1;
+            pointer-events: auto;
+            width: auto;
+            margin-left: 0.5rem;
+        }
+        .sidebar-logo-text {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            width: 0;
+            overflow: hidden;
+        }
+        aside:hover .sidebar-logo-text {
+            opacity: 1;
+            width: auto;
+        }
+        /* Refined Sidebar Interaction: Overlay style */
+        main {
+            margin-left: var(--sidebar-collapsed);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "primary": "#50616b",
+                "primary-container": "#e0f2fe",
+                "on-primary-container": "#5e6f79",
+                "secondary": "#565e74",
+                "secondary-container": "#dae2fd",
+                "on-secondary-container": "#5c647a",
+                "surface": "#f8f9ff",
+                "on-surface": "#0b1c30",
+                "on-surface-variant": "#43474b",
+                "outline": "#73787b",
+                "outline-variant": "#c3c7cb",
+                "background": "#f8f9ff"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+              },
+              "spacing": {
+                "container-max": "1440px",
+                "gutter": "24px",
+                "fluid-gap": "clamp(2rem, 5vw, 6rem)",
+                "margin-desktop": "64px",
+                "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                "body-md": ["Inter"],
+                "data-tabular": ["Inter"],
+                "display-xl": ["Source Serif 4"],
+                "label-caps": ["Inter"],
+                "headline-lg": ["Source Serif 4"]
+              },
+              "fontSize": {
+                "data-tabular": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "display-xl": ["72px", {"lineHeight": "80px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "headline-lg": ["48px", {"lineHeight": "56px", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="font-body-md text-on-surface selection:bg-primary-container overflow-x-hidden">
+<!-- SideNavBar (Expanded overlay style) -->
+<aside class="fixed left-0 top-0 h-screen flex flex-col py-8 px-4 gap-6 bg-white/40 backdrop-blur-xl border-r border-white/30 shadow-xl shadow-primary/5 group/sidebar z-50">
+<div class="flex flex-col mb-8 overflow-hidden">
+<div class="flex items-center gap-4 h-10">
+<div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-primary text-white shadow-lg">
+<span class="material-symbols-outlined">hub</span>
+</div>
+<div class="sidebar-logo-text whitespace-nowrap overflow-hidden">
+<span class="font-display-xl text-2xl font-semibold text-primary block leading-none">SyncChain</span>
+<span class="font-label-caps text-[10px] tracking-widest text-primary/60 block mt-0.5">Operations</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-4 px-3.5 py-3 text-secondary hover:bg-white/60 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined flex-shrink-0" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps tracking-widest nav-label">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-3.5 py-3 text-secondary hover:bg-white/60 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined flex-shrink-0" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-caps text-label-caps tracking-widest nav-label">Inventory</span>
+</a>
+<a class="flex items-center gap-4 px-3.5 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold shadow-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined flex-shrink-0" data-icon="local_shipping">local_shipping</span>
+<span class="font-label-caps text-label-caps tracking-widest nav-label">Logistics</span>
+</a>
+<a class="flex items-center gap-4 px-3.5 py-3 text-secondary hover:bg-white/60 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined flex-shrink-0" data-icon="leaderboard">leaderboard</span>
+<span class="font-label-caps text-label-caps tracking-widest nav-label">Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-3.5 py-3 text-secondary hover:bg-white/60 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined flex-shrink-0" data-icon="badge">badge</span>
+<span class="font-label-caps text-label-caps tracking-widest nav-label">Personnel</span>
+</a>
+</div>
+<div class="pt-6 border-t border-white/20 flex flex-col gap-2">
+<div class="px-2 py-2 mb-4 bg-primary-container/20 rounded-full text-center overflow-hidden">
+<span class="font-label-caps text-[10px] text-primary whitespace-nowrap">Active</span>
+</div>
+<a class="flex items-center gap-4 px-4 py-2 text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined flex-shrink-0" data-icon="help_outline">help_outline</span>
+<span class="font-label-caps text-label-caps nav-label">Support</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-2 text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined flex-shrink-0" data-icon="logout">logout</span>
+<span class="font-label-caps text-label-caps nav-label">Sign Out</span>
+</a>
+</div>
+</aside>
+<main class="min-h-screen transition-all duration-400">
+<!-- TopNavBar -->
+<nav class="h-20 sticky top-0 bg-white/60 backdrop-blur-2xl shadow-sm border-b border-white/30 flex items-center justify-between px-margin-desktop transition-all duration-400 w-full z-40">
+<div class="flex items-center gap-8">
+<span class="font-display-xl text-3xl text-primary tracking-tighter">SyncChain</span>
+<div class="hidden md:flex items-center gap-6 ml-8">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-all duration-300" href="#">Dashboard</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-all duration-300" href="#">Inventory</a>
+<a class="font-body-md text-body-md font-bold border-b-2 border-primary text-[#0c1e26]" href="#">Logistics</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary/50">search</span>
+<input class="bg-white/40 border border-primary/10 rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 w-48 md:w-64 transition-all duration-300 focus:w-80 outline-none placeholder:text-primary/60" placeholder="Tìm kiếm kiện hàng, vận đơn..." type="text"/>
+</div>
+<button class="p-2 text-primary hover:bg-white/60 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-primary hover:bg-white/60 rounded-full transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+<img alt="Administrator Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIatFupAiCk4x18fhTO3xS6Thso_3z-HiXwn0G8YS3WgDAaNEgeNpQOJhvLW8NLRAB00aSCKgwdBf9ZY2VyFIvWu8u6HooNFr08qate5on0d-pKRw5tLmpxuZMekgODNVaGIabvASxA-LlwO4CwcVv8XiMtetAm6YBgw4IUmwlXJtIZmjRCgP1MWiXRfUdYsLbf7tqsh9ErYqLZ2l39r18zXC52NBkIK5o4YfO6mOVw_l3VIr8GFgOCmVbHWl9lJKqjMH1DLVDN7A"/>
+</div>
+</div>
+</nav>
+<section class="p-margin-desktop flex flex-col gap-10">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div class="max-w-2xl">
+<h1 class="font-display-xl text-5xl text-primary tracking-tight mb-2">Quản lý Đơn nhập hàng</h1>
+<p class="text-on-surface-variant font-body-md opacity-80">Theo dõi dòng chảy logistics thời gian thực và quản lý các vận đơn Inbound xuyên biên giới của SyncChain.</p>
+</div>
+<button class="bg-primary text-white px-8 py-3 rounded-xl font-label-caps tracking-widest flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span> Tạo Đơn Nhập Mới
+            </button>
+</div>
+<!-- Dashboard Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="p-8 rounded-3xl flex flex-col gap-4 glass-card bg-white/60">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="inventory_2">inventory_2</span>
+<div>
+<p class="font-label-caps text-[10px] text-on-surface-variant/60 tracking-[0.15em] mb-1">TỔNG KIỆN HÀNG</p>
+<h3 class="font-display-xl text-4xl text-primary">1,284</h3>
+</div>
+</div>
+<div class="p-8 rounded-3xl flex flex-col gap-4 glass-card bg-white/60">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="sailing">sailing</span>
+<div>
+<p class="font-label-caps text-[10px] text-on-surface-variant/60 tracking-[0.15em] mb-1">ĐANG TRÊN BIỂN</p>
+<h3 class="font-display-xl text-4xl text-primary">12 <span class="text-xl font-body-md text-on-surface-variant/40">Vessels</span></h3>
+</div>
+</div>
+<div class="p-8 rounded-3xl flex flex-col gap-4 glass-card bg-white/60">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="gavel">gavel</span>
+<div>
+<p class="font-label-caps text-[10px] text-on-surface-variant/60 tracking-[0.15em] mb-1">ĐỢI THÔNG QUAN</p>
+<h3 class="font-display-xl text-4xl text-primary">05</h3>
+</div>
+</div>
+<div class="p-8 rounded-3xl flex flex-col gap-4 glass-card bg-white/60">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="verified">verified</span>
+<div>
+<p class="font-label-caps text-[10px] text-on-surface-variant/60 tracking-[0.15em] mb-1">HOÀN TẤT NHẬP KHO</p>
+<h3 class="font-display-xl text-4xl text-primary">342</h3>
+</div>
+</div>
+</div>
+<!-- Visual Tracking Timeline & Map Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Live Timeline -->
+<div class="lg:col-span-1 p-8 rounded-3xl flex flex-col gap-6 glass-card bg-white/60">
+<div class="flex justify-between items-center">
+<h2 class="font-display-xl text-2xl text-primary">Live Tracking</h2>
+<span class="bg-primary-container text-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">#SC-9982</span>
+</div>
+<div class="flex flex-col gap-8 relative mt-4">
+<div class="absolute left-[11px] top-2 bottom-2 w-px bg-primary/10"></div>
+<div class="flex gap-4 relative z-10">
+<div class="w-6 h-6 rounded-full bg-primary border-4 border-white shadow-sm"></div>
+<div>
+<h4 class="font-bold text-sm text-primary">Cảng Thượng Hải, CN</h4>
+<p class="text-xs text-on-surface-variant">Rời bến: 12 Oct, 10:30 AM</p>
+<span class="inline-block mt-2 px-2 py-0.5 rounded-full bg-emerald-50 text-[10px] text-emerald-600 font-bold">COMPLETED</span>
+</div>
+</div>
+<div class="flex gap-4 relative z-10">
+<div class="w-6 h-6 rounded-full bg-primary-container border-4 border-white shadow-sm"></div>
+<div>
+<h4 class="font-bold text-sm text-primary">East China Sea</h4>
+<p class="text-xs text-on-surface-variant">Vị trí hiện tại - Vận tốc: 18 kts</p>
+<span class="inline-block mt-2 px-2 py-0.5 rounded-full bg-blue-50 text-[10px] text-blue-600 font-bold animate-pulse">IN TRANSIT</span>
+</div>
+</div>
+<div class="flex gap-4 relative z-10 opacity-50">
+<div class="w-6 h-6 rounded-full bg-slate-200 border-4 border-white"></div>
+<div>
+<h4 class="font-bold text-sm text-on-surface-variant">Cảng Cái Mép, VN</h4>
+<p class="text-xs text-on-surface-variant">Dự kiến: 16 Oct, 04:00 PM</p>
+</div>
+</div>
+<div class="flex gap-4 relative z-10 opacity-50">
+<div class="w-6 h-6 rounded-full bg-slate-200 border-4 border-white"></div>
+<div>
+<h4 class="font-bold text-sm text-on-surface-variant">Kho Trung Tâm SyncChain</h4>
+<p class="text-xs text-on-surface-variant">Dự kiến: 18 Oct</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-primary/10">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs text-on-surface-variant">Hàng hóa: Thiết bị bán dẫn (40ft High Cube)</span>
+<span class="text-xs font-bold text-primary">65%</span>
+</div>
+<div class="w-full bg-white h-1.5 rounded-full overflow-hidden shadow-inner">
+<div class="bg-primary h-full rounded-full" style="width: 65%;"></div>
+</div>
+</div>
+</div>
+<!-- Logistics Map Visual -->
+<div class="lg:col-span-2 relative h-[500px] rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 group glass-card">
+<img class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="A high-fidelity topographic map visual focused on the maritime route between China and Southeast Asia. The map is stylized in a premium digital luxury aesthetic, featuring cool sapphire blues, glowing data pathways, and luminous icons representing cargo ships." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXJtdBr4a30h15UKfFTc2JBDR8UJaP5-I7m-hP-1XHBtqaW7cU-4aiPvbX-w2D0wWgFOsgFugO4O5vQac4a9WfdFSAbg0apJCNG40zi9gZx8jWZjvhMRBWlpnF0rpStSxYd6G1tNAXkcitJDEZGBGE_sJYYsFNhMIqehIOGZZ2LWqrycu-CG3yZCKVlqoTvXDHWera9XSnOLZPRFka1HNzI9tkkRA-npiVTTQ7s0E7YDxa6BBKfpx55sEqfqhXzAiST1V69FEEjR8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent pointer-events-none"></div>
+<div class="absolute top-6 left-6 p-4 rounded-2xl max-w-xs bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl">
+<h4 class="font-bold text-primary flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span> Vessel: Ocean Sapphire
+                    </h4>
+<p class="text-[10px] font-label-caps text-on-surface-variant mt-1">LAT: 31.2304° N, LONG: 121.4737° E</p>
+</div>
+<div class="absolute bottom-6 right-6 flex gap-3">
+<button class="w-12 h-12 rounded-full flex items-center justify-center text-primary bg-white/60 backdrop-blur-md hover:bg-primary hover:text-white transition-all shadow-lg border border-white/30">
+<span class="material-symbols-outlined" data-icon="fullscreen">fullscreen</span>
+</button>
+<button class="w-12 h-12 rounded-full flex items-center justify-center text-primary bg-white/60 backdrop-blur-md hover:bg-primary hover:text-white transition-all shadow-lg border border-white/30">
+<span class="material-symbols-outlined" data-icon="layers">layers</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Recent Inbound Shipments Table -->
+<div class="rounded-3xl overflow-hidden glass-card bg-white/60">
+<div class="px-8 py-6 border-b border-primary/10 flex justify-between items-center">
+<h2 class="font-display-xl text-2xl text-primary">Vận đơn nhập hàng gần đây</h2>
+<div class="flex gap-4">
+<button class="text-[10px] font-label-caps tracking-widest text-primary flex items-center gap-2 px-4 py-2 hover:bg-white/60 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span> LỌC DỮ LIỆU
+                    </button>
+<button class="text-[10px] font-label-caps tracking-widest text-primary flex items-center gap-2 px-4 py-2 hover:bg-white/60 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span> XUẤT BÁO CÁO
+                    </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-primary/5">
+<tr>
+<th class="px-8 py-4 font-label-caps text-[10px] text-on-surface-variant tracking-widest">MÃ VẬN ĐƠN</th>
+<th class="px-8 py-4 font-label-caps text-[10px] text-on-surface-variant tracking-widest">NHÀ CUNG CẤP</th>
+<th class="px-8 py-4 font-label-caps text-[10px] text-on-surface-variant tracking-widest">HÀNG HÓA</th>
+<th class="px-8 py-4 font-label-caps text-[10px] text-on-surface-variant tracking-widest">NGÀY ĐẾN (DỰ KIẾN)</th>
+<th class="px-8 py-4 font-label-caps text-[10px] text-on-surface-variant tracking-widest">TRẠNG THÁI</th>
+<th class="px-8 py-4 font-label-caps text-[10px] text-on-surface-variant tracking-widest">QUẢN LÝ</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5 font-data-tabular text-sm">
+<tr class="hover:bg-white/40 transition-colors">
+<td class="px-8 py-5 font-bold text-primary">SC-INB-1024</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-blue-100 flex items-center justify-center text-[10px] text-blue-600 font-bold shadow-sm">ST</div>
+                                    Shenzhen Tech Ltd.
+                                </div>
+</td>
+<td class="px-8 py-5">Mainboards A-Series</td>
+<td class="px-8 py-5">14/10/2023</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 font-bold text-[10px] uppercase shadow-sm">Đã thông quan</span>
+</td>
+<td class="px-8 py-5">
+<button class="text-primary hover:underline font-bold text-[10px] uppercase tracking-widest">Chi tiết</button>
+</td>
+</tr>
+<tr class="hover:bg-white/40 transition-colors">
+<td class="px-8 py-5 font-bold text-primary">SC-INB-1025</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-indigo-100 flex items-center justify-center text-[10px] text-indigo-600 font-bold shadow-sm">NL</div>
+                                    Nippon Logistics
+                                </div>
+</td>
+<td class="px-8 py-5">Precision Optical Lenses</td>
+<td class="px-8 py-5">16/10/2023</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 rounded-full bg-blue-50 text-blue-600 font-bold text-[10px] uppercase animate-pulse shadow-sm">Trên biển</span>
+</td>
+<td class="px-8 py-5">
+<button class="text-primary hover:underline font-bold text-[10px] uppercase tracking-widest">Chi tiết</button>
+</td>
+</tr>
+<tr class="hover:bg-white/40 transition-colors">
+<td class="px-8 py-5 font-bold text-primary">SC-INB-1026</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-[10px] text-slate-600 font-bold shadow-sm">KM</div>
+                                    Korea Materials Co.
+                                </div>
+</td>
+<td class="px-8 py-5">Aluminum Housing Unit</td>
+<td class="px-8 py-5">19/10/2023</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 rounded-full bg-amber-50 text-amber-600 font-bold text-[10px] uppercase shadow-sm">Đang xếp dỡ</span>
+</td>
+<td class="px-8 py-5">
+<button class="text-primary hover:underline font-bold text-[10px] uppercase tracking-widest">Chi tiết</button>
+</td>
+</tr>
+<tr class="hover:bg-white/40 transition-colors">
+<td class="px-8 py-5 font-bold text-primary">SC-INB-1027</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-blue-100 flex items-center justify-center text-[10px] text-blue-600 font-bold shadow-sm">ST</div>
+                                    Shenzhen Tech Ltd.
+                                </div>
+</td>
+<td class="px-8 py-5">Battery Modules X-20</td>
+<td class="px-8 py-5">22/10/2023</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 rounded-full bg-white text-on-surface-variant font-bold text-[10px] uppercase shadow-sm border border-primary/5">Lên lịch rời bến</span>
+</td>
+<td class="px-8 py-5">
+<button class="text-primary hover:underline font-bold text-[10px] uppercase tracking-widest">Chi tiết</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-8 py-5 border-t border-primary/10 flex justify-between items-center text-[10px] font-label-caps text-on-surface-variant tracking-wider">
+<span>HIỂN THỊ 4 TRÊN 45 VẬN ĐƠN</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-lg border border-primary/10 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold">1</button>
+<button class="w-8 h-8 rounded-lg border border-primary/10 flex items-center justify-center hover:bg-primary hover:text-white transition-all">2</button>
+<button class="w-8 h-8 rounded-lg border border-primary/10 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Decoration -->
+<footer class="mt-20 px-margin-desktop py-10 opacity-60">
+<div class="flex justify-between items-center border-t border-primary/10 pt-8">
+<span class="font-label-caps text-[10px] text-on-surface-variant tracking-[0.2em] uppercase">© 2024 SyncChain. Professional Inbound Logistics Protocol.</span>
+<div class="flex gap-6 font-label-caps text-[10px] uppercase tracking-[0.2em] font-bold text-primary/70">
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Security</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+</main>
+<!-- Background Decorative Elements (Liquid Gradients) -->
+<div class="fixed top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
+<div class="fixed bottom-0 left-0 w-[800px] h-[800px] bg-primary-container/30 blur-[150px] rounded-full -z-10 pointer-events-none"></div>
+<script>
+    // Micro-interaction for map hover refinement
+    const mapContainer = document.querySelector('.relative.h-\\[500px\\]');
+    if(mapContainer) {
+        mapContainer.addEventListener('mousemove', (e) => {
+            const { left, top, width, height } = mapContainer.getBoundingClientRect();
+            const x = (e.clientX - left) / width;
+            const y = (e.clientY - top) / height;
+            
+            const img = mapContainer.querySelector('img');
+            img.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+        });
+    }
+
+    // Scroll effect for nav
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('nav');
+        if (window.scrollY > 20) {
+            nav.classList.add('shadow-md', 'bg-white/80');
+        } else {
+            nav.classList.remove('shadow-md', 'bg-white/80');
+        }
+    });
+</script>
+</body></html>

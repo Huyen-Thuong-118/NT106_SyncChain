@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="SyncChain.Desktop.CustomerShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:SyncChain.Desktop.Views.Pages"
+    FlyoutBackgroundColor="#CCEFF4FF"
+    FlyoutBehavior="Flyout"
+    FlyoutWidth="280"
+    Shell.BackgroundColor="#CCFFFFFF"
+    Shell.ForegroundColor="{StaticResource Primary}"
+    Shell.TitleColor="{StaticResource Primary}"
+    Shell.UnselectedColor="{StaticResource OnSurfaceVariant}"
+    Shell.NavBarIsVisible="False">
+
+    <Shell.FlyoutHeader>
+        <Grid Padding="24,32,24,22">
+            <HorizontalStackLayout Spacing="14" VerticalOptions="Center">
+                <Border BackgroundColor="{StaticResource Primary}"
+                        StrokeThickness="0"
+                        WidthRequest="46"
+                        HeightRequest="46">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14" />
+                    </Border.StrokeShape>
+                    <Label Text="&#xe7ef;"
+                           FontFamily="MaterialSymbols"
+                           FontSize="24"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                    <Label Text="SyncChain"
+                           FontFamily="SourceSerif4"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}" />
+                    <Label Text="CỔNG KHÁCH HÀNG"
+                           FontFamily="Inter"
+                           FontSize="10"
+                           FontAttributes="Bold"
+                           TextTransform="Uppercase"
+                           TextColor="{StaticResource OnSurfaceVariant}"
+                           CharacterSpacing="1.8" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Border BackgroundColor="#33FFFFFF"
+                    Stroke="#33FFFFFF"
+                    StrokeThickness="1"
+                    Margin="14,4"
+                    Padding="14,12">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14"
+                      HeightRequest="34">
+                    <Image Grid.Column="0"
+                           Source="{Binding FlyoutIcon}"
+                           WidthRequest="22"
+                           HeightRequest="22"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="{Binding Title}"
+                           FontFamily="Inter"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextTransform="Uppercase"
+                           TextColor="{StaticResource OnSurfaceVariant}"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <FlyoutItem Title="Trang khách hàng" Route="customer-home">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe88a;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:CustomerHomePage}" />
+    </FlyoutItem>
+</Shell>
