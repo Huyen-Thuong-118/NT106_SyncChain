@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nhật ký hoạt động</title>
+  <link rel="stylesheet" href="logs.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="header">
+      <div>
+        <h1>NHẬT KÝ HOẠT ĐỘNG</h1>
+        <p>Theo dõi các thao tác quan trọng trong hệ thống.</p>
+      </div>
+
+      <button class="btn-primary">Xuất nhật ký</button>
+    </section>
+
+    <section class="filter-card">
+      <div class="search">
+        <span>⌕</span>
+        <input placeholder="Tìm kiếm theo người dùng, hành động..." />
+      </div>
+
+      <button>Tất cả vai trò ▾</button>
+      <button>Loại hoạt động ▾</button>
+      <button>30 ngày qua ▾</button>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <p>HOẠT ĐỘNG HÔM NAY</p>
+        <h2>128</h2>
+      </div>
+
+      <div class="stat">
+        <p>THAY ĐỔI DỮ LIỆU</p>
+        <h2>42</h2>
+      </div>
+
+      <div class="stat">
+        <p>CẢNH BÁO</p>
+        <h2>06</h2>
+      </div>
+    </section>
+
+    <section class="log-card">
+      <div class="log-item">
+        <div class="icon green">✓</div>
+        <div class="content">
+          <h3>Hoàn tất đơn hàng #ORD-2023-8942</h3>
+          <p>Nguyễn Văn A đã chuyển trạng thái đơn hàng sang “Đã xử lý”.</p>
+          <span>5 phút trước</span>
+        </div>
+        <b class="tag green">Đơn hàng</b>
+      </div>
+
+      <div class="log-item">
+        <div class="icon blue">＋</div>
+        <div class="content">
+          <h3>Thêm sản phẩm mới</h3>
+          <p>Lê Minh Tuấn đã thêm sản phẩm “Đồng hồ Classic Gen 2”.</p>
+          <span>28 phút trước</span>
+        </div>
+        <b class="tag blue">Sản phẩm</b>
+      </div>
+
+      <div class="log-item">
+        <div class="icon orange">!</div>
+        <div class="content">
+          <h3>Cảnh báo tồn kho thấp</h3>
+          <p>Sản phẩm “Tai nghe Studio Pro” chỉ còn 05 sản phẩm trong kho.</p>
+          <span>1 giờ trước</span>
+        </div>
+        <b class="tag orange">Kho hàng</b>
+      </div>
+
+      <div class="log-item">
+        <div class="icon purple">♙</div>
+        <div class="content">
+          <h3>Tạo tài khoản nhân viên</h3>
+          <p>Quản trị viên đã tạo tài khoản mới cho Trần Thị B.</p>
+          <span>2 giờ trước</span>
+        </div>
+        <b class="tag purple">Người dùng</b>
+      </div>
+
+      <div class="log-item">
+        <div class="icon red">×</div>
+        <div class="content">
+          <h3>Hủy đơn hàng #ORD-2023-8938</h3>
+          <p>Đơn hàng bị hủy theo yêu cầu của khách hàng.</p>
+          <span>4 giờ trước</span>
+        </div>
+        <b class="tag red">Hủy đơn</b>
+      </div>
+    </section>
+
+    <section class="pagination">
+      <span>Hiển thị 1 - 5 trong số 2,481 hoạt động</span>
+
+      <div>
+        <button>‹</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>›</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

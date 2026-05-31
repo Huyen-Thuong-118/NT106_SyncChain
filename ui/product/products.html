@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý sản phẩm</title>
+  <link rel="stylesheet" href="products.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="header">
+      <div>
+        <h1>QUẢN LÝ SẢN PHẨM</h1>
+        <p>Theo dõi danh sách sản phẩm, tồn kho và trạng thái kinh doanh.</p>
+      </div>
+
+      <button class="btn-primary">+ Thêm sản phẩm</button>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="icon blue">▣</div>
+        <p>TỔNG SẢN PHẨM</p>
+        <h2>1,284</h2>
+      </div>
+
+      <div class="stat">
+        <div class="icon green">✓</div>
+        <p>ĐANG BÁN</p>
+        <h2>986</h2>
+      </div>
+
+      <div class="stat">
+        <div class="icon orange">!</div>
+        <p>SẮP HẾT HÀNG</p>
+        <h2>14</h2>
+      </div>
+
+      <div class="stat">
+        <div class="icon red">×</div>
+        <p>NGỪNG BÁN</p>
+        <h2>38</h2>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div class="search">
+        <span>⌕</span>
+        <input placeholder="Tìm kiếm sản phẩm..." />
+      </div>
+
+      <div class="toolbar-actions">
+        <button>Danh mục ▾</button>
+        <button>Trạng thái ▾</button>
+        <button>Sắp xếp ▾</button>
+      </div>
+    </section>
+
+    <section class="product-grid">
+      <div class="product-card">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300" />
+          <span class="badge green">Đang bán</span>
+        </div>
+
+        <div class="product-body">
+          <p class="sku">WTC-0012</p>
+          <h3>Đồng hồ thông minh S3</h3>
+          <p class="desc">Thiết bị đeo thông minh theo dõi sức khỏe.</p>
+
+          <div class="meta">
+            <div>
+              <span>Giá bán</span>
+              <strong>890,000 đ</strong>
+            </div>
+
+            <div>
+              <span>Tồn kho</span>
+              <strong class="danger">02</strong>
+            </div>
+          </div>
+
+          <button>Xem chi tiết</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" />
+          <span class="badge green">Đang bán</span>
+        </div>
+
+        <div class="product-body">
+          <p class="sku">AUD-0982</p>
+          <h3>Tai nghe Studio Pro</h3>
+          <p class="desc">Tai nghe không dây chống ồn chủ động.</p>
+
+          <div class="meta">
+            <div>
+              <span>Giá bán</span>
+              <strong>450,000 đ</strong>
+            </div>
+
+            <div>
+              <span>Tồn kho</span>
+              <strong class="warning">05</strong>
+            </div>
+          </div>
+
+          <button>Xem chi tiết</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=300" />
+          <span class="badge blue">Mới</span>
+        </div>
+
+        <div class="product-body">
+          <p class="sku">WTC-0045</p>
+          <h3>Đồng hồ Classic Gen 2</h3>
+          <p class="desc">Đồng hồ cổ điển, dây da cao cấp.</p>
+
+          <div class="meta">
+            <div>
+              <span>Giá bán</span>
+              <strong>1,250,000 đ</strong>
+            </div>
+
+            <div>
+              <span>Tồn kho</span>
+              <strong>58</strong>
+            </div>
+          </div>
+
+          <button>Xem chi tiết</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1585386959984-a41552231658?w=300" />
+          <span class="badge orange">Sắp hết</span>
+        </div>
+
+        <div class="product-body">
+          <p class="sku">PER-1108</p>
+          <h3>Nước hoa Mini Rose</h3>
+          <p class="desc">Hương thơm nhẹ nhàng, dung tích 30ml.</p>
+
+          <div class="meta">
+            <div>
+              <span>Giá bán</span>
+              <strong>320,000 đ</strong>
+            </div>
+
+            <div>
+              <span>Tồn kho</span>
+              <strong class="warning">08</strong>
+            </div>
+          </div>
+
+          <button>Xem chi tiết</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300" />
+          <span class="badge green">Đang bán</span>
+        </div>
+
+        <div class="product-body">
+          <p class="sku">SHO-2031</p>
+          <h3>Giày thể thao Runner</h3>
+          <p class="desc">Giày chạy bộ nhẹ, đế đàn hồi tốt.</p>
+
+          <div class="meta">
+            <div>
+              <span>Giá bán</span>
+              <strong>690,000 đ</strong>
+            </div>
+
+            <div>
+              <span>Tồn kho</span>
+              <strong>120</strong>
+            </div>
+          </div>
+
+          <button>Xem chi tiết</button>
+        </div>
+      </div>
+
+      <div class="product-card inactive">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=300" />
+          <span class="badge red">Ngừng bán</span>
+        </div>
+
+        <div class="product-body">
+          <p class="sku">GLA-7712</p>
+          <h3>Kính mát Urban</h3>
+          <p class="desc">Kính thời trang chống tia UV.</p>
+
+          <div class="meta">
+            <div>
+              <span>Giá bán</span>
+              <strong>250,000 đ</strong>
+            </div>
+
+            <div>
+              <span>Tồn kho</span>
+              <strong>00</strong>
+            </div>
+          </div>
+
+          <button>Xem chi tiết</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="pagination">
+      <span>Hiển thị 1 - 6 trong số 1,284 sản phẩm</span>
+
+      <div>
+        <button>‹</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>›</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

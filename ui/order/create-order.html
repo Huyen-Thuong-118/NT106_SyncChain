@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tạo đơn hàng mới</title>
+  <link rel="stylesheet" href="create-order.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="top">
+      <a href="#">← Quay lại đơn hàng</a>
+      <button class="save-draft">Lưu nháp</button>
+    </section>
+
+    <section class="header">
+      <div>
+        <h1>TẠO ĐƠN HÀNG MỚI</h1>
+        <p>Nhập thông tin khách hàng và sản phẩm cần bán.</p>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="left">
+        <div class="card">
+          <h3>Thông tin khách hàng</h3>
+
+          <div class="form-grid">
+            <div>
+              <label>HỌ VÀ TÊN</label>
+              <input placeholder="Nguyễn Văn A" />
+            </div>
+
+            <div>
+              <label>SỐ ĐIỆN THOẠI</label>
+              <input placeholder="0901 234 567" />
+            </div>
+
+            <div>
+              <label>EMAIL</label>
+              <input placeholder="email@gmail.com" />
+            </div>
+
+            <div>
+              <label>KÊNH BÁN</label>
+              <select>
+                <option>Cửa hàng trực tiếp</option>
+                <option>Online</option>
+                <option>Facebook</option>
+              </select>
+            </div>
+          </div>
+
+          <label>ĐỊA CHỈ GIAO HÀNG</label>
+          <textarea placeholder="Nhập địa chỉ giao hàng..."></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Sản phẩm</h3>
+            <button>+ Thêm sản phẩm</button>
+          </div>
+
+          <div class="product-row">
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=120" />
+            <div class="product-info">
+              <strong>Đồng hồ thông minh S3</strong>
+              <p>WTC-0012 · Còn 02 sản phẩm</p>
+            </div>
+
+            <div class="qty">
+              <button>-</button>
+              <span>1</span>
+              <button>+</button>
+            </div>
+
+            <strong class="price">890,000 đ</strong>
+            <button class="remove">×</button>
+          </div>
+
+          <div class="product-row">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=120" />
+            <div class="product-info">
+              <strong>Tai nghe Studio Pro</strong>
+              <p>AUD-0982 · Còn 05 sản phẩm</p>
+            </div>
+
+            <div class="qty">
+              <button>-</button>
+              <span>1</span>
+              <button>+</button>
+            </div>
+
+            <strong class="price">450,000 đ</strong>
+            <button class="remove">×</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Ghi chú đơn hàng</h3>
+          <textarea placeholder="Nhập ghi chú cho đơn hàng..."></textarea>
+        </div>
+      </div>
+
+      <aside class="right">
+        <div class="summary">
+          <h3>Tóm tắt đơn hàng</h3>
+
+          <div class="sum-row">
+            <span>Tạm tính</span>
+            <strong>1,340,000 đ</strong>
+          </div>
+
+          <div class="sum-row">
+            <span>Phí vận chuyển</span>
+            <strong>30,000 đ</strong>
+          </div>
+
+          <div class="discount">
+            <input placeholder="Mã giảm giá" />
+            <button>Áp dụng</button>
+          </div>
+
+          <div class="sum-row">
+            <span>Giảm giá</span>
+            <strong>-0 đ</strong>
+          </div>
+
+          <div class="total">
+            <span>Tổng cộng</span>
+            <strong>1,370,000 đ</strong>
+          </div>
+
+          <button class="create">Tạo đơn hàng</button>
+        </div>
+
+        <div class="payment">
+          <h3>Thanh toán</h3>
+
+          <label class="pay-method active">
+            <input type="radio" checked />
+            <span>Tiền mặt</span>
+          </label>
+
+          <label class="pay-method">
+            <input type="radio" />
+            <span>Chuyển khoản</span>
+          </label>
+
+          <label class="pay-method">
+            <input type="radio" />
+            <span>Ví điện tử</span>
+          </label>
+        </div>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

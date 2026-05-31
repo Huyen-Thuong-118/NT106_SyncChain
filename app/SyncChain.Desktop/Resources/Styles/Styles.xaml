@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         LIQUID GRADIENT BRUSH
+         135° linear gradient: #f8f9ff → #e0f2fe → #eff4ff
+         StartPoint="0,0" EndPoint="1,1" approximates 135 degrees
+    ═══════════════════════════════════════════════════════════════ -->
+    <LinearGradientBrush x:Key="LiquidGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#f8f9ff" Offset="0.0" />
+        <GradientStop Color="#e0f2fe" Offset="0.5" />
+        <GradientStop Color="#eff4ff" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         CONTENT PAGE STYLE
+         Applies LiquidGradientBrush as page background
+    ═══════════════════════════════════════════════════════════════ -->
+    <!-- Default ContentPage style (implicit) -->
+    <Style TargetType="ContentPage">
+        <Setter Property="Background" Value="{StaticResource LiquidGradientBrush}" />
+    </Style>
+
+    <Style TargetType="ScrollView">
+        <Setter Property="Background" Value="{StaticResource LiquidGradientBrush}" />
+    </Style>
+
+    <Style TargetType="Shell">
+        <Setter Property="Background" Value="{StaticResource LiquidGradientBrush}" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         TYPOGRAPHY STYLES
+         Source Serif 4: editorial headlines
+         Inter: functional/data text
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- DisplayXlLabel: Source Serif 4, 40px, weight 600 (SemiBold) -->
+    <Style x:Key="DisplayXlLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="SourceSerif4" />
+        <Setter Property="FontSize" Value="40" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+    </Style>
+
+    <!-- HeadlineLgLabel: Source Serif 4, 32px, weight 500 (Medium) -->
+    <Style x:Key="HeadlineLgLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="SourceSerif4" />
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+    </Style>
+
+    <!-- HeadlineLgMobileLabel: Source Serif 4, 32px, weight 500 (Medium) -->
+    <Style x:Key="HeadlineLgMobileLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="SourceSerif4" />
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+    </Style>
+
+    <!-- BodyMdLabel: Inter, 16px, weight 400 (Regular) -->
+    <Style x:Key="BodyMdLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurfaceVariant}" />
+    </Style>
+
+    <!-- DataTabularLabel: Inter, 14px, weight 600 (SemiBold) -->
+    <Style x:Key="DataTabularLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+    </Style>
+
+    <!-- LabelCapsLabel: Inter, 12px, weight 700 (Bold), Uppercase -->
+    <Style x:Key="LabelCapsLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextTransform" Value="Uppercase" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurfaceVariant}" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         GLASS CARD BORDER STYLE
+         Semi-transparent white bg, 30% white stroke, 24px corners, shadow
+    ═══════════════════════════════════════════════════════════════ -->
+    <Style x:Key="GlassCardBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#D9FFFFFF" />
+        <Setter Property="Stroke" Value="{DynamicResource GlassBorder30}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="28" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#1A213145"
+                        Offset="0,18"
+                        Radius="48"
+                        Opacity="0.08" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PageHeaderCard" TargetType="Border" BasedOn="{StaticResource GlassCardBorder}">
+        <Setter Property="BackgroundColor" Value="{DynamicResource GlassWhite80}" />
+        <Setter Property="Padding" Value="32,26" />
+    </Style>
+
+    <Style x:Key="DataRowBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#33FFFFFF" />
+        <Setter Property="Stroke" Value="#33FFFFFF" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         BUTTON STYLES
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- PillPrimaryButton: compact rounded rectangle, primary bg, white label-caps text -->
+    <Style x:Key="PillPrimaryButton" TargetType="Button">
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextTransform" Value="Uppercase" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="Padding" Value="22,12" />
+    </Style>
+
+    <!-- PillSecondaryButton: compact rounded rectangle, glass bg, primary border -->
+    <Style x:Key="PillSecondaryButton" TargetType="Button">
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="BackgroundColor" Value="#66FFFFFF" />
+        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+        <Setter Property="BorderColor" Value="{DynamicResource Primary}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextTransform" Value="Uppercase" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="Padding" Value="22,12" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         INPUT STYLES
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- MinimalistEntry: transparent bg, bottom border in OutlineVariant -->
+    <Style x:Key="MinimalistEntry" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource OnSurfaceVariant}" />
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="ClearButtonVisibility" Value="WhileEditing" />
+    </Style>
+
+    <!-- Default Entry style -->
+    <Style TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource OnSurfaceVariant}" />
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="ClearButtonVisibility" Value="WhileEditing" />
+    </Style>
+
+    <!-- Default Editor style -->
+    <Style TargetType="Editor">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource OnSurfaceVariant}" />
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="AutoSize" Value="TextChanges" />
+    </Style>
+
+    <!-- Default Picker style -->
+    <Style TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HeightRequest" Value="44" />
+    </Style>
+
+    <!-- Default DatePicker style -->
+    <Style TargetType="DatePicker">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HeightRequest" Value="44" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         BADGE STYLES
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- StatusBadgePill: rectangular badge text, bold uppercase 10px -->
+    <Style x:Key="StatusBadgePill" TargetType="Label">
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextTransform" Value="Uppercase" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+        <Setter Property="Padding" Value="12,4" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+    <!-- CategoryBadgePill: rectangular category label with PrimaryContainer background -->
+    <Style x:Key="CategoryBadgePill" TargetType="Label">
+        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource PrimaryContainer}" />
+        <Setter Property="Padding" Value="12,4" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+</ResourceDictionary>
