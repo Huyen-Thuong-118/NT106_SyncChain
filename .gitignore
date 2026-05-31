@@ -1,24 +1,4 @@
-serviceAccountKey.json
 node_modules/
 
-# Bỏ qua cơ sở dữ liệu SQLite
-*.db
-database/*.db
-
-# Bỏ qua các file chứa Key bảo mật
-serviceAccountKey.json
+# Bỏ qua file chứa Key bảo mật / biến môi trường
 .env
-
-# Visual Studio
-.vs/
-*.user
-*.suo
-*.cache
-*.pdb
-
-# Build
-bin/
-obj/
-
-# Logs
-*.log
