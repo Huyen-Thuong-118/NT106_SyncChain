@@ -63,21 +63,21 @@
                         <Label Text="Tổng quan kho hàng"
                                FontFamily="SourceSerif4" FontSize="28" FontAttributes="Bold"
                                TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="Hệ thống đang quản lý 1,284 sản phẩm trên 6 danh mục. Tồn kho ổn định với 986 mặt hàng đang bán, 14 sắp hết hàng cần bổ sung."
+                        <Label Text="Hệ thống đang quản lý sản phẩm trong hệ thống SyncChain. Tồn kho ổn định với các mặt hàng đang bán."
                                Style="{StaticResource BodyMdLabel}" />
                         <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16" Margin="0,8,0,0">
                             <VerticalStackLayout>
-                                <Label Text="1,284" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
+                                <Label Text="{Binding TotalProducts}" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
                                        VerticalOptions="Center" LineBreakMode="NoWrap" />
                                 <Label Text="Tổng sản phẩm" Style="{StaticResource LabelCapsLabel}" />
                             </VerticalStackLayout>
                             <VerticalStackLayout>
-                                <Label Text="986" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
+                                <Label Text="{Binding ActiveProducts}" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
                                        VerticalOptions="Center" LineBreakMode="NoWrap" />
                                 <Label Text="Đang bán" Style="{StaticResource LabelCapsLabel}" />
                             </VerticalStackLayout>
                             <VerticalStackLayout>
-                                <Label Text="14" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
+                                <Label Text="{Binding LowStockProducts}" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
                                        VerticalOptions="Center" LineBreakMode="NoWrap" />
                                 <Label Text="Sắp hết hàng" Style="{StaticResource LabelCapsLabel}" />
                             </VerticalStackLayout>
@@ -178,7 +178,7 @@
                  "Trước"/"Tiếp" pill buttons with Vietnamese record count
             ═══════════════════════════════════════════════════════════ -->
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                <Label Text="Hiển thị 1 – 6 trong số 1,284 sản phẩm" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
+                <Label Text="{Binding PaginationText}" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
                 <HorizontalStackLayout Grid.Column="1" Spacing="8">
                     <Button Text="TRƯỚC" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
                     <Button Text="1" Style="{StaticResource PillPrimaryButton}" Padding="14,10" />
