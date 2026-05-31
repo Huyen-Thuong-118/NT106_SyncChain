@@ -10,6 +10,13 @@ public partial class OrdersPage : ContentPage
 
 	public IReadOnlyList<OrderItem> Orders { get; private set; } = Array.Empty<OrderItem>();
 
+	// Thống kê từ dashboard
+	public string TotalOrders { get; private set; } = "0";
+	public string PendingOrders { get; private set; } = "0";
+	public string CompletedOrders { get; private set; } = "0";
+	public string TotalRevenue { get; private set; } = "0 đ";
+	public string PaginationText { get; private set; } = "Đang tải...";
+
 	public OrdersPage(HttpClient http)
 	{
 		_http = http;
@@ -27,11 +34,46 @@ public partial class OrdersPage : ContentPage
 	{
 		try
 		{
-			var response = await _http.GetFromJsonAsync<ApiResponse<List<DonHangApi>>>("api/donhang");
-			if (response?.success == true && response.data != null)
+			// Gọi API lấy danh sách đơn hàng
+			var orders = await _http.GetFromJsonAsync<List<DonHangApi>>("api/order");
+			if (orders != null)
 			{
-				Orders = response.data.Select(MapToOrderItem).ToList();
+				Orders = orders.Select(MapToOrderItem).ToList();
+				PaginationText = $"Hiển thị 1 - {orders.Count} trong số {orders.Count} đơn hàng";
 				OnPropertyChanged(nameof(Orders));
+				OnPropertyChanged(nameof(PaginationText));
+			}
+
+			// Gọi API dashboard để lấy thống kê
+			try
+			{
+				var dashboard = await _http.GetFromJsonAsync<DashboardApi>("api/report/dashboard");
+				if (dashboard != null)
+				{
+					TotalOrders = dashboard.TotalOrders.ToString("N0");
+					PendingOrders = dashboard.PendingOrders.ToString();
+					CompletedOrders = dashboard.CompletedOrders.ToString();
+					TotalRevenue = $"{dashboard.TotalRevenue:N0} đ";
+					OnPropertyChanged(nameof(TotalOrders));
+					OnPropertyChanged(nameof(PendingOrders));
+					OnPropertyChanged(nameof(CompletedOrders));
+					OnPropertyChanged(nameof(TotalRevenue));
+				}
+			}
+			catch
+			{
+				// Nếu không có quyền gọi dashboard, dùng dữ liệu từ đơn hàng
+				if (orders != null)
+				{
+					TotalOrders = orders.Count.ToString("N0");
+					PendingOrders = orders.Count(o => o.TrangThai is "pending" or "processing").ToString();
+					CompletedOrders = orders.Count(o => o.TrangThai == "done").ToString();
+					TotalRevenue = $"{orders.Sum(o => o.TongTien):N0} đ";
+					OnPropertyChanged(nameof(TotalOrders));
+					OnPropertyChanged(nameof(PendingOrders));
+					OnPropertyChanged(nameof(CompletedOrders));
+					OnPropertyChanged(nameof(TotalRevenue));
+				}
 			}
 		}
 		catch (Exception ex)
@@ -42,26 +84,25 @@ public partial class OrdersPage : ContentPage
 
 	private static OrderItem MapToOrderItem(DonHangApi dh)
 	{
-		var (statusText, statusColor) = dh.TrangThaiDon switch
+		var (statusText, statusColor) = dh.TrangThai switch
 		{
-			"Da dat hang" => ("Chờ duyệt", Color.FromArgb("#dae2fd")),
-			"Dang xu ly" => ("Đang xử lý", Color.FromArgb("#dbeafe")),
-			"Dang van chuyen" => ("Đang vận chuyển", Color.FromArgb("#dbeafe")),
-			"Hoan tat" => ("Hoàn tất", Color.FromArgb("#d3e5f1")),
-			"Huy" => ("Hủy", Color.FromArgb("#ffdad6")),
-			_ => (dh.TrangThaiDon, Color.FromArgb("#eef0f2"))
+			"pending" => ("Chờ duyệt", Color.FromArgb("#dae2fd")),
+			"processing" => ("Đang xử lý", Color.FromArgb("#dbeafe")),
+			"done" => ("Hoàn tất", Color.FromArgb("#d3e5f1")),
+			"cancel" => ("Đã hủy", Color.FromArgb("#ffdad6")),
+			_ => (dh.TrangThai, Color.FromArgb("#eef0f2"))
 		};
 
 		return new OrderItem
 		{
 			Code = $"#ORD-{dh.MaDonHang:0000}",
-			Customer = $"Khách hàng #{dh.MaKhachHang}",
-			Email = $"kh{dh.MaKhachHang}@gmail.com",
+			Customer = $"Khách hàng #{dh.MaNguoiDung}",
+			Email = $"kh{dh.MaNguoiDung}@gmail.com",
 			CreatedAt = dh.NgayTao.ToString("dd/MM/yyyy HH:mm"),
 			Total = $"{dh.TongTien:N0} đ",
 			Status = statusText,
 			StatusColor = statusColor,
-			Initials = $"KH"
+			Initials = "KH"
 		};
 	}
 

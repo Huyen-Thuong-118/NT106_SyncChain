@@ -9,7 +9,12 @@ public partial class ImportsPage : ContentPage
 	private readonly HttpClient _http;
 
 	public IReadOnlyList<ImportItem> Imports { get; private set; } = Array.Empty<ImportItem>();
-	public IReadOnlyList<SupplierItem> Suppliers { get; private set; } = Array.Empty<SupplierItem>();
+
+	// Thống kê
+	public string TotalImports { get; private set; } = "0";
+	public string TotalQuantity { get; private set; } = "0";
+	public string TotalAmount { get; private set; } = "0 đ";
+	public string PaginationText { get; private set; } = "Đang tải...";
 
 	public ImportsPage(HttpClient http)
 	{
@@ -28,43 +33,41 @@ public partial class ImportsPage : ContentPage
 	{
 		try
 		{
-			var response = await _http.GetFromJsonAsync<ApiResponse<List<SanPhamApi>>>("api/sanpham");
-			if (response?.success == true && response.data != null)
+			// Gọi API lấy lịch sử nhập kho
+			var imports = await _http.GetFromJsonAsync<List<ImportApi>>("api/product/imports");
+			if (imports != null)
 			{
-				var products = response.data;
+				Imports = imports.Select(MapToImportItem).ToList();
 
-				// Tạo ImportItem từ sản phẩm (giả lập đơn nhập dựa trên tồn kho)
-				Imports = products.Select(p => new ImportItem
-				{
-					Code = $"NH-{p.MaSanPham:0000}",
-					Supplier = "Nhà cung cấp ABC",
-					Date = DateTime.Now.AddDays(-Random.Shared.Next(1, 30)).ToString("dd/MM/yyyy"),
-					ProductCount = p.TenSanPham,
-					Amount = $"{p.GiaBan * p.SoLuongTon:N0} đ",
-					Status = p.SoLuongTon > p.MucTonThap ? "Đã nhập" :
-							 p.SoLuongTon > 0 ? "Đang vận chuyển" : "Chờ duyệt",
-					StatusColor = p.SoLuongTon > p.MucTonThap ? Color.FromArgb("#d3e5f1") :
-								  Color.FromArgb("#dae2fd")
-				}).ToList();
-
-				// Tạo SupplierItem
-				Suppliers = new List<SupplierItem>
-				{
-					new() { Name = "Nhà cung cấp ABC", Orders = products.Count.ToString(),
-						Amount = $"{products.Sum(p => p.GiaBan * p.SoLuongTon):N0} đ",
-						Initial = "A", Accent = Color.FromArgb("#213145") },
-					new() { Name = "Nhà cung cấp XYZ", Orders = (products.Count / 2).ToString(),
-						Amount = $"{products.Sum(p => p.GiaBan * p.SoLuongTon) / 2:N0} đ",
-						Initial = "X", Accent = Color.FromArgb("#50616B") }
-				};
+				TotalImports = imports.Count.ToString();
+				TotalQuantity = imports.Sum(i => i.SoLuong).ToString();
+				TotalAmount = $"{imports.Sum(i => i.ThanhTien):N0} đ";
+				PaginationText = $"Hiển thị 1 - {imports.Count} trong số {imports.Count} giao dịch";
 
 				OnPropertyChanged(nameof(Imports));
-				OnPropertyChanged(nameof(Suppliers));
+				OnPropertyChanged(nameof(TotalImports));
+				OnPropertyChanged(nameof(TotalQuantity));
+				OnPropertyChanged(nameof(TotalAmount));
+				OnPropertyChanged(nameof(PaginationText));
 			}
 		}
 		catch (Exception ex)
 		{
 			System.Diagnostics.Debug.WriteLine($"[ImportsPage] Load error: {ex.Message}");
 		}
+	}
+
+	private static ImportItem MapToImportItem(ImportApi imp)
+	{
+		return new ImportItem
+		{
+			Code = $"NH-{imp.MaGiaoDich:0000}",
+			Supplier = imp.TenSanPham,
+			Date = imp.ThoiGian.ToString("dd/MM/yyyy HH:mm"),
+			ProductCount = $"+{imp.SoLuong} sản phẩm",
+			Amount = $"{imp.ThanhTien:N0} đ",
+			Status = "Đã nhập",
+			StatusColor = Color.FromArgb("#d3e5f1")
+		};
 	}
 }

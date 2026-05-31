@@ -10,6 +10,12 @@ public partial class ProductsPage : ContentPage
 
 	public IReadOnlyList<ProductItem> Products { get; private set; } = Array.Empty<ProductItem>();
 
+	// Thống kê từ dashboard
+	public string TotalProducts { get; private set; } = "0";
+	public string ActiveProducts { get; private set; } = "0";
+	public string LowStockProducts { get; private set; } = "0";
+	public string PaginationText { get; private set; } = "Đang tải...";
+
 	public ProductsPage(HttpClient http)
 	{
 		_http = http;
@@ -27,11 +33,42 @@ public partial class ProductsPage : ContentPage
 	{
 		try
 		{
-			var response = await _http.GetFromJsonAsync<ApiResponse<List<SanPhamApi>>>("api/sanpham");
-			if (response?.success == true && response.data != null)
+			// Gọi API lấy danh sách sản phẩm
+			var products = await _http.GetFromJsonAsync<List<SanPhamApi>>("api/product");
+			if (products != null)
 			{
-				Products = response.data.Select(MapToProductItem).ToList();
+				Products = products.Select(MapToProductItem).ToList();
+				PaginationText = $"Hiển thị 1 - {products.Count} trong số {products.Count} sản phẩm";
 				OnPropertyChanged(nameof(Products));
+				OnPropertyChanged(nameof(PaginationText));
+			}
+
+			// Gọi API dashboard để lấy thống kê
+			try
+			{
+				var dashboard = await _http.GetFromJsonAsync<DashboardApi>("api/report/dashboard");
+				if (dashboard != null)
+				{
+					TotalProducts = dashboard.TotalProducts.ToString("N0");
+					ActiveProducts = dashboard.ActiveProducts.ToString("N0");
+					LowStockProducts = dashboard.LowStockProducts.ToString();
+					OnPropertyChanged(nameof(TotalProducts));
+					OnPropertyChanged(nameof(ActiveProducts));
+					OnPropertyChanged(nameof(LowStockProducts));
+				}
+			}
+			catch
+			{
+				// Nếu không có quyền gọi dashboard, dùng dữ liệu từ sản phẩm
+				if (products != null)
+				{
+					TotalProducts = products.Count.ToString("N0");
+					ActiveProducts = products.Count(p => p.TrangThai == "Hoat dong" && p.SoLuongTon > 0).ToString("N0");
+					LowStockProducts = products.Count(p => p.SoLuongTon > 0 && p.SoLuongTon <= p.MucTonThap).ToString();
+					OnPropertyChanged(nameof(TotalProducts));
+					OnPropertyChanged(nameof(ActiveProducts));
+					OnPropertyChanged(nameof(LowStockProducts));
+				}
 			}
 		}
 		catch (Exception ex)

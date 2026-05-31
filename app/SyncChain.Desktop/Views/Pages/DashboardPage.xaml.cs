@@ -13,6 +13,12 @@ public partial class DashboardPage : ContentPage
 	public IReadOnlyList<ActivityItem> Activities { get; private set; } = Array.Empty<ActivityItem>();
 	public IReadOnlyList<BridgeItem> Bridges { get; private set; } = Array.Empty<BridgeItem>();
 
+	// Dữ liệu cho biểu đồ xu hướng (7 ngày)
+	public IReadOnlyList<TrendApi> TrendData { get; private set; } = Array.Empty<TrendApi>();
+
+	// Dữ liệu cho phân bổ tồn kho
+	public IReadOnlyList<TopProductApi> TopProducts { get; private set; } = Array.Empty<TopProductApi>();
+
 	public DashboardPage(HttpClient http)
 	{
 		_http = http;
@@ -30,64 +36,55 @@ public partial class DashboardPage : ContentPage
 	{
 		try
 		{
-			// Lấy sản phẩm
-			var productsResp = await _http.GetFromJsonAsync<ApiResponse<List<SanPhamApi>>>("api/sanpham");
-			// Lấy đơn hàng
-			var ordersResp = await _http.GetFromJsonAsync<ApiResponse<List<DonHangApi>>>("api/donhang");
+			// Gọi API dashboard tổng hợp
+			var dashboard = await _http.GetFromJsonAsync<DashboardApi>("api/report/dashboard");
+			if (dashboard == null) return;
 
-			var products = productsResp?.data ?? new List<SanPhamApi>();
-			var orders = ordersResp?.data ?? new List<DonHangApi>();
-
-			var totalProducts = products.Count;
-			var lowStockCount = products.Count(p => p.SoLuongTon > 0 && p.SoLuongTon <= p.MucTonThap);
-			var totalOrders = orders.Count;
-			var totalRevenue = orders.Sum(o => o.TongTien);
-
-			// Tạo stat cards
+			// Tạo stat cards từ dữ liệu dashboard
 			Stats = new List<StatCard>
 			{
-				new() { Title = "TỔNG SẢN PHẨM", Value = totalProducts.ToString(), Icon = "📦",
+				new() { Title = "TỔNG SẢN PHẨM", Value = dashboard.TotalProducts.ToString(), Icon = "📦",
 					Accent = Color.FromArgb("#213145") },
-				new() { Title = "TỔNG ĐƠN HÀNG", Value = totalOrders.ToString(), Icon = "🛒",
+				new() { Title = "SẢN PHẨM HOẠT ĐỘNG", Value = dashboard.ActiveProducts.ToString(), Icon = "✅",
 					Accent = Color.FromArgb("#50616B") },
-				new() { Title = "DOANH THU", Value = $"{totalRevenue:N0} đ", Icon = "💰",
+				new() { Title = "TỔNG ĐƠN HÀNG", Value = dashboard.TotalOrders.ToString(), Icon = "🛒",
 					Accent = Color.FromArgb("#5C647A") },
-				new() { Title = "TỒN KHO THẤP", Value = lowStockCount.ToString(), Icon = "⚠️",
-					Accent = lowStockCount > 0 ? Color.FromArgb("#BA1A1A") : Color.FromArgb("#5C647A") },
-				new() { Title = "ĐANG XỬ LÝ", Value = orders.Count(o => o.TrangThaiDon is "Da dat hang" or "Dang xu ly").ToString(),
+				new() { Title = "DOANH THU", Value = $"{dashboard.TotalRevenue:N0} đ", Icon = "💰",
+					Accent = Color.FromArgb("#213145") },
+				new() { Title = "TỒN KHO THẤP", Value = dashboard.LowStockProducts.ToString(), Icon = "⚠️",
+					Accent = dashboard.LowStockProducts > 0 ? Color.FromArgb("#BA1A1A") : Color.FromArgb("#5C647A") },
+				new() { Title = "ĐANG XỬ LÝ", Value = dashboard.PendingOrders.ToString(),
 					Icon = "⏳", Accent = Color.FromArgb("#B7C9D5") }
 			};
 
-			// Tạo cảnh báo tồn kho thấp
-			Alerts = products
-				.Where(p => p.SoLuongTon > 0 && p.SoLuongTon <= p.MucTonThap)
-				.Take(3)
-				.Select(p => new AlertItem
-				{
-					Name = p.TenSanPham,
-					Code = $"SP-{p.MaSanPham:0000}",
-					StockText = $"Còn {p.SoLuongTon}",
-					Accent = p.SoLuongTon <= 5 ? Color.FromArgb("#BA1A1A") : Color.FromArgb("#50616B")
-				})
-				.ToList();
+			// Tạo cảnh báo tồn kho thấp từ API
+			Alerts = dashboard.LowStock.Select(p => new AlertItem
+			{
+				Name = p.TenSanPham,
+				Code = $"SP-{p.MaSanPham:0000}",
+				StockText = $"Còn {p.SoLuongTon}",
+				Accent = p.SoLuongTon <= 5 ? Color.FromArgb("#BA1A1A") : Color.FromArgb("#50616B")
+			}).ToList();
 
-			// Tạo hoạt động gần đây từ đơn hàng
-			Activities = orders
-				.OrderByDescending(o => o.NgayTao)
-				.Take(4)
-				.Select(o => new ActivityItem
-				{
-					Title = $"Đơn #ORD-{o.MaDonHang:0000} - {MapStatus(o.TrangThaiDon)}",
-					Time = o.NgayTao.ToString("dd/MM HH:mm"),
-					Icon = "🛒",
-					Accent = Color.FromArgb("#50616B")
-				})
-				.ToList();
+			// Tạo hoạt động gần đây từ API
+			Activities = dashboard.RecentActivities.Select(a => new ActivityItem
+			{
+				Title = a.Title,
+				Time = a.Time.ToString("dd/MM HH:mm"),
+				Icon = a.Type == "order" ? "🛒" : "📦",
+				Accent = a.Type == "order" ? Color.FromArgb("#50616B") : Color.FromArgb("#5C647A")
+			}).ToList();
+
+			// Dữ liệu xu hướng 7 ngày
+			TrendData = dashboard.Trend;
+
+			// Top sản phẩm bán chạy
+			TopProducts = dashboard.TopProducts;
 
 			// Bridge items
 			Bridges = new List<BridgeItem>
 			{
-				new() { Title = "API Backend", Description = $"Đã kết nối {totalProducts} sản phẩm, {totalOrders} đơn hàng",
+				new() { Title = "API Backend", Description = $"Đã kết nối {dashboard.TotalProducts} sản phẩm, {dashboard.TotalOrders} đơn hàng",
 					Status = "Đã kết nối", Accent = Color.FromArgb("#213145") }
 			};
 
@@ -95,20 +92,12 @@ public partial class DashboardPage : ContentPage
 			OnPropertyChanged(nameof(Alerts));
 			OnPropertyChanged(nameof(Activities));
 			OnPropertyChanged(nameof(Bridges));
+			OnPropertyChanged(nameof(TrendData));
+			OnPropertyChanged(nameof(TopProducts));
 		}
 		catch (Exception ex)
 		{
 			System.Diagnostics.Debug.WriteLine($"[DashboardPage] Load error: {ex.Message}");
 		}
 	}
-
-	private static string MapStatus(string status) => status switch
-	{
-		"Da dat hang" => "Chờ duyệt",
-		"Dang xu ly" => "Đang xử lý",
-		"Dang van chuyen" => "Đang vận chuyển",
-		"Hoan tat" => "Hoàn tất",
-		"Huy" => "Đã hủy",
-		_ => status
-	};
 }

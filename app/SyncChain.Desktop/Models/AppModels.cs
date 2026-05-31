@@ -166,57 +166,189 @@ public sealed class PaymentOption
 }
 
 // ═══════════════════════════════════════════════════════════
-//  API RESPONSE MODELS — khớp với backend Node.js
+//  API RESPONSE MODELS — khớp với backend ASP.NET Core
 // ═══════════════════════════════════════════════════════════
 
-public sealed class ApiResponse<T>
-{
-	public bool success { get; set; }
-	public T? data { get; set; }
-	public string? message { get; set; }
-}
-
+/// <summary>
+/// Sản phẩm từ API /api/product
+/// </summary>
 public sealed class SanPhamApi
 {
 	public int MaSanPham { get; set; }
 	public string TenSanPham { get; set; } = string.Empty;
 	public decimal GiaBan { get; set; }
+	public decimal GiaNhap { get; set; }
 	public int SoLuongTon { get; set; }
 	public int MucTonThap { get; set; } = 10;
 	public string TrangThai { get; set; } = "Hoat dong";
+	public string HinhAnhUrl { get; set; } = string.Empty;
+	public string MoTa { get; set; } = string.Empty;
 }
 
+/// <summary>
+/// Đơn hàng từ API /api/order
+/// </summary>
 public sealed class DonHangApi
 {
 	public int MaDonHang { get; set; }
-	public int MaKhachHang { get; set; }
+	public int MaNguoiDung { get; set; }
 	public decimal TongTien { get; set; }
-	public string TrangThaiDon { get; set; } = "Da dat hang";
+	public string TrangThai { get; set; } = "pending";
 	public DateTime NgayTao { get; set; }
 }
 
+/// <summary>
+/// Chi tiết đơn hàng từ API /api/order/{id}
+/// </summary>
 public sealed class ChiTietDonHangApi
 {
 	public int MaSanPham { get; set; }
-	public string TenSanPham { get; set; } = string.Empty;
 	public int SoLuong { get; set; }
 	public decimal DonGia { get; set; }
+	public SanPhamTrongDonApi? SanPham { get; set; }
 }
 
-public sealed class DonHangDetailApi
+public sealed class SanPhamTrongDonApi
 {
-	public int MaDonHang { get; set; }
-	public int MaKhachHang { get; set; }
-	public decimal TongTien { get; set; }
-	public string TrangThaiDon { get; set; } = string.Empty;
-	public DateTime NgayTao { get; set; }
-	public List<ChiTietDonHangApi> items { get; set; } = new();
+	public int MaSanPham { get; set; }
+	public string TenSanPham { get; set; } = string.Empty;
+	public decimal GiaBan { get; set; }
+	public int SoLuongTon { get; set; }
+	public int MucTonThap { get; set; }
+	public string TrangThai { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Chi tiết sản phẩm từ API /api/product/{id}/detail
+/// </summary>
+public sealed class ProductDetailApi
+{
+	public SanPhamApi? Product { get; set; }
+	public int SoldCount { get; set; }
+	public decimal Revenue { get; set; }
+	public List<StockHistoryApi> StockHistory { get; set; } = new();
+}
+
+public sealed class StockHistoryApi
+{
+	public DateTime ThoiGian { get; set; }
+	public string Loai { get; set; } = string.Empty;
+	public int SoLuong { get; set; }
+	public int? MaNguoiDung { get; set; }
+	public string GhiChu { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Dashboard từ API /api/report/dashboard
+/// </summary>
+public sealed class DashboardApi
+{
+	public int TotalProducts { get; set; }
+	public int ActiveProducts { get; set; }
+	public int LowStockProducts { get; set; }
+	public int OutOfStockProducts { get; set; }
+	public int TotalOrders { get; set; }
+	public int PendingOrders { get; set; }
+	public int CompletedOrders { get; set; }
+	public int CancelledOrders { get; set; }
+	public decimal TotalRevenue { get; set; }
+	public decimal TodayRevenue { get; set; }
+	public List<TrendApi> Trend { get; set; } = new();
+	public List<TopProductApi> TopProducts { get; set; } = new();
+	public List<LowStockApi> LowStock { get; set; } = new();
+	public List<RecentActivityApi> RecentActivities { get; set; } = new();
+}
+
+public sealed class TrendApi
+{
+	public DateTime Date { get; set; }
+	public string Label { get; set; } = string.Empty;
+	public int TotalOrders { get; set; }
+	public int CompletedOrders { get; set; }
+	public int ProcessingOrders { get; set; }
+	public decimal Revenue { get; set; }
+}
+
+public sealed class TopProductApi
+{
+	public int MaSanPham { get; set; }
+	public string TenSanPham { get; set; } = string.Empty;
+	public int SoLuongBan { get; set; }
+	public decimal DoanhThu { get; set; }
+}
+
+public sealed class LowStockApi
+{
+	public int MaSanPham { get; set; }
+	public string TenSanPham { get; set; } = string.Empty;
+	public int SoLuongTon { get; set; }
+	public int MucTonThap { get; set; }
+	public string TrangThai { get; set; } = string.Empty;
+}
+
+public sealed class RecentActivityApi
+{
+	public string Title { get; set; } = string.Empty;
+	public DateTime Time { get; set; }
+	public string Type { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Giao dịch nhập kho từ API /api/product/imports
+/// </summary>
+public sealed class ImportApi
+{
+	public int MaGiaoDich { get; set; }
+	public int MaSanPham { get; set; }
+	public string TenSanPham { get; set; } = string.Empty;
+	public int SoLuong { get; set; }
+	public DateTime ThoiGian { get; set; }
+	public int? MaNguoiDung { get; set; }
+	public string GhiChu { get; set; } = string.Empty;
+	public decimal DonGiaNhap { get; set; }
+	public decimal ThanhTien { get; set; }
+}
+
+/// <summary>
+/// Log từ API /api/report/logs
+/// </summary>
+public sealed class LogApi
+{
+	public string Title { get; set; } = string.Empty;
+	public string Description { get; set; } = string.Empty;
+	public DateTime Time { get; set; }
+	public string Tag { get; set; } = string.Empty;
+	public string Icon { get; set; } = string.Empty;
+	public string Level { get; set; } = "info";
+}
+
+/// <summary>
+/// User từ API /api/admin/users
+/// </summary>
+public sealed class UserApi
+{
+	public int MaNguoiDung { get; set; }
+	public string TenDangNhap { get; set; } = string.Empty;
+	public string Email { get; set; } = string.Empty;
+	public bool IsActive { get; set; }
+	public string Role { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Profile từ API /api/auth/profile
+/// </summary>
+public sealed class ProfileApi
+{
+	public int MaNguoiDung { get; set; }
+	public string TenDangNhap { get; set; } = string.Empty;
+	public string Email { get; set; } = string.Empty;
+	public string Role { get; set; } = string.Empty;
+	public bool IsActive { get; set; }
 }
 
 public sealed class CreateOrderRequest
 {
-	public int MaKhachHang { get; set; }
-	public List<OrderItemRequest> items { get; set; } = new();
+	public List<OrderItemRequest> Items { get; set; } = new();
 }
 
 public sealed class OrderItemRequest
@@ -227,6 +359,7 @@ public sealed class OrderItemRequest
 
 public sealed class CreateOrderResponse
 {
+	public string Message { get; set; } = string.Empty;
 	public int MaDonHang { get; set; }
 	public decimal TongTien { get; set; }
 }

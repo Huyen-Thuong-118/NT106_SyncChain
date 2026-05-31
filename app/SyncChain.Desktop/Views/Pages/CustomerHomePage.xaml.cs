@@ -13,11 +13,15 @@ public partial class CustomerHomePage : ContentPage
 	private static readonly Color Ice = Color.FromArgb("#B7C9D5");
 	private static readonly Color Critical = Color.FromArgb("#BA1A1A");
 
-	public IReadOnlyList<CustomerMetric> Metrics { get; } =
+	// Thông tin người dùng
+	public string UserName { get; private set; } = "Khách hàng";
+	public string UserEmail { get; private set; } = "";
+
+	public IReadOnlyList<CustomerMetric> Metrics { get; private set; } =
 	[
-		new("Đơn đang xử lý", "03", "1 đơn cần theo dõi", "ORD", Blue),
-		new("Điểm tích lũy", "1,240", "Hạng bạc", "VIP", Mist),
-		new("Voucher", "05", "2 mã sắp hết hạn", "VC", Ice),
+		new("Đơn đang xử lý", "0", "Đang tải...", "ORD", Blue),
+		new("Điểm tích lũy", "0", "Hạng bạc", "VIP", Mist),
+		new("Voucher", "0", "Đang tải...", "VC", Ice),
 		new("Hỗ trợ", "24/7", "Phản hồi nhanh", "CS", Sapphire)
 	];
 
@@ -58,11 +62,28 @@ public partial class CustomerHomePage : ContentPage
 	{
 		try
 		{
-			// Lấy sản phẩm gợi ý
-			var productsResp = await _http.GetFromJsonAsync<ApiResponse<List<SanPhamApi>>>("api/sanpham");
-			if (productsResp?.success == true && productsResp.data != null)
+			// Lấy thông tin profile
+			try
 			{
-				SuggestedProducts = productsResp.data.Take(4).Select(sp => new ProductItem
+				var profile = await _http.GetFromJsonAsync<ProfileApi>("api/auth/profile");
+				if (profile != null)
+				{
+					UserName = profile.TenDangNhap ?? "Khách hàng";
+					UserEmail = profile.Email ?? "";
+					OnPropertyChanged(nameof(UserName));
+					OnPropertyChanged(nameof(UserEmail));
+				}
+			}
+			catch
+			{
+				// Không có quyền lấy profile
+			}
+
+			// Lấy sản phẩm gợi ý
+			var products = await _http.GetFromJsonAsync<List<SanPhamApi>>("api/product");
+			if (products != null)
+			{
+				SuggestedProducts = products.Take(4).Select(sp => new ProductItem
 				{
 					Code = $"SP-{sp.MaSanPham:0000}",
 					Name = sp.TenSanPham,
@@ -79,24 +100,35 @@ public partial class CustomerHomePage : ContentPage
 			}
 
 			// Lấy đơn hàng gần đây
-			var ordersResp = await _http.GetFromJsonAsync<ApiResponse<List<DonHangApi>>>("api/donhang");
-			if (ordersResp?.success == true && ordersResp.data != null)
+			var orders = await _http.GetFromJsonAsync<List<DonHangApi>>("api/order");
+			if (orders != null)
 			{
-				RecentOrders = ordersResp.data.Take(3).Select(o => new CustomerOrderCard(
+				RecentOrders = orders.Take(3).Select(o => new CustomerOrderCard(
 					$"#ORD-{o.MaDonHang:0000}",
-					o.TrangThaiDon switch
+					o.TrangThai switch
 					{
-						"Da dat hang" => "Đang chuẩn bị hàng",
-						"Dang xu ly" => "Đang xử lý",
-						"Hoan tat" => "Hoàn tất",
-						"Huy" => "Đã hủy",
-						_ => o.TrangThaiDon
+						"pending" => "Đang chuẩn bị hàng",
+						"processing" => "Đang xử lý",
+						"done" => "Hoàn tất",
+						"cancel" => "Đã hủy",
+						_ => o.TrangThai
 					},
 					o.NgayTao.ToString("dd/MM/yyyy"),
 					$"{o.TongTien:N0} đ",
-					o.TrangThaiDon == "Hoan tat" ? Sapphire : Blue
+					o.TrangThai == "done" ? Sapphire : Blue
 				)).ToList();
+
+				// Cập nhật metrics
+				Metrics =
+				[
+					new("Đơn đang xử lý", orders.Count(o => o.TrangThai is "pending" or "processing").ToString(), "Đơn cần theo dõi", "ORD", Blue),
+					new("Điểm tích lũy", "1,240", "Hạng bạc", "VIP", Mist),
+					new("Voucher", "05", "2 mã sắp hết hạn", "VC", Ice),
+					new("Hỗ trợ", "24/7", "Phản hồi nhanh", "CS", Sapphire)
+				];
+
 				OnPropertyChanged(nameof(RecentOrders));
+				OnPropertyChanged(nameof(Metrics));
 			}
 		}
 		catch (Exception ex)
