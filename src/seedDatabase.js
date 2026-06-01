@@ -20,21 +20,27 @@ async function seed() {
 
     // --- Vai trò (PhanQuyen) ---
     // ON CONFLICT để chạy lại nhiều lần không bị lỗi trùng (idempotent).
-    const vaiTro = ['Admin', 'NhanVienKho', 'NhaPhanPhoi', 'KhachHang'];
-    for (const ten of vaiTro) {
+    // MaVaiTro cố định khớp backend .NET (AuthService): 1=customer, 2=staff, 3=manager, 4=admin.
+    const vaiTro = [
+      [1, 'customer'],
+      [2, 'staff'],
+      [3, 'manager'],
+      [4, 'admin'],
+    ];
+    for (const [ma, ten] of vaiTro) {
       await client.query(
-        'INSERT INTO PhanQuyen (TenVaiTro) VALUES ($1) ON CONFLICT (TenVaiTro) DO NOTHING',
-        [ten]
+        'INSERT INTO PhanQuyen (MaVaiTro, TenVaiTro) VALUES ($1, $2) ON CONFLICT (TenVaiTro) DO NOTHING',
+        [ma, ten]
       );
     }
 
     // --- Người dùng (NguoiDung) ---
     // MatKhauHash ở đây chỉ là chuỗi giả lập cho dữ liệu mẫu.
     const nguoiDung = [
-      ['admin',    'hash_admin',    'admin@syncchain.vn',    'Admin'],
-      ['nvkho01',  'hash_nvkho',    'kho@syncchain.vn',      'NhanVienKho'],
-      ['nppabc',   'hash_npp',      'supplier@abc.com',      'NhaPhanPhoi'],
-      ['khachA',   'hash_khach',    'customer@gmail.com',    'KhachHang'],
+      ['admin',    'hash_admin',    'admin@syncchain.vn',    'admin'],
+      ['nvkho01',  'hash_nvkho',    'kho@syncchain.vn',      'staff'],
+      ['quanly01', 'hash_quanly',   'manager@syncchain.vn',  'manager'],
+      ['khachA',   'hash_khach',    'customer@gmail.com',    'customer'],
     ];
     for (const [tenDangNhap, matKhauHash, email, tenVaiTro] of nguoiDung) {
       await client.query(

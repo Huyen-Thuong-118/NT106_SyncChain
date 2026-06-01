@@ -58,7 +58,7 @@ public class OrderService
         {
             MaNguoiDung = userId,
             NgayTao = DateTime.Now,
-            TrangThai = "pending"
+            TrangThai = "Draft"
         };
 
         _db.DonHang.Add(order);
@@ -88,7 +88,7 @@ public class OrderService
             _db.GiaoDichKho.Add(new SyncChain.API.Models.GiaoDichKho
             {
                 MaSanPham = product.MaSanPham,
-                Loai = "Xuat kho",
+                Loai = "OUT",
                 SoLuong = -item.SoLuong,
                 MaNguoiDung = userId,
                 GhiChu = $"Tao don hang #{order.MaDonHang}"

@@ -146,12 +146,12 @@ public class OrderController : ControllerBase
         if (order == null)
             return NotFound();
 
-        var validStatus = new[] { "pending", "processing", "done", "cancel" };
+        var validStatus = new[] { "Draft", "Approved", "Processing", "Done", "Cancelled" };
 
         if (!validStatus.Contains(status))
             return BadRequest("Trang thai khong hop le");
 
-        if (order.TrangThai == "done")
+        if (order.TrangThai == "Done")
             return BadRequest("Don da hoan thanh");
 
         order.TrangThai = status;
