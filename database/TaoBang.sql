@@ -1,3 +1,8 @@
+-- Schema PostgreSQL của SyncChain — khớp với DB thật (cập nhật 2026-06-01).
+-- Dùng CREATE TABLE IF NOT EXISTS để chạy lại an toàn (idempotent).
+-- Trạng thái lấy từ src/constants/statusEnum.js (nguồn chân lý duy nhất):
+--   ORDER_STATUS, GRN_STATUS, INVENTORY_TXN_TYPE.
+
 -- 1. Phân Quyền
 CREATE TABLE IF NOT EXISTS PhanQuyen (
     MaVaiTro SERIAL PRIMARY KEY,
@@ -11,8 +16,11 @@ CREATE TABLE IF NOT EXISTS NguoiDung (
     MatKhauHash TEXT NOT NULL,
     Email TEXT UNIQUE NOT NULL,
     MaVaiTro INTEGER,
-    KichHoat BOOLEAN NOT NULL DEFAULT TRUE,  -- admin bật/tắt tài khoản
     NgayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    DaXacThucEmail BOOLEAN DEFAULT FALSE,        -- đã xác thực email hay chưa
+    MaXacThuc TEXT,                              -- mã xác thực email
+    LanDangNhapCuoi TIMESTAMP,                   -- thời điểm đăng nhập gần nhất
+    KichHoat BOOLEAN NOT NULL DEFAULT TRUE,      -- admin bật/tắt tài khoản
     FOREIGN KEY (MaVaiTro) REFERENCES PhanQuyen(MaVaiTro)
 );
 
@@ -38,6 +46,14 @@ CREATE TABLE IF NOT EXISTS DonHang (
     TrangThaiDon TEXT NOT NULL DEFAULT 'Draft'
         CHECK (TrangThaiDon IN ('Draft', 'Approved', 'Processing', 'Done', 'Cancelled')),
     NgayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -- Thông tin thanh toán & giao vận (COD).
+    PhuongThucThanhToan TEXT DEFAULT 'COD',
+    NguoiNhan TEXT,
+    SoDienThoaiNhan TEXT,
+    DiaChiGiao TEXT,
+    MaVanDon TEXT,
+    DonViVanChuyen TEXT,
+    NgayCapNhat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (MaKhachHang) REFERENCES NguoiDung(MaNguoiDung)
 );
 
@@ -84,5 +100,16 @@ CREATE TABLE IF NOT EXISTS GiaoDichKho (
     MaNguoiDung INTEGER,
     GhiChu TEXT NOT NULL DEFAULT '',
     FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham),
+    FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung)
+);
+
+-- 9. Lịch Sử Hoạt Động (nhật ký audit: đăng nhập, đổi trạng thái, thao tác kho...)
+CREATE TABLE IF NOT EXISTS LichSuHoatDong (
+    MaLichSu SERIAL PRIMARY KEY,
+    MaNguoiDung INTEGER,
+    HanhDong TEXT NOT NULL,
+    MoTa TEXT,
+    DiaChiIP TEXT,
+    ThoiGian TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung)
 );
