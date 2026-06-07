@@ -29,10 +29,16 @@ async function seed() {
     ];
     for (const [ma, ten] of vaiTro) {
       await client.query(
-        'INSERT INTO PhanQuyen (MaVaiTro, TenVaiTro) VALUES ($1, $2) ON CONFLICT (TenVaiTro) DO NOTHING',
+        `INSERT INTO PhanQuyen (MaVaiTro, TenVaiTro) VALUES ($1, $2)
+         ON CONFLICT (MaVaiTro) DO UPDATE SET TenVaiTro = EXCLUDED.TenVaiTro`,
         [ma, ten]
       );
     }
+    // Đẩy sequence vượt qua các ID đã insert thủ công để tránh conflict PK sau này.
+    await client.query(
+      `SELECT setval(pg_get_serial_sequence('PhanQuyen', 'mavaitro'),
+                     GREATEST((SELECT MAX(MaVaiTro) FROM PhanQuyen), 1))`
+    );
 
     // --- Người dùng (NguoiDung) ---
     // MatKhauHash ở đây chỉ là chuỗi giả lập cho dữ liệu mẫu.
