@@ -60,8 +60,8 @@ CREATE TABLE IF NOT EXISTS DonHang (
 -- 5. Chi Tiết Đơn Hàng
 CREATE TABLE IF NOT EXISTS ChiTietDonHang (
     MaChiTiet SERIAL PRIMARY KEY,
-    MaDonHang INTEGER,
-    MaSanPham INTEGER,
+    MaDonHang INTEGER NOT NULL,
+    MaSanPham INTEGER NOT NULL,
     SoLuong INTEGER NOT NULL CHECK (SoLuong > 0),
     DonGia NUMERIC(15,2) NOT NULL,
     FOREIGN KEY (MaDonHang) REFERENCES DonHang(MaDonHang),
@@ -82,8 +82,8 @@ CREATE TABLE IF NOT EXISTS DonNhapHang (
 -- 7. Chi Tiết Đơn Nhập
 CREATE TABLE IF NOT EXISTS ChiTietDonNhap (
     MaChiTietNhap SERIAL PRIMARY KEY,
-    MaDonNhap INTEGER,
-    MaSanPham INTEGER,
+    MaDonNhap INTEGER NOT NULL,
+    MaSanPham INTEGER NOT NULL,
     SoLuongYeuCau INTEGER NOT NULL CHECK (SoLuongYeuCau > 0),
     FOREIGN KEY (MaDonNhap) REFERENCES DonNhapHang(MaDonNhap),
     FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham)
@@ -138,3 +138,34 @@ ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS DiaChiGiao TEXT;
 ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS MaVanDon TEXT;
 ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS DonViVanChuyen TEXT;
 ALTER TABLE DonHang ADD COLUMN IF NOT EXISTS NgayCapNhat TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Fix 5: FK columns phải NOT NULL (bảng đã tồn tại dùng ALTER)
+-- Lệnh này sẽ lỗi nếu có dữ liệu NULL trong cột — kiểm tra trước khi chạy.
+ALTER TABLE ChiTietDonHang ALTER COLUMN MaDonHang SET NOT NULL;
+ALTER TABLE ChiTietDonHang ALTER COLUMN MaSanPham SET NOT NULL;
+ALTER TABLE ChiTietDonNhap ALTER COLUMN MaDonNhap SET NOT NULL;
+ALTER TABLE ChiTietDonNhap ALTER COLUMN MaSanPham SET NOT NULL;
+
+-- Fix 6: Trigger tự cập nhật NgayCapNhat khi UPDATE DonHang
+CREATE OR REPLACE FUNCTION fn_set_ngaycapnhat()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.NgayCapNhat = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_donhang_ngaycapnhat ON DonHang;
+CREATE TRIGGER trg_donhang_ngaycapnhat
+    BEFORE UPDATE ON DonHang
+    FOR EACH ROW EXECUTE FUNCTION fn_set_ngaycapnhat();
+
+-- Fix 7: Index cho các query phổ biến
+CREATE INDEX IF NOT EXISTS idx_donhang_khachhang   ON DonHang(MaKhachHang);
+CREATE INDEX IF NOT EXISTS idx_donhang_trangthai   ON DonHang(TrangThaiDon);
+CREATE INDEX IF NOT EXISTS idx_chitiet_donhang     ON ChiTietDonHang(MaDonHang);
+CREATE INDEX IF NOT EXISTS idx_chitiet_sanpham     ON ChiTietDonHang(MaSanPham);
+CREATE INDEX IF NOT EXISTS idx_kho_sanpham         ON GiaoDichKho(MaSanPham);
+CREATE INDEX IF NOT EXISTS idx_kho_loai_thoigian   ON GiaoDichKho(Loai, ThoiGian DESC);
+CREATE INDEX IF NOT EXISTS idx_lichsu_nguoidung    ON LichSuHoatDong(MaNguoiDung);
+CREATE INDEX IF NOT EXISTS idx_lichsu_thoigian     ON LichSuHoatDong(ThoiGian DESC);
