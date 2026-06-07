@@ -151,8 +151,8 @@ public class OrderController : ControllerBase
         if (!validStatus.Contains(status))
             return BadRequest("Trang thai khong hop le");
 
-        if (order.TrangThai == "Done")
-            return BadRequest("Don da hoan thanh");
+        if (order.TrangThai is "Done" or "Cancelled")
+            return BadRequest("Don da o trang thai cuoi, khong the cap nhat");
 
         order.TrangThai = status;
         _db.SaveChanges();

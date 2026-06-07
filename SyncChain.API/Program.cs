@@ -134,7 +134,7 @@ using (var scope = app.Services.CreateScope())
         {
             db.PhanQuyen.Add(role);
         }
-        else
+        else if (existingRole.TenVaiTro != role.TenVaiTro)
         {
             existingRole.TenVaiTro = role.TenVaiTro;
         }

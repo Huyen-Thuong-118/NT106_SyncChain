@@ -76,15 +76,7 @@ public class AuthService
             throw new Exception("Tai khoan bi khoa");
         }
 
-        // Chuyển mã vai trò trong DB sang tên role dùng trong policy.
-        var roleName = user.MaVaiTro switch
-        {
-            1 => "customer",
-            2 => "staff",
-            3 => "manager",
-            4 => "admin",
-            _ => "unknown"
-        };
+        var roleName = ResolveRoleName(user.MaVaiTro);
 
         var jwtSettings = _config.GetSection("Jwt");
 
@@ -130,14 +122,7 @@ public class AuthService
         var user = _db.NguoiDung.FirstOrDefault(x => x.MaNguoiDung == userId)
             ?? throw new Exception("Khong tim thay tai khoan");
 
-        var roleName = user.MaVaiTro switch
-        {
-            1 => "customer",
-            2 => "staff",
-            3 => "manager",
-            4 => "admin",
-            _ => "unknown"
-        };
+        var roleName = ResolveRoleName(user.MaVaiTro);
 
         return new
         {
@@ -163,6 +148,12 @@ public class AuthService
         _db.SaveChanges();
 
         return GetProfile(userId);
+    }
+
+    // Lấy tên role từ PhanQuyen theo MaVaiTro — tránh hardcode số nguyên.
+    private string ResolveRoleName(int maVaiTro)
+    {
+        return _db.PhanQuyen.FirstOrDefault(x => x.MaVaiTro == maVaiTro)?.TenVaiTro ?? "unknown";
     }
 
     // Đổi mật khẩu sau khi kiểm tra mật khẩu hiện tại.
