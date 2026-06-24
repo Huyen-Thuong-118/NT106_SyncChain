@@ -32,10 +32,10 @@ public class ReportController : ControllerBase
         var products = _db.SanPham.ToList();
 
         var totalRevenue = allOrders
-            .Where(x => x.TrangThai != "cancel")
+            .Where(x => x.TrangThai != "Cancelled")
             .Sum(x => x.TongTien);
         var todayRevenue = allOrders
-            .Where(x => x.TrangThai != "cancel" && x.NgayTao.Date == now.Date)
+            .Where(x => x.TrangThai != "Cancelled" && x.NgayTao.Date == now.Date)
             .Sum(x => x.TongTien);
 
         var lowStock = products
@@ -55,7 +55,7 @@ public class ReportController : ControllerBase
         var topProducts = _db.ChiTietDonHang
             .Include(x => x.SanPham)
             .Include(x => x.DonHang)
-            .Where(x => x.DonHang != null && x.DonHang.TrangThai != "cancel")
+            .Where(x => x.DonHang != null && x.DonHang.TrangThai != "Cancelled")
             .GroupBy(x => x.MaSanPham)
             .Select(g => new
             {
@@ -79,9 +79,9 @@ public class ReportController : ControllerBase
                     Date = date,
                     Label = date.ToString("dd/MM"),
                     TotalOrders = dateOrders.Count,
-                    CompletedOrders = dateOrders.Count(x => x.TrangThai == "done"),
-                    ProcessingOrders = dateOrders.Count(x => x.TrangThai is "pending" or "processing"),
-                    Revenue = dateOrders.Where(x => x.TrangThai != "cancel").Sum(x => x.TongTien)
+                    CompletedOrders = dateOrders.Count(x => x.TrangThai == "Done"),
+                    ProcessingOrders = dateOrders.Count(x => x.TrangThai is "Draft" or "Processing"),
+                    Revenue = dateOrders.Where(x => x.TrangThai != "Cancelled").Sum(x => x.TongTien)
                 };
             })
             .ToList();
@@ -114,9 +114,9 @@ public class ReportController : ControllerBase
             LowStockProducts = products.Count(x => x.SoLuongTon > 0 && x.SoLuongTon <= x.MucTonThap),
             OutOfStockProducts = products.Count(x => x.SoLuongTon <= 0 || x.TrangThai == "Ngung ban"),
             TotalOrders = allOrders.Count,
-            PendingOrders = allOrders.Count(x => x.TrangThai is "pending" or "processing"),
-            CompletedOrders = allOrders.Count(x => x.TrangThai == "done"),
-            CancelledOrders = allOrders.Count(x => x.TrangThai == "cancel"),
+            PendingOrders = allOrders.Count(x => x.TrangThai is "Draft" or "Processing"),
+            CompletedOrders = allOrders.Count(x => x.TrangThai == "Done"),
+            CancelledOrders = allOrders.Count(x => x.TrangThai == "Cancelled"),
             TotalRevenue = totalRevenue,
             TodayRevenue = todayRevenue,
             Trend = trend,
@@ -157,7 +157,7 @@ public class ReportController : ControllerBase
                 Time = x.NgayTao,
                 Tag = "Đơn hàng",
                 Icon = "ĐH",
-                Level = x.TrangThai == "cancel" ? "danger" : x.TrangThai == "done" ? "success" : "info"
+                Level = x.TrangThai == "Cancelled" ? "danger" : x.TrangThai == "Done" ? "success" : "info"
             })
             .ToList();
 

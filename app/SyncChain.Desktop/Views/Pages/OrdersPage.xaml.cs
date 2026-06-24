@@ -66,8 +66,8 @@ public partial class OrdersPage : ContentPage
 				if (orders != null)
 				{
 					TotalOrders = orders.Count.ToString("N0");
-					PendingOrders = orders.Count(o => o.TrangThai is "pending" or "processing").ToString();
-					CompletedOrders = orders.Count(o => o.TrangThai == "done").ToString();
+					PendingOrders = orders.Count(o => o.TrangThai is "Draft" or "Approved" or "Processing").ToString();
+					CompletedOrders = orders.Count(o => o.TrangThai == "Done").ToString();
 					TotalRevenue = $"{orders.Sum(o => o.TongTien):N0} đ";
 					OnPropertyChanged(nameof(TotalOrders));
 					OnPropertyChanged(nameof(PendingOrders));
@@ -86,10 +86,11 @@ public partial class OrdersPage : ContentPage
 	{
 		var (statusText, statusColor) = dh.TrangThai switch
 		{
-			"pending" => ("Chờ duyệt", Color.FromArgb("#dae2fd")),
-			"processing" => ("Đang xử lý", Color.FromArgb("#dbeafe")),
-			"done" => ("Hoàn tất", Color.FromArgb("#d3e5f1")),
-			"cancel" => ("Đã hủy", Color.FromArgb("#ffdad6")),
+			"Draft"      => ("Chờ duyệt",      Color.FromArgb("#dae2fd")),
+			"Approved"   => ("Đã duyệt",        Color.FromArgb("#dae2fd")),
+			"Processing" => ("Đang xử lý",      Color.FromArgb("#dbeafe")),
+			"Done"       => ("Hoàn tất",         Color.FromArgb("#d3e5f1")),
+			"Cancelled"  => ("Đã hủy",           Color.FromArgb("#ffdad6")),
 			_ => (dh.TrangThai, Color.FromArgb("#eef0f2"))
 		};
 

@@ -107,21 +107,22 @@ public partial class CustomerHomePage : ContentPage
 					$"#ORD-{o.MaDonHang:0000}",
 					o.TrangThai switch
 					{
-						"pending" => "Đang chuẩn bị hàng",
-						"processing" => "Đang xử lý",
-						"done" => "Hoàn tất",
-						"cancel" => "Đã hủy",
+						"Draft"      => "Chờ duyệt",
+						"Approved"   => "Đã duyệt",
+						"Processing" => "Đang xử lý",
+						"Done"       => "Hoàn tất",
+						"Cancelled"  => "Đã hủy",
 						_ => o.TrangThai
 					},
 					o.NgayTao.ToString("dd/MM/yyyy"),
 					$"{o.TongTien:N0} đ",
-					o.TrangThai == "done" ? Sapphire : Blue
+					o.TrangThai == "Done" ? Sapphire : Blue
 				)).ToList();
 
 				// Cập nhật metrics
 				Metrics =
 				[
-					new("Đơn đang xử lý", orders.Count(o => o.TrangThai is "pending" or "processing").ToString(), "Đơn cần theo dõi", "ORD", Blue),
+					new("Đơn đang xử lý", orders.Count(o => o.TrangThai is "Draft" or "Approved" or "Processing").ToString(), "Đơn cần theo dõi", "ORD", Blue),
 					new("Điểm tích lũy", "1,240", "Hạng bạc", "VIP", Mist),
 					new("Voucher", "05", "2 mã sắp hết hạn", "VC", Ice),
 					new("Hỗ trợ", "24/7", "Phản hồi nhanh", "CS", Sapphire)

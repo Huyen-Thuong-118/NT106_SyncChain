@@ -35,5 +35,22 @@ public class AppDbContext : DbContext
             .HasOne(x => x.SanPham)
             .WithMany()
             .HasForeignKey(x => x.MaSanPham);
+
+        // ─── Đồng bộ tên vật lý với schema PostgreSQL của Node (database/TaoBang.sql) ───
+        // Node tạo bảng KHÔNG đặt nháy kép, nên Postgres tự hạ tên bảng/cột về chữ thường
+        // (vd: DonHang -> donhang, TenSanPham -> tensanpham). Map toàn bộ về chữ thường
+        // để EF đọc/ghi đúng các bảng mà backend Node tạo ra, dùng chung 1 DB.
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            entity.SetTableName(entity.GetTableName()!.ToLowerInvariant());
+            foreach (var property in entity.GetProperties())
+                property.SetColumnName(property.Name.ToLowerInvariant());
+        }
+
+        // Các cột mà TaoBang.sql đặt tên khác với property C#.
+        // Giữ nguyên tên property (để không đổi JSON key client đang dùng), chỉ đổi tên cột DB.
+        modelBuilder.Entity<DonHang>().Property(x => x.MaNguoiDung).HasColumnName("makhachhang");
+        modelBuilder.Entity<DonHang>().Property(x => x.TrangThai).HasColumnName("trangthaidon");
+        modelBuilder.Entity<NguoiDung>().Property(x => x.IsActive).HasColumnName("kichhoat");
     }
 }

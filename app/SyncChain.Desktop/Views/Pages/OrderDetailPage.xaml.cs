@@ -67,10 +67,11 @@ public partial class OrderDetailPage : ContentPage
 			// Trạng thái
 			var (statusText, statusColor) = firstOrder.TrangThai switch
 			{
-				"pending" => ("Chờ duyệt", "#dae2fd"),
-				"processing" => ("Đang xử lý", "#dbeafe"),
-				"done" => ("Hoàn tất", "#d3e5f1"),
-				"cancel" => ("Đã hủy", "#ffdad6"),
+				"Draft"      => ("Chờ duyệt",  "#dae2fd"),
+				"Approved"   => ("Đã duyệt",   "#dae2fd"),
+				"Processing" => ("Đang xử lý", "#dbeafe"),
+				"Done"       => ("Hoàn tất",    "#d3e5f1"),
+				"Cancelled"  => ("Đã hủy",      "#ffdad6"),
 				_ => (firstOrder.TrangThai, "#eef0f2")
 			};
 			OrderStatus = statusText;

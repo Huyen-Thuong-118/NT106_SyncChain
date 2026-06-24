@@ -60,11 +60,12 @@ const INVENTORY_TXN_TYPE = {
   ADJUST: 'ADJUST',
 };
 
+// Bộ vai trò thống nhất với backend .NET (PhanQuyen). MaVaiTro: 1=customer, 2=staff, 3=manager, 4=admin.
 const USER_ROLE = {
-  ADMIN:           'admin',
-  WAREHOUSE_STAFF: 'warehouse_staff',
-  SUPPLIER:        'supplier',
-  CUSTOMER:        'customer',
+  CUSTOMER: 'customer',
+  STAFF:    'staff',
+  MANAGER:  'manager',
+  ADMIN:    'admin',
 };
 
 // Helper: kiểm tra transition có hợp lệ không

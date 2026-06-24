@@ -98,7 +98,7 @@ public class ProductService
         _db.GiaoDichKho.Add(new GiaoDichKho
         {
             MaSanPham = id,
-            Loai = "Nhap kho",
+            Loai = "IN",
             SoLuong = quantity,
             MaNguoiDung = userId,
             GhiChu = string.IsNullOrWhiteSpace(note) ? "Nhap them hang" : note
@@ -113,7 +113,7 @@ public class ProductService
     {
         return _db.GiaoDichKho
             .Include(x => x.SanPham)
-            .Where(x => x.Loai == "Nhap kho")
+            .Where(x => x.Loai == "IN")
             .OrderByDescending(x => x.ThoiGian)
             .Take(50)
             .Select(x => new
@@ -154,7 +154,7 @@ public class ProductService
         var sp = GetById(id);
         var soldLines = _db.ChiTietDonHang
             .Include(x => x.DonHang)
-            .Where(x => x.MaSanPham == id && x.DonHang != null && x.DonHang.TrangThai != "cancel");
+            .Where(x => x.MaSanPham == id && x.DonHang != null && x.DonHang.TrangThai != "Cancelled");
         var soldCount = soldLines.Sum(x => (int?)x.SoLuong) ?? 0;
         var revenue = soldLines.Sum(x => (decimal?)(x.SoLuong * x.DonGia)) ?? 0;
 
@@ -174,13 +174,13 @@ public class ProductService
 
         var salesHistory = _db.ChiTietDonHang
             .Include(x => x.DonHang)
-            .Where(x => x.MaSanPham == id && x.DonHang != null && x.DonHang.TrangThai != "cancel")
+            .Where(x => x.MaSanPham == id && x.DonHang != null && x.DonHang.TrangThai != "Cancelled")
             .OrderByDescending(x => x.DonHang!.NgayTao)
             .Take(20)
             .Select(x => new
             {
                 ThoiGian = x.DonHang!.NgayTao,
-                Loai = "Xuat kho",
+                Loai = "OUT",
                 SoLuong = -x.SoLuong,
                 MaNguoiDung = (int?)x.DonHang.MaNguoiDung,
                 GhiChu = $"Don hang #{x.MaDonHang}"
