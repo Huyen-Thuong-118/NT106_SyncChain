@@ -131,6 +131,7 @@ public partial class OrdersPage : ContentPage
 			"done" => ("Hoàn thành", Color.FromArgb("#d3e5f1")),
 			"cancel" => ("Đã hủy", Color.FromArgb("#ffdad6")),
 			_ => (order.TrangThai, Colors.LightGray)
+
 		};
 		return new OrderItem
 		{

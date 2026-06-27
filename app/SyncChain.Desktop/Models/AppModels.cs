@@ -591,7 +591,7 @@ public sealed class DonHangApi
 	public int MaDonHang { get; set; }
 	public int MaNguoiDung { get; set; }
 	public decimal TongTien { get; set; }
-	public string TrangThai { get; set; } = "pending";
+	public string TrangThai { get; set; } = "Draft";
 	public DateTime NgayTao { get; set; }
 	public int ConcurrencyVersion { get; set; }
 	public string CustomerName { get; set; } = string.Empty;

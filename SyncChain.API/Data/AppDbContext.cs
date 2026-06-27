@@ -1,17 +1,17 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SyncChain.API.Models;
 
 namespace SyncChain.API.Data;
 public class AppDbContext : DbContext
 {
-    // Các bảng tài khoản và phân quyền.
+    // CÃ¡c báº£ng tÃ i khoáº£n vÃ  phÃ¢n quyá»n.
     public DbSet<NguoiDung> NguoiDung { get; set; }
     public DbSet<PhanQuyen> PhanQuyen { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
 
-    // Các bảng sản phẩm, đơn hàng và giao dịch kho.
+    // CÃ¡c báº£ng sáº£n pháº©m, Ä‘Æ¡n hÃ ng vÃ  giao dá»‹ch kho.
     public DbSet<SanPham> SanPham { get; set; }
     public DbSet<DanhMucSanPham> DanhMucSanPham { get; set; }
 
@@ -33,7 +33,7 @@ public class AppDbContext : DbContext
     public DbSet<ChatPollOption> ChatPollOptions { get; set; }
     public DbSet<ChatPollVote> ChatPollVotes { get; set; }
 
-    // Cấu hình quan hệ giữa đơn hàng, sản phẩm và lịch sử kho.
+    // Cáº¥u hÃ¬nh quan há»‡ giá»¯a Ä‘Æ¡n hÃ ng, sáº£n pháº©m vÃ  lá»‹ch sá»­ kho.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<DonHang>()

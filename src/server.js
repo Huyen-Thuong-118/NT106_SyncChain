@@ -30,9 +30,12 @@ app.get('/api/sanpham', async (req, res) => {
     SELECT MaSanPham   AS "MaSanPham",
            TenSanPham  AS "TenSanPham",
            GiaBan      AS "GiaBan",
+           GiaNhap     AS "GiaNhap",
            SoLuongTon  AS "SoLuongTon",
            MucTonThap  AS "MucTonThap",
-           TrangThai   AS "TrangThai"
+           TrangThai   AS "TrangThai",
+           HinhAnhUrl  AS "HinhAnhUrl",
+           MoTa        AS "MoTa"
     FROM SanPham
     ORDER BY MaSanPham
   `;
@@ -48,7 +51,7 @@ app.get('/api/sanpham', async (req, res) => {
 // POST /api/sanpham: thêm sản phẩm mới (Nhà phân phối nhập hàng).
 // Body: { TenSanPham, GiaBan, SoLuongTon, MucTonThap? }
 app.post('/api/sanpham', async (req, res) => {
-  const { TenSanPham, GiaBan, SoLuongTon, MucTonThap } = req.body;
+  const { TenSanPham, GiaBan, GiaNhap = 0, SoLuongTon, MucTonThap, HinhAnhUrl = '', MoTa = '' } = req.body;
 
   // Kiểm tra dữ liệu đầu vào
   if (!TenSanPham || GiaBan == null || SoLuongTon == null) {
@@ -57,22 +60,25 @@ app.post('/api/sanpham', async (req, res) => {
       message: 'Thiếu thông tin: cần TenSanPham, GiaBan, SoLuongTon',
     });
   }
-  if (GiaBan < 0 || SoLuongTon < 0) {
-    return res.status(400).json({ success: false, message: 'GiaBan và SoLuongTon không được âm' });
+  if (GiaBan < 0 || GiaNhap < 0 || SoLuongTon < 0) {
+    return res.status(400).json({ success: false, message: 'GiaBan, GiaNhap và SoLuongTon không được âm' });
   }
 
   const sql = `
-    INSERT INTO SanPham (TenSanPham, GiaBan, SoLuongTon, MucTonThap)
-    VALUES ($1, $2, $3, COALESCE($4, 10))
+    INSERT INTO SanPham (TenSanPham, GiaBan, GiaNhap, SoLuongTon, MucTonThap, HinhAnhUrl, MoTa)
+    VALUES ($1, $2, $3, $4, COALESCE($5, 10), $6, $7)
     RETURNING MaSanPham  AS "MaSanPham",
               TenSanPham AS "TenSanPham",
               GiaBan     AS "GiaBan",
+              GiaNhap    AS "GiaNhap",
               SoLuongTon AS "SoLuongTon",
               MucTonThap AS "MucTonThap",
-              TrangThai  AS "TrangThai"
+              TrangThai  AS "TrangThai",
+              HinhAnhUrl AS "HinhAnhUrl",
+              MoTa       AS "MoTa"
   `;
   try {
-    const result = await pool.query(sql, [TenSanPham, GiaBan, SoLuongTon, MucTonThap]);
+    const result = await pool.query(sql, [TenSanPham, GiaBan, GiaNhap, SoLuongTon, MucTonThap, HinhAnhUrl, MoTa]);
     res.status(201).json({ success: true, data: result.rows[0] });
   } catch (err) {
     console.error('Lỗi thêm SanPham:', err.message);
@@ -170,11 +176,18 @@ app.post('/api/donhang', async (req, res) => {
 // GET /api/donhang: danh sách đơn hàng (mới nhất trước).
 app.get('/api/donhang', async (req, res) => {
   const sql = `
-    SELECT MaDonHang    AS "MaDonHang",
-           MaKhachHang  AS "MaKhachHang",
-           TongTien     AS "TongTien",
-           TrangThaiDon AS "TrangThaiDon",
-           NgayTao      AS "NgayTao"
+    SELECT MaDonHang           AS "MaDonHang",
+           MaKhachHang         AS "MaKhachHang",
+           TongTien            AS "TongTien",
+           TrangThaiDon        AS "TrangThaiDon",
+           NgayTao             AS "NgayTao",
+           NgayCapNhat         AS "NgayCapNhat",
+           PhuongThucThanhToan AS "PhuongThucThanhToan",
+           NguoiNhan           AS "NguoiNhan",
+           SoDienThoaiNhan     AS "SoDienThoaiNhan",
+           DiaChiGiao          AS "DiaChiGiao",
+           MaVanDon            AS "MaVanDon",
+           DonViVanChuyen      AS "DonViVanChuyen"
     FROM DonHang
     ORDER BY MaDonHang DESC
   `;
@@ -195,11 +208,18 @@ app.get('/api/donhang/:id', async (req, res) => {
   }
   try {
     const donResult = await pool.query(
-      `SELECT MaDonHang    AS "MaDonHang",
-              MaKhachHang  AS "MaKhachHang",
-              TongTien     AS "TongTien",
-              TrangThaiDon AS "TrangThaiDon",
-              NgayTao      AS "NgayTao"
+      `SELECT MaDonHang           AS "MaDonHang",
+              MaKhachHang         AS "MaKhachHang",
+              TongTien            AS "TongTien",
+              TrangThaiDon        AS "TrangThaiDon",
+              NgayTao             AS "NgayTao",
+              NgayCapNhat         AS "NgayCapNhat",
+              PhuongThucThanhToan AS "PhuongThucThanhToan",
+              NguoiNhan           AS "NguoiNhan",
+              SoDienThoaiNhan     AS "SoDienThoaiNhan",
+              DiaChiGiao          AS "DiaChiGiao",
+              MaVanDon            AS "MaVanDon",
+              DonViVanChuyen      AS "DonViVanChuyen"
        FROM DonHang WHERE MaDonHang = $1`,
       [maDonHang]
     );

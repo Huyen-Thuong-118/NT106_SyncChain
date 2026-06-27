@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -203,6 +203,9 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // EnsureCreated() tá»± táº¡o toÃ n bá»™ schema (ká»ƒ cáº£ GiaoDichKho vÃ  cÃ¡c cá»™t
+    // má»›i cá»§a SanPham) theo Ä‘Ãºng cÃº phÃ¡p PostgreSQL tá»« model EF.
     db.Database.EnsureCreated();
     db.Database.ExecuteSqlRaw("""
         ALTER TABLE "DonHang" ADD COLUMN IF NOT EXISTS "TenNguoiNhan" character varying(150) NOT NULL DEFAULT '';

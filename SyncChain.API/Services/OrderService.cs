@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using SyncChain.API.Data;
 using SyncChain.API.DTOs;
@@ -424,7 +424,7 @@ public class OrderService
         var value = service?.Trim().ToLowerInvariant() ?? string.Empty;
         return value switch
         {
-            "hoa toc" or "hỏa tốc" => "Hoa toc",
+            "hoa toc" or "há»a tá»‘c" => "Hoa toc",
             "nhanh" => "Nhanh",
             _ => "Tieu chuan"
         };

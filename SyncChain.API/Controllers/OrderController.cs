@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -23,7 +23,7 @@ public class OrderController : ControllerBase
         _db = db;
     }
 
-    // Tạo đơn hàng mới cho người dùng hiện tại.
+    // Táº¡o Ä‘Æ¡n hÃ ng má»›i cho ngÆ°á»i dÃ¹ng hiá»‡n táº¡i.
     [Authorize(Policy = "OrderWrite")]
     [HttpPost]
     public async Task<IActionResult> CreateOrder(CreateOrderDTO dto)
@@ -46,7 +46,7 @@ public class OrderController : ControllerBase
                 throw new ValidationApiException(
                     "Don Online phai do khach hang tu dat.");
             }
-            if (!channel.Equals("Cửa hàng trực tiếp", StringComparison.OrdinalIgnoreCase) &&
+            if (!channel.Equals("Cá»­a hÃ ng trá»±c tiáº¿p", StringComparison.OrdinalIgnoreCase) &&
                 !channel.Equals("Facebook", StringComparison.OrdinalIgnoreCase))
             {
                 throw new ValidationApiException("Kenh ban hang khong hop le.");
@@ -64,7 +64,7 @@ public class OrderController : ControllerBase
         return Ok(await _service.CreateOrderAsync(userId.Value, dto));
     }
 
-    // Lấy danh sách đơn, lọc theo role của người dùng.
+    // Láº¥y danh sÃ¡ch Ä‘Æ¡n, lá»c theo role cá»§a ngÆ°á»i dÃ¹ng.
     [Authorize]
     [HttpGet]
     public IActionResult GetOrders([FromQuery] string? status = null)
@@ -137,7 +137,7 @@ public class OrderController : ControllerBase
         return Ok(orders);
     }
 
-    // Lấy chi tiết đơn và kiểm tra quyền xem.
+    // Láº¥y chi tiáº¿t Ä‘Æ¡n vÃ  kiá»ƒm tra quyá»n xem.
     [Authorize]
     [HttpGet("{id}")]
     public IActionResult GetOrderDetail(int id)
@@ -208,7 +208,7 @@ public class OrderController : ControllerBase
         });
     }
 
-    // Lấy toàn bộ đơn cho nhân sự nội bộ quản lý.
+    // Láº¥y toÃ n bá»™ Ä‘Æ¡n cho nhÃ¢n sá»± ná»™i bá»™ quáº£n lÃ½.
     [Authorize(Policy = "OrderManage")]
     [HttpGet("full")]
     public IActionResult GetFullOrders()
@@ -229,7 +229,7 @@ public class OrderController : ControllerBase
         return Ok(orders);
     }
 
-    // Cập nhật trạng thái xử lý đơn hàng.
+    // Cáº­p nháº­t tráº¡ng thÃ¡i xá»­ lÃ½ Ä‘Æ¡n hÃ ng.
     [Authorize(Policy = "OrderManage")]
     [HttpPut("{id}/status")]
     public async Task<IActionResult> UpdateStatus(
@@ -241,20 +241,20 @@ public class OrderController : ControllerBase
         return Ok(await _service.UpdateStatusAsync(id, request, status, userId));
     }
 
-    // Đọc mã người dùng từ JWT.
+    // Äá»c mÃ£ ngÆ°á»i dÃ¹ng tá»« JWT.
     private int? GetUserId()
     {
         var claim = User.FindFirst("user_id")?.Value;
         return int.TryParse(claim, out var userId) ? userId : null;
     }
 
-    // Đọc role hiện tại từ JWT.
+    // Äá»c role hiá»‡n táº¡i tá»« JWT.
     private string GetRole()
     {
         return User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
     }
 
-    // Kiểm tra role thuộc nhóm nhân sự nội bộ.
+    // Kiá»ƒm tra role thuá»™c nhÃ³m nhÃ¢n sá»± ná»™i bá»™.
     private static bool IsInternalRole(string role)
     {
         return role is "admin" or "manager" or "staff";

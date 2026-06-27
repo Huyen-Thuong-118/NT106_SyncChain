@@ -12,7 +12,7 @@ public class DonHang
 
     public DateTime NgayTao { get; set; } = DateTime.Now;
 
-    public string TrangThai { get; set; } = "pending";
+    public string TrangThai { get; set; } = "Draft";
 
     [MaxLength(100)]
     public string? IdempotencyKey { get; set; }
