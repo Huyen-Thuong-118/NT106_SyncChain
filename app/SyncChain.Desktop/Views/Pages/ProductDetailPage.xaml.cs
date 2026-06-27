@@ -1,43 +1,49 @@
 using System.Net.Http.Json;
-using Microsoft.Maui.Controls;
+using System.Text.Json;
 using SyncChain.Desktop.Models;
+using SyncChain.Desktop.Services;
 
 namespace SyncChain.Desktop.Views.Pages;
 
-public partial class ProductDetailPage : ContentPage
+public partial class ProductDetailPage : ContentPage, IQueryAttributable
 {
-	private readonly HttpClient _http;
+	private readonly HttpClient _http = ApiClientProvider.Client;
+	private int _productId;
+	private SanPhamApi? _product;
 
-	// Thông tin sản phẩm
-	public string ProductCode { get; private set; } = "";
-	public string ProductName { get; private set; } = "";
-	public string ProductDescription { get; private set; } = "";
-	public string ProductStatus { get; private set; } = "";
+	public string ProductCode { get; private set; } = string.Empty;
+	public string ProductName { get; private set; } = string.Empty;
+	public string ProductInitials { get; private set; } = "SP";
+	public string ProductDescription { get; private set; } = string.Empty;
+	public string ProductStatus { get; private set; } = string.Empty;
 	public string ProductStatusColor { get; private set; } = "#5C647A";
-
-	// Giá và tồn kho
+	public string StatusActionText { get; private set; } = "NGỪNG BÁN";
 	public string Price { get; private set; } = "0 đ";
 	public string ImportPrice { get; private set; } = "0 đ";
 	public string Stock { get; private set; } = "0";
 	public string SoldCount { get; private set; } = "0";
-	public string Revenue { get; private set; } = "0 đ";
+	public string Category { get; private set; } = "Chưa phân loại";
+	public string PerformanceIcon { get; private set; } = "→";
+	public string PerformanceText { get; private set; } = "0%";
+	public Color PerformanceColor { get; private set; } = Colors.Gray;
+	public IReadOnlyList<ProductImageItem> ProductImages { get; private set; } = Array.Empty<ProductImageItem>();
+	public string SelectedImageUrl { get; private set; } = string.Empty;
+	public string ImageCountText { get; private set; } = "Chưa có hình ảnh";
+	public string RatingText { get; private set; } = "—";
+	public string RatingStars { get; private set; } = "☆☆☆☆☆";
+	public string ReviewCountText { get; private set; } = "0 đánh giá";
+	public string ReviewEmptyText { get; private set; } = "Sản phẩm chưa có đánh giá.";
 
-	// Thông số kỹ thuật
-	public string Category { get; private set; } = "";
-	public string Unit { get; private set; } = "Cái";
-	public string AlertThreshold { get; private set; } = "10";
-	public string StatusText { get; private set; } = "";
-	public string CreatedDate { get; private set; } = "";
-	public string UpdatedDate { get; private set; } = "";
-
-	// Lịch sử kho
-	public IReadOnlyList<InventoryEvent> Events { get; private set; } = Array.Empty<InventoryEvent>();
-
-	public ProductDetailPage(HttpClient http)
+	public ProductDetailPage()
 	{
-		_http = http;
 		InitializeComponent();
 		BindingContext = this;
+	}
+
+	public void ApplyQueryAttributes(IDictionary<string, object> query)
+	{
+		if (query.TryGetValue("productId", out var value))
+			int.TryParse(Uri.UnescapeDataString(value?.ToString() ?? string.Empty), out _productId);
 	}
 
 	protected override async void OnAppearing()
@@ -50,92 +56,184 @@ public partial class ProductDetailPage : ContentPage
 	{
 		try
 		{
-			// Lấy danh sách sản phẩm trước, rồi lấy chi tiết sản phẩm đầu tiên
-			var products = await _http.GetFromJsonAsync<List<SanPhamApi>>("api/product");
-			if (products == null || products.Count == 0) return;
+			if (_productId <= 0)
+				throw new InvalidOperationException("Thiếu mã sản phẩm.");
 
-			var firstProduct = products.First();
+			var detail = await _http.GetFromJsonAsync<ProductDetailApi>($"api/product/{_productId}/detail");
+			if (detail?.Product == null)
+				throw new InvalidOperationException("API không trả dữ liệu sản phẩm.");
 
-			// Gọi API lấy chi tiết sản phẩm
-			var detail = await _http.GetFromJsonAsync<ProductDetailApi>($"api/product/{firstProduct.MaSanPham}/detail");
-			if (detail?.Product == null) return;
-
+			_product = detail.Product;
 			var sp = detail.Product;
-
-			// Cập nhật thông tin sản phẩm
 			ProductCode = $"SP-{sp.MaSanPham:0000}";
 			ProductName = sp.TenSanPham;
-			ProductDescription = sp.MoTa ?? "Không có mô tả";
+			ProductInitials = BuildInitials(sp.TenSanPham);
+			ProductDescription = string.IsNullOrWhiteSpace(sp.MoTa) ? "Chưa có mô tả." : sp.MoTa;
+			ProductImages = ParseImageUrls(sp.HinhAnhUrl)
+				.Select(x => new ProductImageItem { Url = x })
+				.ToList();
+			if (ProductImages.Count == 0)
+				ProductImages = [new ProductImageItem()];
+			var firstImage = ProductImages.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Url));
+			SelectedImageUrl = firstImage?.Url ?? string.Empty;
+			ImageCountText = ProductImages.All(x => string.IsNullOrWhiteSpace(x.Url))
+				? "Chưa có hình ảnh"
+				: $"{ProductImages.Count(x => !string.IsNullOrWhiteSpace(x.Url))} hình ảnh";
 
-			// Trạng thái
-			var (status, statusColor) = sp.TrangThai switch
+			(ProductStatus, ProductStatusColor) = sp.TrangThai switch
 			{
-				"Hoat dong" when sp.SoLuongTon > sp.MucTonThap => ("ĐANG BÁN", "#2E7D32"),
-				"Hoat dong" when sp.SoLuongTon > 0 => ("SẮP HẾT HÀNG", "#F57C00"),
-				"Hoat dong" => ("HẾT HÀNG", "#C62828"),
 				"Ngung ban" => ("NGỪNG BÁN", "#C62828"),
-				_ => (sp.TrangThai, "#5C647A")
+				_ when sp.SoLuongTon <= 0 => ("HẾT HÀNG", "#C62828"),
+				_ when sp.SoLuongTon <= sp.MucTonThap => ("SẮP HẾT HÀNG", "#F57C00"),
+				_ => ("ĐANG BÁN", "#2E7D32")
 			};
-			ProductStatus = status;
-			ProductStatusColor = statusColor;
-
-			// Giá và tồn kho
+			StatusActionText = sp.TrangThai == "Ngung ban" ? "MỞ BÁN" : "NGỪNG BÁN";
 			Price = $"{sp.GiaBan:N0} đ";
 			ImportPrice = $"{sp.GiaNhap:N0} đ";
-			Stock = sp.SoLuongTon.ToString();
-			SoldCount = detail.SoldCount.ToString();
-			Revenue = $"{detail.Revenue:N0} đ";
+			Stock = sp.SoLuongTon.ToString("N0");
+			SoldCount = detail.SoldCount.ToString("N0");
+			Category = sp.DanhMuc?.TenDanhMuc ?? "Chưa phân loại";
 
-			// Thông số kỹ thuật
-			Category = sp.MoTa?.Contains("điện tử") == true ? "Điện tử" :
-					   sp.MoTa?.Contains("thời trang") == true ? "Thời trang" : "Khác";
-			StatusText = sp.TrangThai == "Hoat dong" ? "Đang bán" : "Ngừng bán";
-			AlertThreshold = sp.MucTonThap.ToString();
-			CreatedDate = DateTime.Now.AddDays(-30).ToString("dd/MM/yyyy");
-			UpdatedDate = DateTime.Now.ToString("dd/MM/yyyy");
+			var performance = detail.PerformancePercent;
+			PerformanceIcon = performance > 0 ? "↑" : performance < 0 ? "↓" : "→";
+			PerformanceText = $"{Math.Abs(performance):0.#}%";
+			PerformanceColor = performance > 0 ? Colors.Green : performance < 0 ? Colors.Red : Colors.Gray;
 
-			// Lịch sử kho từ API
-			Events = detail.StockHistory.Select(h => new InventoryEvent
+			if (detail.ReviewCount > 0)
 			{
-				Date = h.ThoiGian.ToString("dd/MM/yyyy HH:mm"),
-				Type = h.Loai,
-				Quantity = h.SoLuong > 0 ? $"+{h.SoLuong}" : h.SoLuong.ToString(),
-				Actor = h.MaNguoiDung.HasValue ? $"User #{h.MaNguoiDung}" : "Hệ thống",
-				Note = h.GhiChu ?? "",
-				Accent = h.Loai switch
-				{
-					"Nhập kho" => Color.FromArgb("#2E7D32"),
-					"Xuất kho" => Color.FromArgb("#C62828"),
-					_ => Color.FromArgb("#5C647A")
-				}
-			}).ToList();
-
-			// Thông báo UI cập nhật
-			OnPropertyChanged(nameof(ProductCode));
-			OnPropertyChanged(nameof(ProductName));
-			OnPropertyChanged(nameof(ProductDescription));
-			OnPropertyChanged(nameof(ProductStatus));
-			OnPropertyChanged(nameof(ProductStatusColor));
-			OnPropertyChanged(nameof(Price));
-			OnPropertyChanged(nameof(ImportPrice));
-			OnPropertyChanged(nameof(Stock));
-			OnPropertyChanged(nameof(SoldCount));
-			OnPropertyChanged(nameof(Revenue));
-			OnPropertyChanged(nameof(Category));
-			OnPropertyChanged(nameof(StatusText));
-			OnPropertyChanged(nameof(AlertThreshold));
-			OnPropertyChanged(nameof(CreatedDate));
-			OnPropertyChanged(nameof(UpdatedDate));
-			OnPropertyChanged(nameof(Events));
+				RatingText = detail.AverageRating.ToString("0.0");
+				RatingStars = BuildStars(detail.AverageRating);
+				ReviewCountText = $"{detail.ReviewCount:N0} đánh giá";
+				ReviewEmptyText = string.Empty;
+			}
+			else
+			{
+				RatingText = "—";
+				RatingStars = "☆☆☆☆☆";
+				ReviewCountText = "0 đánh giá";
+				ReviewEmptyText = "Sản phẩm chưa có đánh giá. Hệ thống hiện chưa lưu dữ liệu đánh giá khách hàng.";
+			}
+			NotifyAll();
+			ProductImageGallery.SelectedItem = firstImage;
 		}
 		catch (Exception ex)
 		{
-			System.Diagnostics.Debug.WriteLine($"[ProductDetailPage] Load error: {ex.Message}");
+			await DisplayAlertAsync("Không tải được chi tiết", ex.Message, "OK");
 		}
 	}
 
-	private async void OnBackClicked(object? sender, EventArgs e)
+	private void NotifyAll()
 	{
+		foreach (var property in new[]
+		{
+			nameof(ProductCode), nameof(ProductName), nameof(ProductInitials),
+			nameof(ProductDescription), nameof(ProductStatus), nameof(ProductStatusColor),
+			nameof(StatusActionText), nameof(Price), nameof(ImportPrice), nameof(Stock),
+			nameof(SoldCount), nameof(Category), nameof(PerformanceIcon),
+			nameof(PerformanceText), nameof(PerformanceColor), nameof(ProductImages),
+			nameof(SelectedImageUrl), nameof(ImageCountText), nameof(RatingText), nameof(RatingStars),
+			nameof(ReviewCountText), nameof(ReviewEmptyText)
+		})
+			OnPropertyChanged(property);
+	}
+
+	private void OnImageSelected(object? sender, SelectionChangedEventArgs e)
+	{
+		if (e.CurrentSelection.FirstOrDefault() is not ProductImageItem image ||
+			string.IsNullOrWhiteSpace(image.Url))
+			return;
+
+		SelectedImageUrl = image.Url;
+		OnPropertyChanged(nameof(SelectedImageUrl));
+	}
+
+	private async void OnEditClicked(object? sender, EventArgs e) =>
+		await Shell.Current.GoToAsync($"{nameof(ProductFormPage)}?productId={_productId}");
+
+	private async void OnImportStockClicked(object? sender, EventArgs e)
+	{
+		var quantityText = await DisplayPromptAsync(
+			"Nhập thêm hàng", "Nhập số lượng cần cộng vào tồn kho:",
+			"Nhập", "Hủy", keyboard: Keyboard.Numeric);
+		if (!int.TryParse(quantityText, out var quantity) || quantity <= 0)
+			return;
+
+		var note = await DisplayPromptAsync(
+			"Ghi chú", "Nguồn nhập hoặc ghi chú:",
+			"Tiếp tục", "Bỏ qua") ?? "Nhập kho nhanh từ trang sản phẩm";
+		var response = await _http.PostAsJsonAsync(
+			$"api/product/{_productId}/import",
+			new { soLuong = quantity, ghiChu = note });
+		if (!response.IsSuccessStatusCode)
+		{
+			await DisplayAlertAsync("Nhập kho thất bại", await ReadErrorAsync(response), "OK");
+			return;
+		}
+		await LoadProductDetailAsync();
+	}
+
+	private async void OnToggleStatusClicked(object? sender, EventArgs e)
+	{
+		if (_product == null) return;
+		var newStatus = _product.TrangThai == "Ngung ban" ? "Hoat dong" : "Ngung ban";
+		var response = await _http.PutAsync(
+			$"api/product/{_productId}/status?status={Uri.EscapeDataString(newStatus)}", null);
+		if (!response.IsSuccessStatusCode)
+		{
+			await DisplayAlertAsync("Không đổi được trạng thái", await ReadErrorAsync(response), "OK");
+			return;
+		}
+		await LoadProductDetailAsync();
+	}
+
+	private async void OnDeleteClicked(object? sender, EventArgs e)
+	{
+		if (!await DisplayAlertAsync("Xóa sản phẩm", $"Bạn có chắc muốn xóa {ProductName}?", "Xóa", "Hủy"))
+			return;
+		var response = await _http.DeleteAsync($"api/product/{_productId}");
+		if (!response.IsSuccessStatusCode)
+		{
+			await DisplayAlertAsync("Không xóa được", await ReadErrorAsync(response), "OK");
+			return;
+		}
 		await Shell.Current.GoToAsync("..");
 	}
+
+	private static IEnumerable<string> ParseImageUrls(string? value)
+	{
+		if (string.IsNullOrWhiteSpace(value)) yield break;
+		foreach (var item in value.Split([',', ';', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries))
+		{
+			var url = item.Trim();
+			yield return Uri.TryCreate(url, UriKind.Absolute, out _)
+				? url
+				: new Uri(ApiClientProvider.Client.BaseAddress!, url.TrimStart('/')).ToString();
+		}
+	}
+
+	private static string BuildStars(decimal rating)
+	{
+		var full = Math.Clamp((int)Math.Round(rating), 0, 5);
+		return new string('★', full) + new string('☆', 5 - full);
+	}
+
+	private static string BuildInitials(string name) =>
+		string.Join("", name.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+			.Take(2).Select(x => char.ToUpperInvariant(x[0])));
+
+	private static async Task<string> ReadErrorAsync(HttpResponseMessage response)
+	{
+		var text = await response.Content.ReadAsStringAsync();
+		try
+		{
+			using var document = JsonDocument.Parse(text);
+			if (document.RootElement.TryGetProperty("message", out var message))
+				return message.GetString() ?? text;
+		}
+		catch { }
+		return string.IsNullOrWhiteSpace(text) ? $"HTTP {(int)response.StatusCode}" : text.Trim('"');
+	}
+
+	private async void OnBackClicked(object? sender, EventArgs e) =>
+		await Shell.Current.GoToAsync("..");
 }

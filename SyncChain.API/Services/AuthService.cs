@@ -12,11 +12,13 @@ public class AuthService
 {
     private readonly AppDbContext _db;
     private readonly IConfiguration _config;
+    private readonly IAuditService _audit;
 
-    public AuthService(AppDbContext db, IConfiguration config)
+    public AuthService(AppDbContext db, IConfiguration config, IAuditService audit)
     {
         _db = db;
         _config = config;
+        _audit = audit;
     }
 
     // Tạo tài khoản customer sau khi kiểm tra email và mật khẩu.
@@ -47,8 +49,17 @@ public class AuthService
             IsActive = true
         };
 
+        using var transaction = _db.Database.BeginTransaction();
         _db.NguoiDung.Add(user);
         _db.SaveChanges();
+        _audit.AddSuccess(
+            AuditActions.Create,
+            "NguoiDung",
+            user.MaNguoiDung.ToString(),
+            after: new { user.TenDangNhap, user.Email, role = "customer", user.IsActive },
+            actor: new AuditActor(user.MaNguoiDung, user.TenDangNhap, "customer"));
+        _db.SaveChanges();
+        transaction.Commit();
 
         return "Dang ky thanh cong";
     }
@@ -66,13 +77,25 @@ public class AuthService
 
         if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.MatKhauHash))
         {
-            Console.WriteLine($"LOGIN FAIL: {dto.Email}");
+            _audit.AddFailureAsync(
+                    AuditActions.LoginFailed,
+                    "Authentication",
+                    email,
+                    metadata: new { email, reason = "invalid_credentials" },
+                    actor: new AuditActor(null, email, string.Empty))
+                .GetAwaiter().GetResult();
             throw new Exception("Sai thong tin dang nhap");
         }
 
         if (!user.IsActive)
         {
-            Console.WriteLine($"LOGIN BLOCKED: {dto.Email}");
+            _audit.AddFailureAsync(
+                    AuditActions.LoginFailed,
+                    "Authentication",
+                    user.MaNguoiDung.ToString(),
+                    metadata: new { email, reason = "account_locked" },
+                    actor: new AuditActor(user.MaNguoiDung, user.TenDangNhap, GetRoleName(user.MaVaiTro)))
+                .GetAwaiter().GetResult();
             throw new Exception("Tai khoan bi khoa");
         }
 
@@ -92,6 +115,8 @@ public class AuthService
         var claims = new[]
         {
             new Claim("user_id", user.MaNguoiDung.ToString()),
+            new Claim(ClaimTypes.Name, user.TenDangNhap),
+            new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Role, roleName)
         };
 
@@ -109,7 +134,18 @@ public class AuthService
             signingCredentials: creds
         );
 
-        Console.WriteLine($"LOGIN SUCCESS: {user.Email}");
+        _audit.AddSuccess(
+            AuditActions.Login,
+            "Authentication",
+            user.MaNguoiDung.ToString(),
+            after: new { authenticated = true },
+            metadata: new
+            {
+                device = dto.Device?.Trim() ?? string.Empty,
+                location = dto.Location?.Trim() ?? string.Empty
+            },
+            actor: new AuditActor(user.MaNguoiDung, user.TenDangNhap, roleName));
+        _db.SaveChanges();
 
         return new
         {
@@ -159,7 +195,14 @@ public class AuthService
         var user = _db.NguoiDung.FirstOrDefault(x => x.MaNguoiDung == userId)
             ?? throw new Exception("Khong tim thay tai khoan");
 
+        var oldUsername = user.TenDangNhap;
         user.TenDangNhap = username;
+        _audit.AddSuccess(
+            AuditActions.Update,
+            "NguoiDung",
+            userId.ToString(),
+            before: new { username = oldUsername },
+            after: new { username });
         _db.SaveChanges();
 
         return GetProfile(userId);
@@ -184,6 +227,20 @@ public class AuthService
             throw new Exception("Mat khau hien tai khong dung");
 
         user.MatKhauHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        _audit.AddSuccess(
+            AuditActions.PasswordChange,
+            "NguoiDung",
+            userId.ToString(),
+            after: new { passwordChanged = true });
         _db.SaveChanges();
     }
+
+    private static string GetRoleName(int roleId) => roleId switch
+    {
+        1 => "customer",
+        2 => "staff",
+        3 => "manager",
+        4 => "admin",
+        _ => "unknown"
+    };
 }

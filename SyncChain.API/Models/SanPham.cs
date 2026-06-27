@@ -16,6 +16,8 @@ public class SanPham
 
     public int SoLuongTon { get; set; }
 
+    public int TonKhoBanDau { get; set; }
+
     public int MucTonThap { get; set; } = 10;
 
     public string TrangThai { get; set; } = "Hoat dong";
@@ -23,4 +25,8 @@ public class SanPham
     public string HinhAnhUrl { get; set; } = string.Empty;
 
     public string MoTa { get; set; } = string.Empty;
+
+    public int? MaDanhMuc { get; set; }
+
+    public DanhMucSanPham? DanhMuc { get; set; }
 }

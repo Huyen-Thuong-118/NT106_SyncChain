@@ -7,8 +7,27 @@ public partial class AppShell : Shell
 		InitializeComponent();
 		Routing.RegisterRoute(nameof(Views.Pages.RegisterPage), typeof(Views.Pages.RegisterPage));
 		Routing.RegisterRoute(nameof(Views.Pages.ProductDetailPage), typeof(Views.Pages.ProductDetailPage));
+		Routing.RegisterRoute(nameof(Views.Pages.ProductFormPage), typeof(Views.Pages.ProductFormPage));
 		Routing.RegisterRoute(nameof(Views.Pages.OrderDetailPage), typeof(Views.Pages.OrderDetailPage));
 		Navigated += (_, _) => FlyoutIsPresented = false;
+		ApplyRoleVisibility();
+	}
+
+	private void ApplyRoleVisibility()
+	{
+		var role = Services.ApiClientProvider.Role?.Trim().ToLowerInvariant();
+		AccessFlyout.IsVisible = role == "admin";
+		DashboardFlyout.IsVisible = role is "admin" or "manager";
+		ImportsFlyout.IsVisible = role is "admin" or "manager";
+		LogsFlyout.IsVisible = role == "admin";
+		if (role == "staff")
+			CurrentItem = OrdersFlyout;
+	}
+
+	private void OnLogoutClicked(object? sender, EventArgs e)
+	{
+		Services.ApiClientProvider.ClearSession();
+		App.ShowLogin();
 	}
 
 #if WINDOWS

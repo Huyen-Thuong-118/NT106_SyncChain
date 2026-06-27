@@ -7,7 +7,7 @@ public static class MauiProgram
 	// ═══════════════════════════════════════════════════════
 	//  BACKEND BASE URL — đổi thành địa chỉ server thật
 	// ═══════════════════════════════════════════════════════
-	public const string ApiBaseUrl = "http://localhost:3000/";
+	public static string ApiBaseUrl => Services.ApiClientProvider.ApiBaseUrl;
 
 	public static MauiApp CreateMauiApp()
 	{
@@ -29,8 +29,7 @@ public static class MauiProgram
 		// Đăng ký HttpClient dùng chung cho toàn app
 		builder.Services.AddSingleton(sp =>
 		{
-			var client = new HttpClient { BaseAddress = new Uri(ApiBaseUrl) };
-			return client;
+			return Services.ApiClientProvider.Client;
 		});
 
 #if DEBUG

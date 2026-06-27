@@ -19,27 +19,52 @@ public class ProductController : ControllerBase
     }
 
     // Trả về toàn bộ sản phẩm cho màn hình quản lý/bán hàng.
-    [Authorize]
+    [Authorize(Policy = "ProductRead")]
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult GetAll([FromQuery] int? categoryId)
     {
-        return Ok(_service.GetAll());
+        try
+        {
+            return Ok(_service.GetAll(categoryId));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     // Lấy thông tin cơ bản của một sản phẩm.
-    [Authorize]
+    [Authorize(Policy = "ProductRead")]
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        return Ok(_service.GetById(id));
+        try
+        {
+            return Ok(_service.GetById(id));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     // Lấy chi tiết sản phẩm kèm thống kê và lịch sử kho.
-    [Authorize]
+    [Authorize(Policy = "InventoryRead")]
     [HttpGet("{id}/detail")]
     public IActionResult GetDetail(int id)
     {
-        return Ok(_service.GetDetail(id));
+        try
+        {
+            return Ok(_service.GetDetail(id));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     // Tạo sản phẩm mới.
@@ -47,7 +72,14 @@ public class ProductController : ControllerBase
     [HttpPost]
     public IActionResult Create(CreateProductDTO dto)
     {
-        return Ok(_service.Create(dto));
+        try
+        {
+            return Ok(_service.Create(dto));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     // Cập nhật thông tin sản phẩm.
@@ -55,19 +87,45 @@ public class ProductController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult Update(int id, UpdateProductDTO dto)
     {
-        return Ok(_service.Update(id, dto));
+        try
+        {
+            return Ok(_service.Update(id, dto));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     // Nhập thêm tồn kho và ghi lịch sử giao dịch kho.
-    [Authorize(Policy = "ProductWrite")]
+    [Authorize(Policy = "InventoryWrite")]
     [HttpPost("{id}/import")]
-    public IActionResult ImportStock(int id, ImportStockDTO dto)
+    public async Task<IActionResult> ImportStock(int id, ImportStockDTO dto)
     {
-        return Ok(_service.ImportStock(id, dto.SoLuong, GetUserId(), dto.GhiChu));
+        try
+        {
+            return Ok(await _service.ImportStockAsync(
+                id,
+                dto.SoLuong,
+                GetUserId(),
+                dto.GhiChu));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     // Lấy danh sách giao dịch nhập kho gần đây.
-    [Authorize(Policy = "ProductWrite")]
+    [Authorize(Policy = "InventoryRead")]
     [HttpGet("imports")]
     public IActionResult GetImportHistory()
     {
@@ -120,8 +178,19 @@ public class ProductController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        _service.Delete(id);
-        return Ok("Da xoa");
+        try
+        {
+            _service.Delete(id);
+            return Ok("Da xoa");
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     // Lấy user id từ token để gắn vào giao dịch kho.

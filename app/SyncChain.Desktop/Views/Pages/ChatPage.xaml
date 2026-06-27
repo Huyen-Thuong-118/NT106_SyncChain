@@ -6,38 +6,34 @@
              NavigationPage.HasNavigationBar="False"
              Padding="0">
 
-    <Grid ColumnDefinitions="320,*" ColumnSpacing="0">
-
-        <!-- ═══════════════════════════════════════════════════════════════
-             LEFT PANEL: Chat List (fixed 320px width)
-             "Hộp thư" header, search input, conversation cards
-        ═══════════════════════════════════════════════════════════════ -->
-        <Border Style="{StaticResource GlassCardBorder}"
-                Margin="24,24,0,24"
-                Padding="20">
+    <Grid ColumnSpacing="14" Padding="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition x:Name="InfoColumn" Width="0" />
+        </Grid.ColumnDefinitions>
+        <Border Style="{StaticResource GlassCardBorder}" Padding="16">
             <Border.StrokeShape>
-                <RoundRectangle CornerRadius="24" />
+                <RoundRectangle CornerRadius="18" />
             </Border.StrokeShape>
-            <VerticalStackLayout Spacing="16">
+            <Grid>
+            <Grid x:Name="InboxPanel" RowDefinitions="Auto,Auto,*" RowSpacing="10">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <Label Text="Hộp thư" Style="{StaticResource HeadlineLgMobileLabel}" />
+                    <Button Grid.Column="1"
+                            Text="NHÓM"
+                            Style="{StaticResource PillSecondaryButton}"
+                            Clicked="OnCreateGroupClicked" />
+                </Grid>
 
-                <!-- Chat list header -->
-                <Label Text="Hộp thư" Style="{StaticResource HeadlineLgMobileLabel}" />
+                <Entry x:Name="InboxSearchEntry"
+                       Grid.Row="1"
+                       Placeholder="Tìm kiếm"
+                       Style="{StaticResource MinimalistEntry}"
+                       BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                       Focused="OnSearchFocused" />
 
-                <!-- Search input -->
-                <Border BackgroundColor="{DynamicResource SurfaceContainerLow}"
-                        StrokeThickness="0"
-                        Padding="14,0"
-                        HeightRequest="44">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="12" />
-                    </Border.StrokeShape>
-                    <Entry Placeholder="Tìm kiếm..."
-                           Style="{StaticResource MinimalistEntry}"
-                           BackgroundColor="Transparent" />
-                </Border>
-
-                <!-- Conversation list -->
-                <ScrollView VerticalScrollBarVisibility="Never">
+                <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Default">
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Threads}" Spacing="8">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="models:ChatThread">
@@ -45,258 +41,801 @@
                                         Stroke="{Binding IsActive, Converter={StaticResource BoolToColorConverter}, ConverterParameter=ActiveThread}"
                                         StrokeThickness="1"
                                         Padding="12">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnThreadTapped" CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
                                     <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="16" />
+                                        <RoundRectangle CornerRadius="12" />
                                     </Border.StrokeShape>
-                                    <Border.Shadow>
-                                        <Shadow Brush="#14000000"
-                                                Offset="0,4"
-                                                Radius="12"
-                                                Opacity="0.08" />
-                                    </Border.Shadow>
-                                    <Grid ColumnDefinitions="44,*,Auto" ColumnSpacing="12">
-                                        <!-- Avatar circle -->
-                                        <Border BackgroundColor="{DynamicResource PrimaryContainer}"
-                                                StrokeThickness="0"
-                                                WidthRequest="44"
-                                                HeightRequest="44">
+                                    <Grid ColumnDefinitions="44,*,Auto" ColumnSpacing="10">
+                                        <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" WidthRequest="44" HeightRequest="44">
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="22" />
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding Initials}"
-                                                   HorizontalOptions="Center"
-                                                   VerticalOptions="Center"
-                                                   TextColor="{DynamicResource Primary}"
-                                                   FontAttributes="Bold"
-                                                   FontFamily="Inter"
-                                                   FontSize="14" />
+                                            <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
                                         </Border>
-                                        <!-- Name + last message -->
                                         <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                                            <Label Text="{Binding Name}"
-                                                   FontAttributes="Bold"
-                                                   FontFamily="Inter"
-                                                   FontSize="14"
-                                                   TextColor="{DynamicResource OnSurface}"
-                                                   LineBreakMode="TailTruncation"
-                                                   MaxLines="1" />
-                                            <Label Text="{Binding Preview}"
-                                                   FontFamily="Inter"
-                                                   FontSize="12"
-                                                   TextColor="{DynamicResource OnSurfaceVariant}"
-                                                   LineBreakMode="TailTruncation"
-                                                   MaxLines="1" />
+                                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="14" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Preview}" FontSize="12" TextColor="{DynamicResource OnSurfaceVariant}" LineBreakMode="TailTruncation" />
                                         </VerticalStackLayout>
-                                        <!-- Timestamp -->
-                                        <Label Grid.Column="2"
-                                               Text="{Binding Time}"
-                                               FontFamily="Inter"
-                                               FontSize="11"
-                                               TextColor="{DynamicResource OnSurfaceVariant}"
-                                               VerticalOptions="Start" />
+                                        <VerticalStackLayout Grid.Column="2" Spacing="2">
+                                            <Label Text="{Binding Time}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                            <Label Text="{Binding UnreadCount}" FontSize="11" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                                        </VerticalStackLayout>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
                 </ScrollView>
+            </Grid>
 
-            </VerticalStackLayout>
-        </Border>
-
-        <!-- ═══════════════════════════════════════════════════════════════
-             RIGHT PANEL: Active Conversation (flexible width)
-             Header, messages, input area
-        ═══════════════════════════════════════════════════════════════ -->
-        <Border Grid.Column="1"
-                Style="{StaticResource GlassCardBorder}"
-                Margin="16,24,24,24"
-                Padding="24">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="24" />
-            </Border.StrokeShape>
-            <Grid RowDefinitions="Auto,*,Auto" RowSpacing="16">
-
-                <!-- ═══════════════════════════════════════════════════════
-                     CONVERSATION HEADER
-                     Contact name, role, action buttons
-                ═══════════════════════════════════════════════════════ -->
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                    <VerticalStackLayout VerticalOptions="Center">
-                        <Label Text="Lê Minh Tuấn"
-                               Style="{StaticResource DisplayXlLabel}"
-                               LineBreakMode="TailTruncation" />
-                        <Label Text="Quản lý kho — Đang hoạt động"
-                               Style="{StaticResource BodyMdLabel}"
-                               Margin="0,4,0,0"
-                               LineBreakMode="TailTruncation" />
-                    </VerticalStackLayout>
-                    <!-- Action buttons: call, video, more -->
-                    <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
-                        <!-- Call button -->
-                        <Border Style="{StaticResource GlassCardBorder}"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                Padding="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="21" />
-                            </Border.StrokeShape>
-                            <Label Text="📞"
-                                   FontSize="16"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center" />
-                        </Border>
-                        <!-- Video button -->
-                        <Border Style="{StaticResource GlassCardBorder}"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                Padding="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="21" />
-                            </Border.StrokeShape>
-                            <Label Text="📹"
-                                   FontSize="16"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center" />
-                        </Border>
-                        <!-- More button -->
-                        <Border Style="{StaticResource GlassCardBorder}"
-                                WidthRequest="42"
-                                HeightRequest="42"
-                                Padding="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="21" />
-                            </Border.StrokeShape>
-                            <Label Text="⋯"
-                                   FontSize="18"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   TextColor="{DynamicResource OnSurface}" />
-                        </Border>
-                    </HorizontalStackLayout>
+            <Grid x:Name="SearchPanel" IsVisible="False" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="12">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                    <Button Text="Quay lại" Style="{StaticResource PillSecondaryButton}" Clicked="OnBackFromSearchClicked" />
+                    <Entry x:Name="AccountSearchEntry"
+                           Grid.Column="1"
+                           Placeholder="Tìm kiếm"
+                           Style="{StaticResource MinimalistEntry}"
+                           BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                           TextChanged="OnAccountSearchChanged"
+                           Completed="OnAccountSearchCompleted" />
                 </Grid>
-
-                <!-- Separator -->
-                <BoxView Grid.Row="0"
-                         HeightRequest="1"
-                         Color="{DynamicResource OutlineVariant}"
-                         VerticalOptions="End"
-                         Margin="0,12,0,0" />
-
-                <!-- ═══════════════════════════════════════════════════════
-                     MESSAGE LIST
-                     Incoming (white, 2px top-left / 18px others)
-                     Outgoing (PrimaryContainer, 18px top / 2px bottom-right)
-                     Date dividers with LabelCapsLabel
-                ═══════════════════════════════════════════════════════ -->
-                <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Default">
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Messages}" Spacing="10" Padding="0,12">
+                <Label Grid.Row="1" Text="Nội dung tìm kiếm mới đây" Style="{StaticResource LabelCapsLabel}" />
+                <Label Grid.Row="2" Text="Danh bạ của bạn" Style="{StaticResource LabelCapsLabel}" />
+                <ScrollView Grid.Row="3" VerticalScrollBarVisibility="Default">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding SearchResults}" Spacing="8">
                         <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="models:ChatMessage">
-                                <VerticalStackLayout Spacing="10">
-                                    <!-- Date divider (shown when IsDateDivider is true) -->
-                                    <Border BackgroundColor="#33000000"
-                                            StrokeThickness="0"
-                                            HorizontalOptions="Center"
-                                            Padding="16,6"
-                                            IsVisible="{Binding IsDateDivider}">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="12" />
-                                        </Border.StrokeShape>
-                                        <Label Text="{Binding Content}"
-                                               Style="{StaticResource LabelCapsLabel}"
-                                               TextColor="White"
-                                               Padding="0" />
-                                    </Border>
-
-                                    <!-- Message bubble -->
-                                    <Border HorizontalOptions="{Binding IsOutgoing, Converter={StaticResource BoolToLayoutConverter}}"
-                                            BackgroundColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageBubble}"
-                                            StrokeThickness="0"
-                                            Padding="14,10"
-                                            MaximumWidthRequest="420">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="18" />
-                                        </Border.StrokeShape>
-                                        <VerticalStackLayout Spacing="4">
-                                            <Label Text="{Binding Content}"
-                                                   TextColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageText}"
-                                                   FontFamily="Inter"
-                                                   FontSize="14"
-                                                   LineBreakMode="WordWrap" />
-                                            <Label Text="{Binding Time}"
-                                                   FontSize="11"
-                                                   FontFamily="Inter"
-                                                   TextColor="{DynamicResource OnSurfaceVariant}"
-                                                   HorizontalTextAlignment="End" />
-                                        </VerticalStackLayout>
-                                    </Border>
-                                </VerticalStackLayout>
+                            <DataTemplate x:DataType="models:ChatUserApi">
+                                <Border StrokeThickness="0" Padding="10">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnSearchUserTapped" CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="40,*,Auto" ColumnSpacing="10">
+                                        <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" WidthRequest="40" HeightRequest="40">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="20" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Username, StringFormat='{0}'}" FontSize="11" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" MaxLines="1" />
+                                        </Border>
+                                        <Label Grid.Column="1" Text="{Binding Username}" FontAttributes="Bold" FontSize="14" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+                                        <Label Grid.Column="2" Text="X" FontSize="14" VerticalOptions="Center" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                    </Grid>
+                                </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
                 </ScrollView>
-
-                <!-- ═══════════════════════════════════════════════════════
-                     MESSAGE INPUT AREA
-                     Pill-shaped GlassCardBorder, attachment, emoji, send
-                ═══════════════════════════════════════════════════════ -->
-                <Border Grid.Row="2"
-                        Style="{StaticResource GlassCardBorder}"
-                        Padding="8,6"
-                        Margin="0,8,0,0">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="12" />
-                    </Border.StrokeShape>
-                    <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
-                        <!-- Attachment button -->
-                        <Border BackgroundColor="Transparent"
-                                StrokeThickness="0"
-                                WidthRequest="36"
-                                HeightRequest="36"
-                                Padding="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="18" />
-                            </Border.StrokeShape>
-                            <Label Text="📎"
-                                   FontSize="16"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center" />
-                        </Border>
-                        <!-- Emoji button -->
-                        <Border Grid.Column="1"
-                                BackgroundColor="Transparent"
-                                StrokeThickness="0"
-                                WidthRequest="36"
-                                HeightRequest="36"
-                                Padding="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="18" />
-                            </Border.StrokeShape>
-                            <Label Text="😊"
-                                   FontSize="16"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center" />
-                        </Border>
-                        <!-- Message entry -->
-                        <Entry Grid.Column="2"
-                               Placeholder="Nhập tin nhắn..."
-                               Style="{StaticResource MinimalistEntry}"
-                               BackgroundColor="Transparent"
-                               VerticalOptions="Center" />
-                        <!-- Send button -->
-                        <Button Grid.Column="3"
-                                Text="GỬI"
-                                Style="{StaticResource PillPrimaryButton}"
-                                Padding="20,10"
-                                HeightRequest="38"
-                                VerticalOptions="Center" />
-                    </Grid>
-                </Border>
-
+            </Grid>
             </Grid>
         </Border>
 
+        <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}" Padding="18">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="18" />
+            </Border.StrokeShape>
+            <Grid RowDefinitions="Auto,*,Auto,Auto,Auto" RowSpacing="12">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                    <VerticalStackLayout>
+                        <Label x:Name="ConversationTitleLabel"
+                               Text="Chọn hoặc tìm tài khoản"
+                               Style="{StaticResource DisplayXlLabel}"
+                               LineBreakMode="TailTruncation" />
+                        <Label x:Name="ConversationSubtitleLabel"
+                               Text="Hộp thư chỉ hiện sau khi có tin nhắn hoặc cuộc gọi"
+                               Style="{StaticResource BodyMdLabel}"
+                               LineBreakMode="TailTruncation" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="Gọi điện" Style="{StaticResource PillSecondaryButton}" Clicked="OnStartCallTapped" />
+                    <Button Grid.Column="2" Text="Thông tin" Style="{StaticResource PillSecondaryButton}" Clicked="OnToggleInfoClicked" />
+                </Grid>
+
+                <CollectionView x:Name="MessagesCollectionView"
+                                Grid.Row="1"
+                                ItemsSource="{Binding Messages}"
+                                ItemsUpdatingScrollMode="KeepLastItemInView"
+                                ItemSizingStrategy="MeasureAllItems"
+                                SelectionMode="None"
+                                VerticalScrollBarVisibility="Default">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ChatMessage">
+                            <Grid HorizontalOptions="Fill">
+                                <Border HorizontalOptions="{Binding IsOutgoing, Converter={StaticResource BoolToLayoutConverter}}"
+                                        BackgroundColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageBubble}"
+                                        StrokeThickness="0"
+                                        Padding="14,10"
+                                        Margin="0,5"
+                                        MaximumWidthRequest="520">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnMessageTapped" CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+                                    <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="10">
+                                        <Label Text="{Binding PinText}" FontSize="11" FontAttributes="Bold" VerticalOptions="Start" />
+                                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                            <Label Text="{Binding DisplayText}" IsVisible="{Binding IsTextVisible}" FontFamily="Inter" FontSize="14" LineBreakMode="WordWrap" />
+                                            <Image Source="{Binding FileUrl}" IsVisible="{Binding IsImage}" MaximumHeightRequest="280" Aspect="AspectFit" />
+                                            <WebView Source="{Binding FileUrl}" IsVisible="{Binding IsVideo}" HeightRequest="260" WidthRequest="420" />
+                                            <Border IsVisible="{Binding IsFileCard}" BackgroundColor="#eeeeee" StrokeThickness="0" Padding="16,12">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="18" />
+                                                </Border.StrokeShape>
+                                                <Grid ColumnDefinitions="42,*" ColumnSpacing="12">
+                                                    <Border BackgroundColor="#f8f8f8" StrokeThickness="0" WidthRequest="38" HeightRequest="38">
+                                                        <Border.StrokeShape>
+                                                            <RoundRectangle CornerRadius="19" />
+                                                        </Border.StrokeShape>
+                                                        <Label Text="File" FontSize="9" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                                                    </Border>
+                                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                                        <Label Text="{Binding DisplayText}" FontAttributes="Bold" FontSize="14" LineBreakMode="TailTruncation" />
+                                                        <Label Text="{Binding FileSizeText}" FontSize="12" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                    </VerticalStackLayout>
+                                                </Grid>
+                                            </Border>
+                                            <Border IsVisible="{Binding IsPoll}" BackgroundColor="#f3f4f6" StrokeThickness="0" Padding="12">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="OnPollDetailsTapped" CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="12" />
+                                                </Border.StrokeShape>
+                                                <VerticalStackLayout Spacing="8">
+                                                    <Label Text="{Binding Poll.Question}" FontAttributes="Bold" />
+                                                    <Label Text="{Binding Poll.ModeText}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                    <CollectionView ItemsSource="{Binding Poll.Options}" SelectionMode="None" MaximumHeightRequest="220">
+                                                        <CollectionView.ItemTemplate>
+                                                            <DataTemplate x:DataType="models:ChatPollOptionApi">
+                                                                <Button Text="{Binding DisplayText}" Style="{StaticResource PillSecondaryButton}" Clicked="OnPollOptionClicked" CommandParameter="{Binding .}" />
+                                                            </DataTemplate>
+                                                        </CollectionView.ItemTemplate>
+                                                    </CollectionView>
+                                                    <Label Text="{Binding Poll.StateText}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                </VerticalStackLayout>
+                                            </Border>
+                                            <Label Text="{Binding DetailText}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                            <Label Text="{Binding StatusText}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" HorizontalTextAlignment="End" />
+                                            <Label Text="{Binding ReactionText}" FontSize="18" HorizontalTextAlignment="End" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Border Grid.Row="2"
+                        x:Name="CallPanel"
+                        IsVisible="False"
+                        BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                        Stroke="{DynamicResource OutlineVariant}"
+                        Padding="12">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12" />
+                    </Border.StrokeShape>
+                    <Grid ColumnDefinitions="48,*,Auto,Auto,Auto" ColumnSpacing="8">
+                        <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" WidthRequest="44" HeightRequest="44">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="22" />
+                            </Border.StrokeShape>
+                            <Label Text="Gọi điện" FontSize="10" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label x:Name="CallStatusLabel" Text="Cuộc gọi" Style="{StaticResource BodyMdLabel}" FontAttributes="Bold" />
+                            <Label x:Name="CallTimeLabel" Text="00:00" FontSize="12" TextColor="{DynamicResource OnSurfaceVariant}" />
+                        </VerticalStackLayout>
+                        <Button x:Name="AcceptCallButton" Grid.Column="2" Text="NHẬN" Style="{StaticResource PillPrimaryButton}" IsVisible="False" Clicked="OnAcceptCallClicked" />
+                        <Button x:Name="RejectCallButton" Grid.Column="3" Text="TỪ CHỐI" Style="{StaticResource PillSecondaryButton}" IsVisible="False" Clicked="OnRejectCallClicked" />
+                        <Button x:Name="EndCallButton" Grid.Column="4" Text="KẾT THÚC" Style="{StaticResource PillSecondaryButton}" IsVisible="False" Clicked="OnEndCallClicked" />
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="3"
+                        x:Name="ReplyPanel"
+                        IsVisible="False"
+                        Style="{StaticResource GlassCardBorder}"
+                        Padding="10,8">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12" />
+                    </Border.StrokeShape>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Trả lời tin nhắn này" FontAttributes="Bold" FontSize="12" />
+                            <Label x:Name="ReplyPreviewLabel" Text="" FontSize="12" LineBreakMode="TailTruncation" TextColor="{DynamicResource OnSurfaceVariant}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1" Text="X" Style="{StaticResource PillSecondaryButton}" Clicked="OnCancelReplyClicked" />
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="4" Style="{StaticResource GlassCardBorder}" Padding="8,6">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12" />
+                    </Border.StrokeShape>
+                    <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="8">
+                        <Button Text="File" Style="{StaticResource PillSecondaryButton}" Clicked="OnSendAttachmentClicked" />
+                        <Button x:Name="PollButton" Grid.Column="1" Text="Bình chọn" Style="{StaticResource PillSecondaryButton}" Clicked="OnCreatePollClicked" IsVisible="False" />
+                        <Entry x:Name="MessageEntry"
+                               Grid.Column="2"
+                               Placeholder="Nhập tin nhắn..."
+                               Style="{StaticResource MinimalistEntry}"
+                               BackgroundColor="Transparent"
+                               Completed="OnMessageCompleted" />
+                        <Button Grid.Column="3" Text="➤" Style="{StaticResource PillPrimaryButton}" Clicked="OnSendClicked" />
+                        <Button Grid.Column="5" Text="☺" Style="{StaticResource PillSecondaryButton}" Clicked="OnToggleEmojiClicked" />
+                    </Grid>
+                </Border>
+                <Border x:Name="EmojiPanel"
+                        Grid.Row="1"
+                        IsVisible="False"
+                        BackgroundColor="White"
+                        Stroke="{DynamicResource OutlineVariant}"
+                        Padding="12"
+                        Margin="0,0,12,12"
+                        VerticalOptions="End"
+                        HorizontalOptions="End">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14" />
+                    </Border.StrokeShape>
+                    <FlexLayout Direction="Row" Wrap="Wrap" WidthRequest="360" BindableLayout.ItemsSource="{Binding EmojiOptions}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Button Text="{Binding .}" FontSize="22" BackgroundColor="Transparent" Clicked="OnEmojiPicked" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="2"
+                x:Name="InfoPanel"
+                Style="{StaticResource GlassCardBorder}"
+                Padding="16"
+                IsVisible="False">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="18" />
+            </Border.StrokeShape>
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*,Auto,*" RowSpacing="10">
+                <Label Text="Thông tin" Style="{StaticResource HeadlineLgMobileLabel}" />
+                <Border Grid.Row="1" BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" WidthRequest="72" HeightRequest="72" HorizontalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="36" />
+                    </Border.StrokeShape>
+                    <Label x:Name="InfoAvatarLabel" Text="AV" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
+                </Border>
+                <Label x:Name="InfoTitleLabel" Grid.Row="2" Text="Trò chuyện" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                <Entry x:Name="MessageSearchEntry"
+                       Grid.Row="3"
+                       Placeholder="Tìm tin nhắn..."
+                       Style="{StaticResource MinimalistEntry}"
+                       BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                       TextChanged="OnMessageSearchChanged"
+                       Completed="OnMessageSearchCompleted" />
+                <Button x:Name="RenameGroupInfoButton"
+                        Grid.Row="5"
+                        Text="Đổi tên nhóm"
+                        Style="{StaticResource PillSecondaryButton}"
+                        IsVisible="False"
+                        Clicked="OnRenameGroupClicked" />
+                <CollectionView x:Name="MessageSearchResultsView"
+                                Grid.Row="4"
+                                ItemsSource="{Binding MessageSearchResults}"
+                                IsVisible="False"
+                                HeightRequest="180"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ChatMessage">
+                            <Border StrokeThickness="0" Padding="8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSearchResultTapped" CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="40,*" ColumnSpacing="10">
+                                    <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" WidthRequest="36" HeightRequest="36">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="18" />
+                                        </Border.StrokeShape>
+                                        <Label Text="MSG" FontSize="8" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding DisplayText}" FontAttributes="Bold" FontSize="13" LineBreakMode="TailTruncation" />
+                                        <Label Text="{Binding DetailText}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" LineBreakMode="TailTruncation" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <VerticalStackLayout Grid.Row="6" Spacing="8">
+                    <Label Text="Tin nhắn đã ghim" Style="{StaticResource LabelCapsLabel}" />
+                    <CollectionView ItemsSource="{Binding PinnedMessages}" HeightRequest="150">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ChatMessage">
+                                <Border StrokeThickness="0" Padding="6">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnPinnedMessageTapped" CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{Binding DisplayText}" FontSize="12" LineBreakMode="TailTruncation" />
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+                <Label Grid.Row="7" Text="File phương tiện và file" Style="{StaticResource LabelCapsLabel}" />
+                <ScrollView Grid.Row="8" VerticalScrollBarVisibility="Default">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="File phương tiện" FontAttributes="Bold" />
+                        <CollectionView ItemsSource="{Binding MediaItems}" HeightRequest="170">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="3" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ChatMessage">
+                                    <Grid HeightRequest="82" WidthRequest="82" Padding="3">
+                                        <Image Source="{Binding FileUrl}" IsVisible="{Binding IsImage}" Aspect="AspectFill" />
+                                        <Border IsVisible="{Binding IsVideo}" BackgroundColor="#111111" StrokeThickness="0">
+                                            <Label Text="VIDEO" TextColor="White" FontAttributes="Bold" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" />
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <Label Text="File" FontAttributes="Bold" />
+                        <CollectionView ItemsSource="{Binding FileItems}" HeightRequest="220">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ChatMessage">
+                                    <Grid ColumnDefinitions="44,*" ColumnSpacing="10" Padding="4,8">
+                                        <Border BackgroundColor="#f4f5f7" StrokeThickness="0" WidthRequest="44" HeightRequest="44">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8" />
+                                            </Border.StrokeShape>
+                                            <Label Text="File" FontSize="8" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding DisplayText}" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding FileSizeText}" FontSize="12" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Grid>
+        </Border>
+        <Grid x:Name="GroupCreateOverlay"
+              Grid.ColumnSpan="3"
+              IsVisible="False"
+              BackgroundColor="#66000000">
+            <Border BackgroundColor="White"
+                    Stroke="{DynamicResource OutlineVariant}"
+                    WidthRequest="760"
+                    Padding="22"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Tạo nhóm" Style="{StaticResource HeadlineLgMobileLabel}" />
+                        <Button Grid.Column="1" Text="X" Style="{StaticResource PillSecondaryButton}" Clicked="OnCancelGroupClicked" />
+                    </Grid>
+                    <Entry x:Name="GroupNameEntry"
+                           Grid.Row="1"
+                           Placeholder="Nhập tên nhóm..."
+                           Style="{StaticResource MinimalistEntry}" />
+                    <Entry x:Name="GroupSearchEntry"
+                           Grid.Row="2"
+                           Placeholder="Nhập tên nhân viên..."
+                           Style="{StaticResource MinimalistEntry}"
+                           TextChanged="OnGroupSearchChanged" />
+                    <Grid Grid.Row="3" ColumnDefinitions="*,280" ColumnSpacing="18">
+                        <CollectionView ItemsSource="{Binding GroupCandidates}" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ChatUserApi">
+                                    <Border StrokeThickness="0" Padding="8">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnGroupCandidateTapped" CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{Binding Username}" FontAttributes="Bold" />
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <Border Grid.Column="1" Stroke="{DynamicResource OutlineVariant}" Padding="10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Đã chọn" FontAttributes="Bold" />
+                                <CollectionView ItemsSource="{Binding SelectedGroupMembers}" SelectionMode="None" HeightRequest="300">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:ChatUserApi">
+                                            <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" Padding="8" Margin="0,0,0,6">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="OnSelectedGroupMemberTapped" CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                                <Label Text="{Binding Username}" LineBreakMode="TailTruncation" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                    <HorizontalStackLayout Grid.Row="4" HorizontalOptions="End" Spacing="12">
+                        <Button Text="Hủy" Style="{StaticResource PillSecondaryButton}" Clicked="OnCancelGroupClicked" />
+                        <Button Text="Tạo nhóm" Style="{StaticResource PillPrimaryButton}" Clicked="OnConfirmGroupClicked" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid x:Name="PollCreateOverlay"
+              Grid.ColumnSpan="3"
+              IsVisible="False"
+              BackgroundColor="#66000000">
+            <Border BackgroundColor="White"
+                    Stroke="{DynamicResource OutlineVariant}"
+                    WidthRequest="1120"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <Grid RowDefinitions="70,*,84">
+                    <Grid Padding="26,0" ColumnDefinitions="*,Auto">
+                        <Label Text="Tạo bình chọn"
+                               FontAttributes="Bold"
+                               FontSize="24"
+                               TextColor="{DynamicResource OnSurface}"
+                               VerticalOptions="Center" />
+                        <Button Grid.Column="1"
+                                Text="X"
+                                Style="{StaticResource PillSecondaryButton}"
+                                BackgroundColor="Transparent"
+                                BorderWidth="0"
+                                Clicked="OnCancelPollClicked" />
+                    </Grid>
+
+                    <BoxView Grid.Row="0"
+                             HeightRequest="1"
+                             Color="{DynamicResource OutlineVariant}"
+                             VerticalOptions="End" />
+
+                    <Grid Grid.Row="1"
+                          Padding="26"
+                          ColumnDefinitions="*,366"
+                          ColumnSpacing="38">
+                        <VerticalStackLayout Spacing="20">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="Chủ đề bình chọn"
+                                       FontSize="20"
+                                       TextColor="{DynamicResource OnSurface}" />
+                                <Border Stroke="{DynamicResource OutlineVariant}"
+                                        StrokeThickness="1"
+                                        Padding="14,10"
+                                        HeightRequest="158">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="6" />
+                                    </Border.StrokeShape>
+                                    <Grid RowDefinitions="*,Auto">
+                                        <Editor x:Name="PollQuestionEditor"
+                                                Placeholder="Đặt câu hỏi bình chọn"
+                                                MaxLength="200"
+                                                AutoSize="Disabled"
+                                                BackgroundColor="Transparent"
+                                                FontSize="18"
+                                                TextChanged="OnPollQuestionChanged" />
+                                        <Label x:Name="PollQuestionCountLabel"
+                                               Grid.Row="1"
+                                               Text="0/200"
+                                               FontSize="18"
+                                               HorizontalOptions="End"
+                                               TextColor="{DynamicResource OnSurface}" />
+                                    </Grid>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="Các lựa chọn"
+                                       FontSize="20"
+                                       TextColor="{DynamicResource OnSurface}" />
+                                <Entry x:Name="PollOption1Entry"
+                                       Placeholder="Lựa chọn 1"
+                                       Style="{StaticResource MinimalistEntry}"
+                                       BackgroundColor="White" />
+                                <Entry x:Name="PollOption2Entry"
+                                       Placeholder="Lựa chọn 2"
+                                       Style="{StaticResource MinimalistEntry}"
+                                       BackgroundColor="White" />
+                                <Entry x:Name="PollOption3Entry"
+                                       Placeholder="Lựa chọn 3"
+                                       Style="{StaticResource MinimalistEntry}"
+                                       BackgroundColor="White"
+                                       IsVisible="False" />
+                                <Entry x:Name="PollOption4Entry"
+                                       Placeholder="Lựa chọn 4"
+                                       Style="{StaticResource MinimalistEntry}"
+                                       BackgroundColor="White"
+                                       IsVisible="False" />
+                                <Button Text="+ Thêm lựa chọn"
+                                        Style="{StaticResource PillSecondaryButton}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{DynamicResource Primary}"
+                                        BorderWidth="0"
+                                        FontAttributes="Bold"
+                                        FontSize="24"
+                                        HorizontalOptions="Start"
+                                        Clicked="OnAddPollOptionClicked" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="18">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="Thời hạn bình chọn"
+                                       FontAttributes="Bold"
+                                       FontSize="20"
+                                       TextColor="{DynamicResource OnSurface}" />
+                                <Border Stroke="{DynamicResource OutlineVariant}"
+                                        StrokeThickness="1"
+                                        Padding="14,0"
+                                        HeightRequest="60">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="6" />
+                                    </Border.StrokeShape>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <DatePicker x:Name="PollEndDatePicker"
+                                                    IsEnabled="{Binding Source={x:Reference PollEndDateSwitch}, Path=IsToggled}"
+                                                    Format="dd/MM/yyyy"
+                                                    FontSize="18"
+                                                    TextColor="{DynamicResource OnSurface}"
+                                                    VerticalOptions="Center" />
+                                        <Switch x:Name="PollEndDateSwitch"
+                                                Grid.Column="1"
+                                                VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+
+                            <VerticalStackLayout Spacing="16">
+                                <Label Text="Thiết lập nâng cao"
+                                       FontAttributes="Bold"
+                                       FontSize="20"
+                                       TextColor="{DynamicResource OnSurface}" />
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="Ghim lên đầu trò chuyện"
+                                           FontSize="20"
+                                           VerticalOptions="Center" />
+                                    <Switch x:Name="PollPinSwitch"
+                                            Grid.Column="1" />
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="Chọn nhiều phương án ⓘ"
+                                           FontSize="20"
+                                           VerticalOptions="Center" />
+                                    <Switch x:Name="PollAllowMultipleSwitch"
+                                            Grid.Column="1"
+                                            IsToggled="True" />
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="Có thể thêm phương án ⓘ"
+                                           FontSize="20"
+                                           VerticalOptions="Center" />
+                                    <Switch x:Name="PollAllowAddOptionsSwitch"
+                                            Grid.Column="1"
+                                            IsToggled="True" />
+                                </Grid>
+                            </VerticalStackLayout>
+
+                            <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+
+                            <VerticalStackLayout Spacing="16">
+                                <Label Text="Bình chọn ẩn danh"
+                                       FontAttributes="Bold"
+                                       FontSize="20"
+                                       TextColor="{DynamicResource OnSurface}" />
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="Ẩn kết quả khi chưa bình chọn ⓘ"
+                                           FontSize="20"
+                                           VerticalOptions="Center" />
+                                    <Switch x:Name="PollHideResultsSwitch"
+                                            Grid.Column="1" />
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="Ẩn người bình chọn ⓘ"
+                                           FontSize="20"
+                                           VerticalOptions="Center" />
+                                    <Switch x:Name="PollHideVotersSwitch"
+                                            Grid.Column="1" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Grid Grid.Row="2"
+                          Padding="26,12"
+                          ColumnDefinitions="Auto,*,Auto,Auto"
+                          ColumnSpacing="22">
+                        <Button Text="⚙"
+                                Style="{StaticResource PillSecondaryButton}"
+                                FontSize="26"
+                                WidthRequest="60" />
+                        <Button Grid.Column="2"
+                                Text="Hủy"
+                                Style="{StaticResource PillSecondaryButton}"
+                                FontSize="22"
+                                Padding="24,12"
+                                Clicked="OnCancelPollClicked" />
+                        <Button Grid.Column="3"
+                                Text="Tạo bình chọn"
+                                Style="{StaticResource PillPrimaryButton}"
+                                FontSize="22"
+                                Padding="24,12"
+                                Clicked="OnConfirmPollClicked" />
+                    </Grid>
+
+                    <BoxView Grid.Row="2"
+                             HeightRequest="1"
+                             Color="{DynamicResource OutlineVariant}"
+                             VerticalOptions="Start" />
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid x:Name="PollDetailsOverlay"
+              Grid.ColumnSpan="3"
+              IsVisible="False"
+              BackgroundColor="#66000000">
+            <Border BackgroundColor="White"
+                    Stroke="{DynamicResource OutlineVariant}"
+                    WidthRequest="656"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <Grid RowDefinitions="74,*,84">
+                    <Grid Padding="20,0" ColumnDefinitions="*,Auto">
+                        <Label Text="Bình chọn"
+                               FontAttributes="Bold"
+                               FontSize="24"
+                               VerticalOptions="Center" />
+                        <Button Grid.Column="1"
+                                Text="X"
+                                Style="{StaticResource PillSecondaryButton}"
+                                BackgroundColor="Transparent"
+                                BorderWidth="0"
+                                Clicked="OnClosePollDetailsClicked" />
+                    </Grid>
+                    <BoxView HeightRequest="1"
+                             Color="{DynamicResource OutlineVariant}"
+                             VerticalOptions="End" />
+
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout Padding="20,28" Spacing="18">
+                            <Label x:Name="PollDetailsQuestionLabel"
+                                   Text="Bình chọn"
+                                   FontAttributes="Bold"
+                                   FontSize="26"
+                                   TextColor="{DynamicResource OnSurface}" />
+                            <Label x:Name="PollDetailsMetaLabel"
+                                   Text=""
+                                   FontSize="16"
+                                   TextColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label x:Name="PollDetailsModeLabel"
+                                   Text=""
+                                   FontSize="20"
+                                   TextColor="{DynamicResource OnSurface}" />
+                            <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+                            <Label x:Name="PollDetailsSummaryLabel"
+                                   Text=""
+                                   FontSize="18"
+                                   TextColor="{DynamicResource Primary}"
+                                   FontAttributes="Bold" />
+
+                            <CollectionView ItemsSource="{Binding PollDetailOptions}" SelectionMode="None">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:ChatPollOptionApi">
+                                        <Grid ColumnDefinitions="36,*,44" ColumnSpacing="12" Padding="0,6">
+                                            <Label Text="{Binding VoteMarker}"
+                                                   FontSize="24"
+                                                   VerticalOptions="Center"
+                                                   HorizontalTextAlignment="Center" />
+                                            <Grid Grid.Column="1" RowDefinitions="56,Auto">
+                                                <Border BackgroundColor="#e5e7eb"
+                                                        StrokeThickness="0"
+                                                        HeightRequest="56">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="5" />
+                                                    </Border.StrokeShape>
+                                                    <Grid ColumnDefinitions="*,Auto" Padding="18,0">
+                                                        <Label Text="{Binding Text}"
+                                                               FontSize="20"
+                                                               VerticalOptions="Center" />
+                                                        <HorizontalStackLayout Grid.Column="1"
+                                                                               BindableLayout.ItemsSource="{Binding Voters}"
+                                                                               Spacing="-8"
+                                                                               VerticalOptions="Center">
+                                                            <BindableLayout.ItemTemplate>
+                                                                <DataTemplate x:DataType="models:ChatPollVoterApi">
+                                                                    <Border BackgroundColor="{DynamicResource PrimaryContainer}"
+                                                                            Stroke="White"
+                                                                            StrokeThickness="2"
+                                                                            WidthRequest="34"
+                                                                            HeightRequest="34">
+                                                                        <Border.StrokeShape>
+                                                                            <RoundRectangle CornerRadius="17" />
+                                                                        </Border.StrokeShape>
+                                                                        <Label Text="{Binding Initials}"
+                                                                               FontAttributes="Bold"
+                                                                               FontSize="12"
+                                                                               HorizontalOptions="Center"
+                                                                               VerticalOptions="Center" />
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </BindableLayout.ItemTemplate>
+                                                        </HorizontalStackLayout>
+                                                    </Grid>
+                                                </Border>
+                                                <Label Grid.Row="1"
+                                                       Text="{Binding VoterSummary}"
+                                                       FontSize="12"
+                                                       TextColor="{DynamicResource OnSurfaceVariant}"
+                                                       LineBreakMode="TailTruncation" />
+                                            </Grid>
+                                            <Label Grid.Column="2"
+                                                   Text="{Binding VoteText}"
+                                                   FontSize="18"
+                                                   VerticalOptions="Center"
+                                                   HorizontalTextAlignment="End" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                            <Button x:Name="PollDetailsAddOptionButton"
+                                    Text="+ Thêm lựa chọn"
+                                    Style="{StaticResource PillSecondaryButton}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{DynamicResource Primary}"
+                                    BorderWidth="0"
+                                    FontAttributes="Bold"
+                                    FontSize="24"
+                                    HorizontalOptions="Start"
+                                    Clicked="OnPollDetailsAddOptionClicked" />
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <Grid Grid.Row="2"
+                          Padding="22,12"
+                          ColumnDefinitions="Auto,*,Auto,Auto"
+                          ColumnSpacing="20">
+                        <Button Text="⚙"
+                                Style="{StaticResource PillSecondaryButton}"
+                                FontSize="26"
+                                WidthRequest="60" />
+                        <Button Grid.Column="2"
+                                Text="Hủy"
+                                Style="{StaticResource PillSecondaryButton}"
+                                FontSize="22"
+                                Padding="24,12"
+                                Clicked="OnClosePollDetailsClicked" />
+                        <Button Grid.Column="3"
+                                Text="Xác nhận"
+                                Style="{StaticResource PillPrimaryButton}"
+                                FontSize="22"
+                                Padding="24,12"
+                                Clicked="OnClosePollDetailsClicked" />
+                    </Grid>
+                    <BoxView Grid.Row="2"
+                             HeightRequest="1"
+                             Color="{DynamicResource OutlineVariant}"
+                             VerticalOptions="Start" />
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </ContentPage>
-

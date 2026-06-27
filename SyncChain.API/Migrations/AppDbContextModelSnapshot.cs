@@ -17,7 +17,85 @@ namespace SyncChain.API.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
 
-            modelBuilder.Entity("ChiTietDonHang", b =>
+            modelBuilder.Entity("SyncChain.API.Models.AuditLog", b =>
+                {
+                    b.Property<long>("MaAudit")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("DuLieuSau")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("DuLieuTruoc")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("HanhDong")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("LoaiDoiTuong")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("MaDoiTuong")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int?>("MaNguoiDung")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Metadata")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("TenDangNhap")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<DateTime>("ThoiGian")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TraceId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("TrangThaiKetQua")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("UserAgent")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("VaiTro")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("MaAudit");
+
+                    b.HasIndex("LoaiDoiTuong", "MaDoiTuong", "ThoiGian");
+                    b.HasIndex("HanhDong", "ThoiGian");
+                    b.HasIndex("MaNguoiDung", "ThoiGian");
+                    b.HasIndex("TraceId");
+
+                    b.ToTable("AuditLog");
+                });
+
+            modelBuilder.Entity("SyncChain.API.Models.ChiTietDonHang", b =>
                 {
                     b.Property<int>("MaChiTiet")
                         .ValueGeneratedOnAdd()
@@ -44,7 +122,7 @@ namespace SyncChain.API.Migrations
                     b.ToTable("ChiTietDonHang");
                 });
 
-            modelBuilder.Entity("DonHang", b =>
+            modelBuilder.Entity("SyncChain.API.Models.DonHang", b =>
                 {
                     b.Property<int>("MaDonHang")
                         .ValueGeneratedOnAdd()
@@ -151,9 +229,104 @@ namespace SyncChain.API.Migrations
                     b.ToTable("SanPham");
                 });
 
-            modelBuilder.Entity("ChiTietDonHang", b =>
+            modelBuilder.Entity("SyncChain.API.Models.LichSuVanChuyen", b =>
                 {
-                    b.HasOne("DonHang", "DonHang")
+                    b.Property<long>("MaLichSu")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("GhiChu")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<int?>("MaNguoiDung")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MaVanChuyen")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ThoiGian")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TraceId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("TrangThaiCu")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("TrangThaiMoi")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.HasKey("MaLichSu");
+                    b.HasIndex("MaVanChuyen");
+                    b.ToTable("LichSuVanChuyen");
+                });
+
+            modelBuilder.Entity("SyncChain.API.Models.VanChuyen", b =>
+                {
+                    b.Property<int>("MaVanChuyen")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ConcurrencyVersion")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DonViVanChuyen")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("MaDonHang")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("MaVanDon")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("NgayCapNhat")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("NgayGiaoDuKien")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("NgayGiaoThucTe")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("PhiVanChuyen")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<string>("TrangThaiGiaoHang")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.HasKey("MaVanChuyen");
+                    b.HasIndex("MaDonHang").IsUnique();
+                    b.HasIndex("MaVanDon")
+                        .IsUnique()
+                        .HasFilter("\"MaVanDon\" IS NOT NULL");
+
+                    b.ToTable("VanChuyen", t =>
+                        t.HasCheckConstraint(
+                            "CK_VanChuyen_PhiVanChuyen_NonNegative",
+                            "\"PhiVanChuyen\" >= 0"));
+                });
+
+            modelBuilder.Entity("SyncChain.API.Models.ChiTietDonHang", b =>
+                {
+                    b.HasOne("SyncChain.API.Models.DonHang", "DonHang")
                         .WithMany("ChiTietDonHang")
                         .HasForeignKey("MaDonHang")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -170,9 +343,33 @@ namespace SyncChain.API.Migrations
                     b.Navigation("SanPham");
                 });
 
-            modelBuilder.Entity("DonHang", b =>
+            modelBuilder.Entity("SyncChain.API.Models.LichSuVanChuyen", b =>
+                {
+                    b.HasOne("SyncChain.API.Models.VanChuyen", "VanChuyen")
+                        .WithMany("LichSu")
+                        .HasForeignKey("MaVanChuyen")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("VanChuyen");
+                });
+
+            modelBuilder.Entity("SyncChain.API.Models.VanChuyen", b =>
+                {
+                    b.HasOne("SyncChain.API.Models.DonHang", "DonHang")
+                        .WithOne("VanChuyen")
+                        .HasForeignKey("SyncChain.API.Models.VanChuyen", "MaDonHang")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DonHang");
+                    b.Navigation("LichSu");
+                });
+
+            modelBuilder.Entity("SyncChain.API.Models.DonHang", b =>
                 {
                     b.Navigation("ChiTietDonHang");
+                    b.Navigation("VanChuyen");
                 });
 #pragma warning restore 612, 618
         }

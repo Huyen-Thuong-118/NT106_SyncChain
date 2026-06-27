@@ -194,10 +194,11 @@
     <!-- Default Picker style -->
     <Style TargetType="Picker">
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
-        <Setter Property="FontFamily" Value="Inter" />
+        <Setter Property="TextColor" Value="#FF0C1D30" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="MinimumHeightRequest" Value="56" />
+        <Setter Property="HeightRequest" Value="56" />
+        <Setter Property="VerticalOptions" Value="Fill" />
     </Style>
 
     <!-- Default DatePicker style -->

@@ -9,4 +9,5 @@ public class CreateProductDTO
     public int SoLuongTon { get; set; }
     public string HinhAnhUrl { get; set; } = string.Empty;
     public string MoTa { get; set; } = string.Empty;
+    public int? MaDanhMuc { get; set; }
 }

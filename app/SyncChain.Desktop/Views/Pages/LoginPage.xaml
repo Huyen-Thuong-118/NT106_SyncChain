@@ -12,12 +12,10 @@
                HorizontalOptions="Fill"
                VerticalOptions="Fill"
                InputTransparent="True" />
-        <BoxView Color="#33213145"
-                 InputTransparent="True" />
-        <ScrollView Background="Transparent" BackgroundColor="Transparent">
-            <Grid Padding="24"
-                  MinimumHeightRequest="720">
+        <BoxView Color="#33213145" InputTransparent="True" />
 
+        <ScrollView Background="Transparent" BackgroundColor="Transparent">
+            <Grid Padding="24" MinimumHeightRequest="720">
                 <Border MaximumWidthRequest="430"
                         HorizontalOptions="Center"
                         VerticalOptions="Center"
@@ -33,7 +31,6 @@
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="20">
-
                         <VerticalStackLayout Spacing="8" Margin="0,0,0,12">
                             <Label Text="Đăng nhập"
                                    Style="{StaticResource HeadlineLgMobileLabel}"
@@ -46,13 +43,19 @@
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="TÊN ĐĂNG NHẬP" Style="{StaticResource LabelCapsLabel}" />
-                            <Entry Style="{StaticResource MinimalistEntry}" Placeholder="Nhập tên đăng nhập" />
+                            <Label Text="EMAIL" Style="{StaticResource LabelCapsLabel}" />
+                            <Entry x:Name="EmailEntry"
+                                   Style="{StaticResource MinimalistEntry}"
+                                   Placeholder="abc@gmail.com"
+                                   Keyboard="Email" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Spacing="6">
                             <Label Text="MẬT KHẨU" Style="{StaticResource LabelCapsLabel}" />
-                            <Entry Style="{StaticResource MinimalistEntry}" Placeholder="••••••••" IsPassword="True" />
+                            <Entry x:Name="PasswordEntry"
+                                   Style="{StaticResource MinimalistEntry}"
+                                   Placeholder="••••••••"
+                                   IsPassword="True" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Spacing="6">
@@ -63,12 +66,6 @@
                                        Style="{StaticResource BodyMdLabel}"
                                        VerticalTextAlignment="Center" />
                             </Grid>
-
-                            <Label Text="Quên mật khẩu?"
-                                   TextColor="{DynamicResource Primary}"
-                                   FontFamily="Inter"
-                                   FontSize="14"
-                                   HorizontalTextAlignment="End" />
                         </VerticalStackLayout>
 
                         <Button Text="ĐĂNG NHẬP QUẢN TRỊ"
@@ -99,7 +96,6 @@
                                Style="{StaticResource LabelCapsLabel}"
                                HorizontalTextAlignment="Center"
                                Margin="0,8,0,0" />
-
                     </VerticalStackLayout>
                 </Border>
             </Grid>

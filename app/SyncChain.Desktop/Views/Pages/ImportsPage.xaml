@@ -4,317 +4,342 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False">
+    <Grid>
     <ScrollView>
         <VerticalStackLayout Padding="64,30" Spacing="24">
-
-            <!-- ═══════════════════════════════════════════════════════════════
-                 PAGE HEADER
-                 "Quản lý Đơn nhập hàng" in DisplayXlLabel + "Tạo Đơn Nhập Mới" PillPrimaryButton
-            ═══════════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" VerticalOptions="Center">
-                <Label Text="Quản lý Đơn nhập hàng" Style="{StaticResource DisplayXlLabel}" VerticalOptions="Center" />
-                <Button Grid.Column="1" Text="TẠO ĐƠN NHẬP MỚI" Style="{StaticResource PillPrimaryButton}" VerticalOptions="Center" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                <VerticalStackLayout>
+                    <Label Text="Quản lý phiếu nhập kho" Style="{StaticResource DisplayXlLabel}" />
+                    <Label Text="Tạo, duyệt và hoàn tất phiếu trước khi cộng tồn kho."
+                           Style="{StaticResource BodyMdLabel}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="TẠO PHIẾU NHẬP"
+                        Style="{StaticResource PillPrimaryButton}"
+                        VerticalOptions="Center"
+                        Clicked="OnCreateReceiptClicked" />
             </Grid>
 
-            <!-- ═══════════════════════════════════════════════════════════════
-                 4-COLUMN STATISTICS GRID
-                 GlassCardBorder containers with DisplayXlLabel numeric values
-            ═══════════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="24">
-                <!-- Tổng giao dịch -->
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="18">
                 <Border Style="{StaticResource GlassCardBorder}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="TỔNG GIAO DỊCH" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="{Binding TotalImports}" Style="{StaticResource DisplayXlLabel}" FontSize="36"
-                               VerticalOptions="Center" LineBreakMode="NoWrap" />
-                        <Label Text="Tổng số giao dịch nhập kho" Style="{StaticResource BodyMdLabel}" FontSize="13" />
+                    <VerticalStackLayout>
+                        <Label Text="TỔNG PHIẾU" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="{Binding TotalImports}" Style="{StaticResource DisplayXlLabel}" FontSize="34" />
                     </VerticalStackLayout>
                 </Border>
-
-                <!-- Tổng số lượng -->
                 <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
-                    <VerticalStackLayout Spacing="8">
+                    <VerticalStackLayout>
                         <Label Text="TỔNG SỐ LƯỢNG" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="{Binding TotalQuantity}" Style="{StaticResource DisplayXlLabel}" FontSize="36"
-                               TextColor="{DynamicResource Primary}" VerticalOptions="Center" LineBreakMode="NoWrap" />
-                        <Label Text="Sản phẩm đã nhập" Style="{StaticResource BodyMdLabel}" FontSize="13" />
+                        <Label Text="{Binding TotalQuantity}" Style="{StaticResource DisplayXlLabel}" FontSize="34" />
                     </VerticalStackLayout>
                 </Border>
-
-                <!-- Tổng tiền nhập -->
                 <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="TỔNG TIỀN NHẬP" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="{Binding TotalAmount}" Style="{StaticResource DisplayXlLabel}" FontSize="36"
-                               VerticalOptions="Center" LineBreakMode="NoWrap" />
-                        <Label Text="Giá trị nhập kho" Style="{StaticResource BodyMdLabel}" FontSize="13" />
+                    <VerticalStackLayout>
+                        <Label Text="TỔNG GIÁ TRỊ" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="{Binding TotalAmount}" Style="{StaticResource DisplayXlLabel}" FontSize="34" />
                     </VerticalStackLayout>
                 </Border>
-
-                <!-- Placeholder -->
                 <Border Grid.Column="3" Style="{StaticResource GlassCardBorder}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="THỐNG KÊ" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="--" Style="{StaticResource DisplayXlLabel}" FontSize="36"
-                               TextColor="{DynamicResource Primary}" VerticalOptions="Center" LineBreakMode="NoWrap" />
-                        <Label Text="Đang cập nhật" Style="{StaticResource BodyMdLabel}" FontSize="13" />
+                    <VerticalStackLayout>
+                        <Label Text="CHỜ XỬ LÝ" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="{Binding PendingCount}" Style="{StaticResource DisplayXlLabel}" FontSize="34" />
                     </VerticalStackLayout>
                 </Border>
             </Grid>
 
-            <!-- ═══════════════════════════════════════════════════════════════
-                 LIVE TRACKING TIMELINE + MAP/VISUAL SECTION
-                 Two-column layout: timeline on left, map on right
-            ═══════════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="1.2*,*" ColumnSpacing="24">
-
-                <!-- Live Tracking Timeline -->
+            <Grid ColumnDefinitions="1.15*,*" ColumnSpacing="24">
                 <Border Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="16">
                         <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Theo dõi trực tiếp" Style="{StaticResource DataTabularLabel}" FontSize="17" />
-                            <Border Grid.Column="1" BackgroundColor="{DynamicResource StatusBlue}" StrokeThickness="0" Padding="12,6" HorizontalOptions="End">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="12" />
-                                </Border.StrokeShape>
-                                <Label Text="🔴 TRỰC TIẾP" Style="{StaticResource StatusBadgePill}" TextColor="{DynamicResource Primary}" Padding="0" />
+                            <VerticalStackLayout>
+                                <Label Text="Tiến độ phiếu nhập"
+                                       Style="{StaticResource DataTabularLabel}" FontSize="18" />
+                                <Label Text="{Binding SelectedReceiptCode}"
+                                       Style="{StaticResource BodyMdLabel}" />
+                            </VerticalStackLayout>
+                            <Border Grid.Column="1"
+                                    BackgroundColor="{Binding SelectedStatusColor}"
+                                    StrokeThickness="0" Padding="12,6">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                <Label Text="{Binding SelectedStatusText}"
+                                       Style="{StaticResource StatusBadgePill}" Padding="0" />
                             </Border>
                         </Grid>
-
-                        <!-- Waypoint 1: Completed -->
-                        <Grid ColumnDefinitions="40,*" ColumnSpacing="16" RowDefinitions="Auto,Auto">
-                            <Grid WidthRequest="40" HeightRequest="40">
-                                <Border BackgroundColor="{DynamicResource StatusEmerald}" StrokeThickness="0" WidthRequest="36" HeightRequest="36"
-                                        HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="18" />
-                                    </Border.StrokeShape>
-                                    <Label Text="✓" HorizontalOptions="Center" VerticalOptions="Center" FontSize="16" TextColor="{DynamicResource Primary}" FontAttributes="Bold" />
-                                </Border>
-                            </Grid>
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="Xuất cảng Thượng Hải" Style="{StaticResource DataTabularLabel}" />
-                                <Label Text="12/01/2025 – Hoàn tất" Style="{StaticResource BodyMdLabel}" FontSize="12" />
-                            </VerticalStackLayout>
-                            <!-- Vertical connector line -->
-                            <BoxView Grid.Row="1" WidthRequest="2" HeightRequest="24" Color="{DynamicResource StatusEmerald}"
-                                     HorizontalOptions="Center" VerticalOptions="Start" Margin="0,4,0,0" />
-                        </Grid>
-
-                        <!-- Waypoint 2: Completed -->
-                        <Grid ColumnDefinitions="40,*" ColumnSpacing="16" RowDefinitions="Auto,Auto">
-                            <Grid WidthRequest="40" HeightRequest="40">
-                                <Border BackgroundColor="{DynamicResource StatusEmerald}" StrokeThickness="0" WidthRequest="36" HeightRequest="36"
-                                        HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="18" />
-                                    </Border.StrokeShape>
-                                    <Label Text="✓" HorizontalOptions="Center" VerticalOptions="Center" FontSize="16" TextColor="{DynamicResource Primary}" FontAttributes="Bold" />
-                                </Border>
-                            </Grid>
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="Quá cảnh Singapore" Style="{StaticResource DataTabularLabel}" />
-                                <Label Text="15/01/2025 – Hoàn tất" Style="{StaticResource BodyMdLabel}" FontSize="12" />
-                            </VerticalStackLayout>
-                            <!-- Vertical connector line -->
-                            <BoxView Grid.Row="1" WidthRequest="2" HeightRequest="24" Color="{DynamicResource StatusBlue}"
-                                     HorizontalOptions="Center" VerticalOptions="Start" Margin="0,4,0,0" />
-                        </Grid>
-
-                        <!-- Waypoint 3: In-Transit (active) -->
-                        <Grid ColumnDefinitions="40,*" ColumnSpacing="16" RowDefinitions="Auto,Auto">
-                            <Grid WidthRequest="40" HeightRequest="40">
-                                <Border BackgroundColor="{DynamicResource StatusBlue}" StrokeThickness="0" WidthRequest="36" HeightRequest="36"
-                                        HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="18" />
-                                    </Border.StrokeShape>
-                                    <Label Text="🚢" HorizontalOptions="Center" VerticalOptions="Center" FontSize="16" />
-                                </Border>
-                            </Grid>
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="Đang trên biển – Biển Đông" Style="{StaticResource DataTabularLabel}" TextColor="{DynamicResource Primary}" />
-                                <Label Text="Dự kiến: 20/01/2025" Style="{StaticResource BodyMdLabel}" FontSize="12" />
-                            </VerticalStackLayout>
-                            <!-- Vertical connector line -->
-                            <BoxView Grid.Row="1" WidthRequest="2" HeightRequest="24" Color="{DynamicResource OutlineVariant}"
-                                     HorizontalOptions="Center" VerticalOptions="Start" Margin="0,4,0,0" />
-                        </Grid>
-
-                        <!-- Waypoint 4: Pending -->
-                        <Grid ColumnDefinitions="40,*" ColumnSpacing="16" RowDefinitions="Auto,Auto">
-                            <Grid WidthRequest="40" HeightRequest="40">
-                                <Border BackgroundColor="{DynamicResource StatusSlate}" StrokeThickness="0" WidthRequest="36" HeightRequest="36"
-                                        HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="18" />
-                                    </Border.StrokeShape>
-                                    <Label Text="○" HorizontalOptions="Center" VerticalOptions="Center" FontSize="16" TextColor="{DynamicResource OnSurfaceVariant}" />
-                                </Border>
-                            </Grid>
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="Cảng Cát Lái – Thông quan" Style="{StaticResource DataTabularLabel}" TextColor="{DynamicResource OnSurfaceVariant}" />
-                                <Label Text="Chờ xử lý" Style="{StaticResource BodyMdLabel}" FontSize="12" />
-                            </VerticalStackLayout>
-                            <!-- Vertical connector line -->
-                            <BoxView Grid.Row="1" WidthRequest="2" HeightRequest="24" Color="{DynamicResource OutlineVariant}"
-                                     HorizontalOptions="Center" VerticalOptions="Start" Margin="0,4,0,0" />
-                        </Grid>
-
-                        <!-- Waypoint 5: Pending -->
-                        <Grid ColumnDefinitions="40,*" ColumnSpacing="16">
-                            <Grid WidthRequest="40" HeightRequest="40">
-                                <Border BackgroundColor="{DynamicResource StatusSlate}" StrokeThickness="0" WidthRequest="36" HeightRequest="36"
-                                        HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="18" />
-                                    </Border.StrokeShape>
-                                    <Label Text="○" HorizontalOptions="Center" VerticalOptions="Center" FontSize="16" TextColor="{DynamicResource OnSurfaceVariant}" />
-                                </Border>
-                            </Grid>
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="Nhập kho SyncChain" Style="{StaticResource DataTabularLabel}" TextColor="{DynamicResource OnSurfaceVariant}" />
-                                <Label Text="Chờ xử lý" Style="{StaticResource BodyMdLabel}" FontSize="12" />
-                            </VerticalStackLayout>
-                        </Grid>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding ReceiptTimeline}" Spacing="0">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:TimelineItem">
+                                    <Grid ColumnDefinitions="34,*" ColumnSpacing="14" Padding="0,8">
+                                        <VerticalStackLayout HorizontalOptions="Center">
+                                            <Border WidthRequest="16" HeightRequest="16"
+                                                    BackgroundColor="{Binding Accent}" StrokeThickness="0">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                            </Border>
+                                            <BoxView WidthRequest="2" HeightRequest="28"
+                                                     Color="{DynamicResource OutlineVariant}"
+                                                     IsVisible="{Binding ShowConnector}" />
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                            <Label Text="{Binding Title}" Style="{StaticResource DataTabularLabel}" />
+                                            <Label Text="{Binding Time}" Style="{StaticResource BodyMdLabel}" FontSize="12" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Map/Visual Section -->
-                <Border Grid.Column="1" BackgroundColor="{DynamicResource SurfaceContainerHigh}" StrokeThickness="0" Padding="0">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="24" />
-                    </Border.StrokeShape>
-                    <Grid>
-                        <!-- Background gradient fill simulating map -->
-                        <BoxView>
-                            <BoxView.Background>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Color="#dce9ff" Offset="0.0" />
-                                    <GradientStop Color="#e0f2fe" Offset="0.4" />
-                                    <GradientStop Color="#d3e4fe" Offset="1.0" />
-                                </LinearGradientBrush>
-                            </BoxView.Background>
-                        </BoxView>
-
-                        <!-- Map placeholder content -->
-                        <Label Text="🗺️" FontSize="64" HorizontalOptions="Center" VerticalOptions="Center" Opacity="0.3" />
-
-                        <!-- Overlay GlassCardBorder showing vessel info -->
-                        <Border Style="{StaticResource GlassCardBorder}" Margin="16" VerticalOptions="End" HorizontalOptions="Fill">
-                            <VerticalStackLayout Spacing="10">
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                    <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" WidthRequest="42" HeightRequest="42">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="12" />
-                                        </Border.StrokeShape>
-                                        <Label Text="🚢" HorizontalOptions="Center" VerticalOptions="Center" FontSize="18" />
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                        <Label Text="MV Pacific Star" Style="{StaticResource DataTabularLabel}" LineBreakMode="TailTruncation" />
-                                        <Label Text="IMO: 9876543" Style="{StaticResource BodyMdLabel}" FontSize="11" LineBreakMode="TailTruncation" />
-                                    </VerticalStackLayout>
-                                    <Border Grid.Column="2" BackgroundColor="{DynamicResource StatusBlue}" StrokeThickness="0" Padding="10,4" VerticalOptions="Center">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="12" />
-                                        </Border.StrokeShape>
-                                        <Label Text="TRÊN BIỂN" Style="{StaticResource StatusBadgePill}" TextColor="{DynamicResource Primary}" Padding="0" />
-                                    </Border>
-                                </Grid>
-                                <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
-                                    <VerticalStackLayout Spacing="2">
-                                        <Label Text="TỐC ĐỘ" Style="{StaticResource LabelCapsLabel}" />
-                                        <Label Text="14.2 hải lý/h" Style="{StaticResource DataTabularLabel}" />
-                                    </VerticalStackLayout>
-                                    <VerticalStackLayout Spacing="2">
-                                        <Label Text="ETA" Style="{StaticResource LabelCapsLabel}" />
-                                        <Label Text="20/01/2025" Style="{StaticResource DataTabularLabel}" />
-                                    </VerticalStackLayout>
-                                </Grid>
-                            </VerticalStackLayout>
-                        </Border>
-                    </Grid>
+                <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Thông tin phiếu nhập"
+                               Style="{StaticResource DataTabularLabel}" FontSize="18" />
+                        <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                              ColumnSpacing="18" RowSpacing="12">
+                            <Label Text="Nhà cung cấp" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Column="1" Text="{Binding SelectedSupplier}" Style="{StaticResource DataTabularLabel}" />
+                            <Label Grid.Row="1" Text="Người liên hệ" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding SelectedContact}" Style="{StaticResource DataTabularLabel}" />
+                            <Label Grid.Row="2" Text="Số mặt hàng" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding SelectedProductCount}" Style="{StaticResource DataTabularLabel}" />
+                            <Label Grid.Row="3" Text="Tổng số lượng" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Row="3" Grid.Column="1" Text="{Binding SelectedQuantity}" Style="{StaticResource DataTabularLabel}" />
+                            <Label Grid.Row="4" Text="Tổng tiền" Style="{StaticResource BodyMdLabel}" />
+                            <Label Grid.Row="4" Grid.Column="1" Text="{Binding SelectedAmount}" Style="{StaticResource DataTabularLabel}" />
+                        </Grid>
+                        <Label Text="{Binding SelectedNote}" Style="{StaticResource BodyMdLabel}" />
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                            <Button Grid.Column="1" Text="{Binding PrimaryActionText}"
+                                    IsVisible="{Binding HasPrimaryAction}"
+                                    Style="{StaticResource PillPrimaryButton}"
+                                    Clicked="OnPrimaryActionClicked" />
+                            <Button Grid.Column="2" Text="HỦY PHIẾU"
+                                    IsVisible="{Binding CanCancelSelected}"
+                                    Style="{StaticResource PillSecondaryButton}"
+                                    Clicked="OnCancelReceiptClicked" />
+                        </Grid>
+                    </VerticalStackLayout>
                 </Border>
             </Grid>
 
-            <!-- ═══════════════════════════════════════════════════════════════
-                 SHIPMENT TABLE
-                 GlassCardBorder with columns: "Mã vận đơn", "Nhà cung cấp",
-                 "Hàng hóa", "Ngày đến (dự kiến)", "Trạng thái", "Quản lý"
-            ═══════════════════════════════════════════════════════════════ -->
             <Border Style="{StaticResource GlassCardBorder}">
                 <VerticalStackLayout Spacing="16">
-                    <!-- Table title -->
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="Danh sách vận đơn nhập hàng" Style="{StaticResource DataTabularLabel}" FontSize="17" />
-                        <Button Grid.Column="1" Text="LỌC DỮ LIỆU" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
+                        <Label Text="Danh sách phiếu nhập" Style="{StaticResource DataTabularLabel}" FontSize="18" />
+                        <Button Grid.Column="1" Text="TẢI LẠI"
+                                Style="{StaticResource PillSecondaryButton}"
+                                Clicked="OnReloadClicked" />
                     </Grid>
-
-                    <!-- Table header -->
-                    <Grid ColumnDefinitions="1.2*,1.5*,1.5*,1.2*,1.2*,Auto" ColumnSpacing="12" Padding="8,0">
-                        <Label Text="Mã vận đơn" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                        <Label Grid.Column="1" Text="Nhà cung cấp" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                        <Label Grid.Column="2" Text="Hàng hóa" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                        <Label Grid.Column="3" Text="Ngày đến (dự kiến)" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                        <Label Grid.Column="4" Text="Trạng thái" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                        <Label Grid.Column="5" Text="Quản lý" Style="{StaticResource LabelCapsLabel}" WidthRequest="80" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                    <Grid ColumnDefinitions="1.2*,1.5*,1.1*,1.1*,1.1*,100"
+                          ColumnSpacing="12" Padding="8,0">
+                        <Label Text="MÃ PHIẾU" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="1" Text="NHÀ CUNG CẤP" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="2" Text="HÀNG HÓA" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="3" Text="NGÀY TẠO" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="4" Text="TRẠNG THÁI" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="5" Text="THAO TÁC" Style="{StaticResource LabelCapsLabel}"
+                               HorizontalTextAlignment="Center" />
                     </Grid>
-                    <!-- Separator -->
                     <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
-
-                    <!-- Import rows -->
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Imports}" Spacing="8">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="models:ImportItem">
-                                <Border BackgroundColor="Transparent" StrokeThickness="0" Padding="8,12">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="12" />
-                                    </Border.StrokeShape>
-                                    <Grid ColumnDefinitions="1.2*,1.5*,1.5*,1.2*,1.2*,Auto" ColumnSpacing="12">
-                                        <!-- Mã vận đơn -->
-                                        <Label Text="{Binding Code}" Style="{StaticResource DataTabularLabel}"
-                                               TextColor="{DynamicResource Primary}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                                        <!-- Nhà cung cấp -->
-                                        <Label Grid.Column="1" Text="{Binding Supplier}" Style="{StaticResource DataTabularLabel}"
-                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                                        <!-- Hàng hóa (ProductCount) -->
-                                        <Label Grid.Column="2" Text="{Binding ProductCount}" Style="{StaticResource DataTabularLabel}"
-                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                                        <!-- Ngày đến (dự kiến) -->
-                                        <Label Grid.Column="3" Text="{Binding Date}" Style="{StaticResource DataTabularLabel}"
-                                               VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                                        <!-- Trạng thái - StatusBadgePill -->
-                                        <Border Grid.Column="4" BackgroundColor="{Binding StatusBadgeBackground}" StrokeThickness="0"
-                                                Padding="12,4" HorizontalOptions="Start" VerticalOptions="Center">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="12" />
-                                            </Border.StrokeShape>
-                                            <Label Text="{Binding Status}" Style="{StaticResource StatusBadgePill}" Padding="0" LineBreakMode="TailTruncation" />
+                                <Border BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                                        StrokeThickness="0" Padding="8,12">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    <Grid ColumnDefinitions="1.2*,1.5*,1.1*,1.1*,1.1*,100"
+                                          ColumnSpacing="12">
+                                        <Label Text="{Binding Code}" Style="{StaticResource DataTabularLabel}" />
+                                        <Label Grid.Column="1" Text="{Binding Supplier}" Style="{StaticResource DataTabularLabel}" />
+                                        <Label Grid.Column="2" Text="{Binding ProductCount}" Style="{StaticResource BodyMdLabel}" />
+                                        <Label Grid.Column="3" Text="{Binding Date}" Style="{StaticResource BodyMdLabel}" />
+                                        <Border Grid.Column="4" BackgroundColor="{Binding StatusBadgeBackground}"
+                                                StrokeThickness="0" Padding="10,5"
+                                                HorizontalOptions="Start">
+                                            <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                            <Label Text="{Binding Status}" Style="{StaticResource StatusBadgePill}" Padding="0" />
                                         </Border>
-                                        <!-- Quản lý button -->
-                                        <Button Grid.Column="5" Text="CHI TIẾT" Style="{StaticResource PillSecondaryButton}"
-                                                Padding="14,8" />
+                                        <Button Grid.Column="5" Text="XEM"
+                                                Style="{StaticResource PillSecondaryButton}"
+                                                CommandParameter="{Binding Id}"
+                                                Clicked="OnSelectReceiptClicked" />
                                     </Grid>
                                 </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
-
-                    <!-- Pagination -->
-                    <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
-                        <Label Text="{Binding PaginationText}" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                        <HorizontalStackLayout Grid.Column="1" Spacing="8">
-                            <Button Text="TRƯỚC" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
-                            <Button Text="1" Style="{StaticResource PillPrimaryButton}" Padding="14,10" />
-                            <Button Text="2" Style="{StaticResource PillSecondaryButton}" Padding="14,10" />
-                            <Button Text="3" Style="{StaticResource PillSecondaryButton}" Padding="14,10" />
-                            <Button Text="TIẾP" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
-                        </HorizontalStackLayout>
-                    </Grid>
+                    <Label Text="{Binding PaginationText}" Style="{StaticResource BodyMdLabel}" />
                 </VerticalStackLayout>
             </Border>
-
         </VerticalStackLayout>
     </ScrollView>
-</ContentPage>
 
+        <Grid IsVisible="{Binding IsReceiptFormOpen}"
+              BackgroundColor="#99000000"
+              Padding="70,40"
+              ZIndex="10">
+            <Border BackgroundColor="{DynamicResource Surface}"
+                    Stroke="{DynamicResource OutlineVariant}"
+                    StrokeThickness="1"
+                    Padding="24"
+                    MaximumWidthRequest="1100"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="24" />
+                </Border.StrokeShape>
+                <Grid RowDefinitions="Auto,*" RowSpacing="18">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout>
+                            <Label Text="Tạo phiếu nhập kho"
+                                   Style="{StaticResource HeadlineLgMobileLabel}"
+                                   FontSize="26" />
+                            <Label Text="Nhập đầy đủ thông tin và hàng hóa trước khi tạo phiếu."
+                                   Style="{StaticResource BodyMdLabel}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1" Text="×"
+                                Style="{StaticResource PillSecondaryButton}"
+                                Padding="14,8" FontSize="20"
+                                Clicked="OnCloseReceiptFormClicked" />
+                    </Grid>
+
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout Spacing="18">
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
+                                  ColumnSpacing="16" RowSpacing="14">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="NHÀ CUNG CẤP / NGUỒN NHẬP"
+                                           Style="{StaticResource LabelCapsLabel}" />
+                                    <Entry x:Name="ReceiptSupplierEntry"
+                                           Placeholder="Nhập tên nhà cung cấp..." />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                    <Label Text="NGƯỜI LIÊN HỆ"
+                                           Style="{StaticResource LabelCapsLabel}" />
+                                    <Entry x:Name="ReceiptContactEntry"
+                                           Placeholder="Tên hoặc số điện thoại..." />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Spacing="6">
+                                    <Label Text="ĐỊA CHỈ NHÀ CUNG CẤP"
+                                           Style="{StaticResource LabelCapsLabel}" />
+                                    <Entry x:Name="ReceiptAddressEntry"
+                                           Placeholder="Nhập địa chỉ..." />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="6">
+                                    <Label Text="GHI CHÚ"
+                                           Style="{StaticResource LabelCapsLabel}" />
+                                    <Entry x:Name="ReceiptNoteEntry"
+                                           Placeholder="Ghi chú phiếu nhập..." />
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <Border BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                                    Stroke="{DynamicResource OutlineVariant}"
+                                    StrokeThickness="1" Padding="16">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="12">
+                                    <Label Text="THÊM SẢN PHẨM"
+                                           Style="{StaticResource LabelCapsLabel}" />
+                                    <Grid ColumnDefinitions="*,120,170,Auto"
+                                          ColumnSpacing="12">
+                                        <Picker x:Name="ReceiptProductPicker"
+                                                Title="Chọn sản phẩm"
+                                                ItemsSource="{Binding ReceiptProductOptions}"
+                                                ItemDisplayBinding="{Binding DisplayText}" />
+                                        <Entry x:Name="ReceiptQuantityEntry"
+                                               Grid.Column="1"
+                                               Placeholder="Số lượng"
+                                               Keyboard="Numeric"
+                                               Text="1" />
+                                        <Entry x:Name="ReceiptUnitCostEntry"
+                                               Grid.Column="2"
+                                               Placeholder="Đơn giá nhập"
+                                               Keyboard="Numeric" />
+                                        <Button Grid.Column="3"
+                                                Text="+ THÊM"
+                                                Style="{StaticResource PillPrimaryButton}"
+                                                Clicked="OnAddReceiptLineClicked" />
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Grid ColumnDefinitions="2*,0.7*,1*,1*,60"
+                                  ColumnSpacing="12" Padding="10,0">
+                                <Label Text="SẢN PHẨM" Style="{StaticResource LabelCapsLabel}" />
+                                <Label Grid.Column="1" Text="SỐ LƯỢNG" Style="{StaticResource LabelCapsLabel}" />
+                                <Label Grid.Column="2" Text="ĐƠN GIÁ" Style="{StaticResource LabelCapsLabel}" />
+                                <Label Grid.Column="3" Text="THÀNH TIỀN" Style="{StaticResource LabelCapsLabel}" />
+                            </Grid>
+                            <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+
+                            <Label Text="Chưa có sản phẩm trong phiếu."
+                                   IsVisible="{Binding IsReceiptDraftEmpty}"
+                                   Style="{StaticResource BodyMdLabel}"
+                                   HorizontalTextAlignment="Center"
+                                   Margin="0,16" />
+
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding ReceiptDraftLines}" Spacing="8">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:ReceiptDraftLine">
+                                        <Border BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                                                StrokeThickness="0" Padding="10">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="12" />
+                                            </Border.StrokeShape>
+                                            <Grid ColumnDefinitions="2*,0.7*,1*,1*,60"
+                                                  ColumnSpacing="12">
+                                                <Label Text="{Binding ProductName}"
+                                                       Style="{StaticResource DataTabularLabel}"
+                                                       VerticalTextAlignment="Center"
+                                                       LineBreakMode="TailTruncation" />
+                                                <Entry Grid.Column="1"
+                                                       Text="{Binding Quantity, Mode=TwoWay}"
+                                                       Keyboard="Numeric"
+                                                       Unfocused="OnReceiptLineChanged" />
+                                                <Entry Grid.Column="2"
+                                                       Text="{Binding UnitCost, Mode=TwoWay}"
+                                                       Keyboard="Numeric"
+                                                       Unfocused="OnReceiptLineChanged" />
+                                                <Label Grid.Column="3"
+                                                       Text="{Binding LineTotalText}"
+                                                       Style="{StaticResource DataTabularLabel}"
+                                                       VerticalTextAlignment="Center" />
+                                                <Button Grid.Column="4"
+                                                        Text="×"
+                                                        Style="{StaticResource PillSecondaryButton}"
+                                                        Padding="0"
+                                                        CommandParameter="{Binding ProductId}"
+                                                        Clicked="OnRemoveReceiptLineClicked" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+                                <VerticalStackLayout>
+                                    <Label Text="TỔNG GIÁ TRỊ PHIẾU"
+                                           Style="{StaticResource LabelCapsLabel}" />
+                                    <Label Text="{Binding ReceiptDraftTotalText}"
+                                           Style="{StaticResource DisplayXlLabel}"
+                                           FontSize="30" />
+                                </VerticalStackLayout>
+                                <HorizontalStackLayout Grid.Column="1"
+                                                       Spacing="10"
+                                                       VerticalOptions="End">
+                                    <Button Text="HỦY"
+                                            Style="{StaticResource PillSecondaryButton}"
+                                            Clicked="OnCloseReceiptFormClicked" />
+                                    <Button Text="TẠO PHIẾU"
+                                            Style="{StaticResource PillPrimaryButton}"
+                                            Clicked="OnSubmitReceiptFormClicked" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

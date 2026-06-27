@@ -45,6 +45,10 @@ public partial class CustomerHomePage : ContentPage
 
 	public IReadOnlyList<ProductItem> SuggestedProducts { get; private set; } = Array.Empty<ProductItem>();
 
+	public CustomerHomePage() : this(Services.ApiClientProvider.Client)
+	{
+	}
+
 	public CustomerHomePage(HttpClient http)
 	{
 		_http = http;
@@ -144,6 +148,7 @@ public partial class CustomerHomePage : ContentPage
 
 	private void OnLogoutClicked(object? sender, EventArgs e)
 	{
+		Services.ApiClientProvider.ClearSession();
 		App.ShowLogin();
 	}
 }

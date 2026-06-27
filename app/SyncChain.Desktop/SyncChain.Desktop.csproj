@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+		<TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>SyncChain.Desktop</RootNamespace>
@@ -48,6 +48,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.7" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
 	</ItemGroup>
 

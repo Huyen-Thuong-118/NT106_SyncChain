@@ -92,24 +92,12 @@
     <Shell.FlyoutFooterTemplate>
         <DataTemplate>
             <VerticalStackLayout Padding="24,16,24,24">
-                <!-- Top border separator at 20% white opacity -->
                 <BoxView HeightRequest="1"
                          Color="#33FFFFFF"
                          Margin="0,0,0,16" />
-                <HorizontalStackLayout Spacing="24">
-                    <Label Text="Hỗ trợ"
-                           FontFamily="Inter"
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextTransform="Uppercase"
-                           TextColor="{StaticResource OnSurfaceVariant}" />
-                    <Label Text="Đăng xuất"
-                           FontFamily="Inter"
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextTransform="Uppercase"
-                           TextColor="{StaticResource OnSurfaceVariant}" />
-                </HorizontalStackLayout>
+                <Button Text="ĐĂNG XUẤT"
+                        Style="{StaticResource PillSecondaryButton}"
+                        Clicked="OnLogoutClicked" />
             </VerticalStackLayout>
         </DataTemplate>
     </Shell.FlyoutFooterTemplate>
@@ -118,42 +106,42 @@
          NAVIGATION ITEMS - Preserved routes with Material Symbols icons
          Icons use FontImageSource with MaterialSymbols font glyphs
     ═══════════════════════════════════════════════════════════════ -->
-    <FlyoutItem Title="Bảng điều khiển" Route="dashboard">
+    <FlyoutItem x:Name="DashboardFlyout" Title="Bảng điều khiển" Route="dashboard">
         <FlyoutItem.FlyoutIcon>
-            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe871;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="Dashboard" Color="{StaticResource OnSurfaceVariant}" Size="20" />
         </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:DashboardPage}" />
     </FlyoutItem>
 
     <FlyoutItem Title="Sản phẩm" Route="products">
         <FlyoutItem.FlyoutIcon>
-            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe8f8;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="package_2" Color="{StaticResource OnSurfaceVariant}" Size="20" />
         </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:ProductsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Đơn hàng" Route="orders">
+    <FlyoutItem x:Name="OrdersFlyout" Title="Đơn hàng" Route="orders">
         <FlyoutItem.FlyoutIcon>
-            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xeb40;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="orders" Color="{StaticResource OnSurfaceVariant}" Size="20" />
         </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:OrdersPage}" />
     </FlyoutItem>
 
     <FlyoutItem Title="Tạo đơn hàng" Route="create-order">
         <FlyoutItem.FlyoutIcon>
-            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe145;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="add_shopping_cart" Color="{StaticResource OnSurfaceVariant}" Size="20" />
         </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:CreateOrderPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Nhập hàng" Route="imports">
+    <FlyoutItem x:Name="ImportsFlyout" Title="Nhập hàng" Route="imports">
         <FlyoutItem.FlyoutIcon>
             <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe8d5;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
         </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:ImportsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Nhật ký" Route="logs">
+    <FlyoutItem x:Name="LogsFlyout" Title="Nhật ký" Route="logs">
         <FlyoutItem.FlyoutIcon>
             <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe85d;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
         </FlyoutItem.FlyoutIcon>
@@ -167,7 +155,7 @@
         <ShellContent ContentTemplate="{DataTemplate pages:ChatPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Người dùng &amp; phân quyền" Route="access">
+    <FlyoutItem x:Name="AccessFlyout" Title="Người dùng &amp; phân quyền" Route="access">
         <FlyoutItem.FlyoutIcon>
             <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe7ef;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
         </FlyoutItem.FlyoutIcon>

@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False">
+    <Grid>
     <ScrollView>
         <VerticalStackLayout Padding="64,30" Spacing="24">
 
@@ -17,7 +18,11 @@
                     <Label Text="Tạo Đơn Hàng Mới" Style="{StaticResource DisplayXlLabel}" LineBreakMode="TailTruncation" />
                     <Label Text="Nhập thông tin khách hàng và sản phẩm cần bán." Style="{StaticResource BodyMdLabel}" LineBreakMode="TailTruncation" />
                 </VerticalStackLayout>
-                <Button Grid.Column="2" Text="LƯU NHÁP" Style="{StaticResource PillSecondaryButton}" VerticalOptions="Center" />
+                <Button Grid.Column="2"
+                        Text="LÀM MỚI"
+                        Style="{StaticResource PillSecondaryButton}"
+                        VerticalOptions="Center"
+                        Clicked="OnResetClicked" />
             </Grid>
 
             <!-- ═══════════════════════════════════════════════════════════════
@@ -38,19 +43,58 @@
                         <VerticalStackLayout Spacing="16">
                             <Label Text="THÔNG TIN KHÁCH HÀNG" Style="{StaticResource LabelCapsLabel}" />
                             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
-                                <Entry Style="{StaticResource MinimalistEntry}" Placeholder="Họ và tên khách hàng" />
-                                <Entry Grid.Column="1" Style="{StaticResource MinimalistEntry}" Placeholder="Số điện thoại" />
-                                <Entry Grid.Row="1" Style="{StaticResource MinimalistEntry}" Placeholder="Địa chỉ email" />
-                                <Picker Grid.Row="1" Grid.Column="1" Title="Kênh bán hàng">
+                                <Entry x:Name="CustomerNameEntry" Style="{StaticResource MinimalistEntry}" Placeholder="Họ và tên khách hàng" />
+                                <Entry x:Name="PhoneEntry" Grid.Column="1" Style="{StaticResource MinimalistEntry}" Placeholder="Số điện thoại" />
+                                <Entry x:Name="EmailEntry" Grid.Row="1" Style="{StaticResource MinimalistEntry}" Placeholder="Địa chỉ email" />
+                                <Picker Grid.Row="1"
+                                        Grid.Column="1"
+                                        Title="Kênh bán hàng"
+                                        SelectedIndex="{Binding SalesChannelIndex, Mode=TwoWay}"
+                                        SelectedIndexChanged="OnSalesChannelChanged">
                                     <Picker.Items>
                                         <x:String>Cửa hàng trực tiếp</x:String>
-                                        <x:String>Online</x:String>
                                         <x:String>Facebook</x:String>
                                     </Picker.Items>
                                 </Picker>
                             </Grid>
-                            <Label Text="ĐỊA CHỈ GIAO HÀNG" Style="{StaticResource LabelCapsLabel}" Margin="0,8,0,0" />
-                            <Editor Placeholder="Nhập địa chỉ giao hàng đầy đủ..." HeightRequest="110" />
+                            <VerticalStackLayout Spacing="16"
+                                                 IsVisible="{Binding RequiresShipping}">
+                                <Label Text="ĐỊA CHỈ GIAO HÀNG"
+                                       Style="{StaticResource LabelCapsLabel}"
+                                       Margin="0,8,0,0" />
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                    <Picker x:Name="ProvincePicker"
+                                            Title="Chọn tỉnh/thành phố"
+                                            ItemsSource="{Binding Provinces}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedIndexChanged="OnProvinceChanged"
+                                            VerticalOptions="Center"/>
+                                    <Picker x:Name="WardPicker"
+                                            Grid.Column="1"
+                                            Title="Chọn phường/xã"
+                                            ItemsSource="{Binding Wards}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            IsEnabled="{Binding CanSelectWard}"
+                                            SelectedIndexChanged="OnWardChanged"
+                                            VerticalOptions="Center" />
+                                </Grid>
+                                <Editor x:Name="AddressEditor"
+                                        Placeholder="Nhập địa chỉ giao hàng đầy đủ..."
+                                        HeightRequest="90" />
+                                <Grid ColumnDefinitions="*">
+                                    <Picker x:Name="ServicePicker"
+                                            Title="Loại dịch vụ"
+                                            SelectedIndex="2"
+                                            SelectedIndexChanged="OnShippingInputChanged"
+                                            VerticalOptions="Center">
+                                        <Picker.Items>
+                                            <x:String>Hỏa tốc</x:String>
+                                            <x:String>Nhanh</x:String>
+                                            <x:String>Tiêu chuẩn</x:String>
+                                        </Picker.Items>
+                                    </Picker>
+                                </Grid>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 
@@ -59,51 +103,64 @@
                          Product list with add/remove controls
                     ═══════════════════════════════════════════════════════ -->
                     <Border Style="{StaticResource GlassCardBorder}">
-                        <VerticalStackLayout Spacing="16" BindableLayout.ItemsSource="{Binding Lines}">
+                        <VerticalStackLayout Spacing="16">
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="DANH SÁCH SẢN PHẨM" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" />
-                                <Button Grid.Column="1" Text="+ THÊM SẢN PHẨM" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
+                                <Button Grid.Column="1"
+                                        Text="+ THÊM SẢN PHẨM"
+                                        Style="{StaticResource PillSecondaryButton}"
+                                        Padding="18,10"
+                                        Clicked="OnAddProductClicked" />
                             </Grid>
-                            <!-- Separator -->
                             <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="models:LineItem">
-                                    <Border BackgroundColor="Transparent" StrokeThickness="0" Padding="8,12">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="12" />
-                                        </Border.StrokeShape>
-                                        <Grid ColumnDefinitions="60,*,Auto,Auto,Auto" ColumnSpacing="16">
-                                            <!-- Product thumbnail -->
-                                            <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0"
-                                                    WidthRequest="52" HeightRequest="52">
-                                                <Border.StrokeShape>
-                                                    <RoundRectangle CornerRadius="16" />
-                                                </Border.StrokeShape>
-                                                <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center"
-                                                       FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
-                                            </Border>
-                                            <!-- Product info -->
-                                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                                                <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}" LineBreakMode="TailTruncation" />
-                                                <Label Text="{Binding Variant}" Style="{StaticResource BodyMdLabel}" FontSize="12" LineBreakMode="TailTruncation" />
-                                            </VerticalStackLayout>
-                                            <!-- Quantity controls -->
-                                            <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
-                                                <Button Text="−" Style="{StaticResource PillSecondaryButton}" Padding="10,6" />
-                                                <Label Text="{Binding Quantity}" VerticalTextAlignment="Center"
-                                                       Style="{StaticResource DataTabularLabel}" VerticalOptions="Center" />
-                                                <Button Text="+" Style="{StaticResource PillSecondaryButton}" Padding="10,6" />
-                                            </HorizontalStackLayout>
-                                            <!-- Price -->
-                                            <Label Grid.Column="3" Text="{Binding Price}" VerticalTextAlignment="Center"
-                                                   Style="{StaticResource DataTabularLabel}" FontSize="15"
-                                                   LineBreakMode="TailTruncation" VerticalOptions="Center" />
-                                            <!-- Remove button -->
-                                            <Button Grid.Column="4" Text="×" Style="{StaticResource PillSecondaryButton}" Padding="10,6" />
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
+                            <Label Text="Chưa có sản phẩm. Nhấn “Thêm sản phẩm” để bắt đầu."
+                                   Style="{StaticResource BodyMdLabel}"
+                                   HorizontalTextAlignment="Center"
+                                   Margin="0,16"
+                                   IsVisible="{Binding IsCartEmpty}" />
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Lines}" Spacing="0">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:CreateOrderLine">
+                                        <Border BackgroundColor="Transparent" StrokeThickness="0" Padding="8,12">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="12" />
+                                            </Border.StrokeShape>
+                                            <Grid ColumnDefinitions="60,*,Auto,120,Auto" ColumnSpacing="16">
+                                                <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0"
+                                                        WidthRequest="52" HeightRequest="52">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="16" />
+                                                    </Border.StrokeShape>
+                                                    <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center"
+                                                           FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
+                                                </Border>
+                                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                                    <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}" LineBreakMode="TailTruncation" />
+                                                    <Label Text="{Binding StockText}" Style="{StaticResource BodyMdLabel}" FontSize="12" />
+                                                </VerticalStackLayout>
+                                                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                                                    <Button Text="−" Style="{StaticResource PillSecondaryButton}" Padding="10,6"
+                                                            CommandParameter="{Binding ProductId}" Clicked="OnDecreaseQuantityClicked" />
+                                                    <Entry Text="{Binding Quantity}"
+                                                       Keyboard="Numeric"
+                                                       WidthRequest="48"
+                                                       HorizontalTextAlignment="Center"
+                                                       Style="{StaticResource MinimalistEntry}"
+                                                       Unfocused="OnCartQuantityEntryUnfocused"
+                                                       Completed="OnCartQuantityEntryCompleted" />
+                                                    <Button Text="+" Style="{StaticResource PillSecondaryButton}" Padding="10,6"
+                                                            CommandParameter="{Binding ProductId}" Clicked="OnIncreaseQuantityClicked" />
+                                                </HorizontalStackLayout>
+                                                <Label Grid.Column="3" Text="{Binding LineTotalText}" HorizontalTextAlignment="End"
+                                                       VerticalTextAlignment="Center" Style="{StaticResource DataTabularLabel}"
+                                                       FontSize="15" LineBreakMode="NoWrap" />
+                                                <Button Grid.Column="4" Text="×" Style="{StaticResource PillSecondaryButton}" Padding="10,6"
+                                                        CommandParameter="{Binding ProductId}" Clicked="OnRemoveProductClicked" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 
@@ -113,7 +170,7 @@
                     <Border Style="{StaticResource GlassCardBorder}">
                         <VerticalStackLayout Spacing="12">
                             <Label Text="GHI CHÚ ĐƠN HÀNG" Style="{StaticResource LabelCapsLabel}" />
-                            <Editor Placeholder="Nhập ghi chú cho đơn hàng..." HeightRequest="120" />
+                            <Editor x:Name="NoteEditor" Placeholder="Nhập ghi chú cho đơn hàng..." HeightRequest="120" />
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
@@ -132,23 +189,21 @@
                             <!-- Subtotal -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Tạm tính" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="1,340,000 đ" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1" Text="{Binding SubtotalText}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                             </Grid>
                             <!-- Shipping -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Phí vận chuyển" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="30,000 đ" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1"
+                                       Text="{Binding ShippingFeeText}"
+                                       Style="{StaticResource DataTabularLabel}"
+                                       VerticalTextAlignment="Center" />
                             </Grid>
+
                             <!-- Discount -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Giảm giá" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="-0 đ" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
-                            </Grid>
-
-                            <!-- Coupon input -->
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                <Entry Style="{StaticResource MinimalistEntry}" Placeholder="Mã giảm giá" />
-                                <Button Grid.Column="1" Text="ÁP DỤNG" Style="{StaticResource PillSecondaryButton}" Padding="16,10" />
+                                <Label Grid.Column="1" Text="0 đ" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                             </Grid>
 
                             <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
@@ -156,12 +211,17 @@
                             <!-- Total -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Tổng cộng" Style="{StaticResource DataTabularLabel}" FontSize="16" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="1,370,000 đ" FontSize="24" FontAttributes="Bold"
+                                <Label Grid.Column="1" Text="{Binding TotalText}" FontSize="24" FontAttributes="Bold"
                                        FontFamily="SourceSerif4" TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center" />
                             </Grid>
 
                             <!-- Create order button -->
-                            <Button Text="TẠO ĐƠN HÀNG" Style="{StaticResource PillPrimaryButton}" Margin="0,8,0,0" />
+                            <Button x:Name="CreateOrderButton"
+                                    Text="TẠO ĐƠN HÀNG"
+                                    Style="{StaticResource PillPrimaryButton}"
+                                    Margin="0,8,0,0"
+                                    IsEnabled="{Binding CanCreateOrder}"
+                                    Clicked="OnCreateOrderClicked" />
                         </VerticalStackLayout>
                     </Border>
 
@@ -191,4 +251,164 @@
 
         </VerticalStackLayout>
     </ScrollView>
+
+        <Grid IsVisible="{Binding IsProductPickerOpen}"
+              BackgroundColor="#99000000"
+              Padding="70,45"
+              ZIndex="10">
+            <Border BackgroundColor="{DynamicResource Surface}"
+                    Stroke="{DynamicResource OutlineVariant}"
+                    StrokeThickness="1"
+                    Padding="24"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    MaximumWidthRequest="1100">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="24" />
+                </Border.StrokeShape>
+                <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="18">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Chọn sản phẩm"
+                                   Style="{StaticResource HeadlineLgMobileLabel}"
+                                   FontSize="26" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1"
+                                Text="×"
+                                Style="{StaticResource PillSecondaryButton}"
+                                FontSize="22"
+                                Padding="14,8"
+                                Clicked="OnCloseProductPickerClicked" />
+                    </Grid>
+
+                    <Grid Grid.Row="1" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Label Text="Sản phẩm"
+                               Style="{StaticResource LabelCapsLabel}"
+                               VerticalTextAlignment="Center" />
+                        <Entry Grid.Column="1"
+                               Placeholder="Tìm sản phẩm theo tên..."
+                               Style="{StaticResource MinimalistEntry}"
+                               TextChanged="OnProductSearchTextChanged" />
+                    </Grid>
+
+                    <CollectionView Grid.Row="2"
+                                    ItemsSource="{Binding ProductChoices}"
+                                    SelectionMode="None"
+                                    VerticalScrollBarVisibility="Always">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical"
+                                             Span="4"
+                                             HorizontalItemSpacing="14"
+                                             VerticalItemSpacing="14" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.EmptyView>
+                            <Label Text="Không tìm thấy sản phẩm phù hợp."
+                                   Style="{StaticResource BodyMdLabel}"
+                                   HorizontalTextAlignment="Center"
+                                   Margin="0,30" />
+                        </CollectionView.EmptyView>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ProductSelectionItem">
+                                <Border BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                                        Stroke="{DynamicResource OutlineVariant}"
+                                        StrokeThickness="1"
+                                        Padding="12"
+                                        HeightRequest="300">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="18" />
+                                    </Border.StrokeShape>
+                                    <Grid RowDefinitions="150,52,70" RowSpacing="10">
+                                        <Border BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                                                StrokeThickness="0">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="14" />
+                                            </Border.StrokeShape>
+                                            <Grid>
+                                                <Label Text="{Binding Initials}"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"
+                                                       FontSize="28"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{DynamicResource Primary}" />
+                                                <Image Source="{Binding ImageUrl}"
+                                                       Aspect="AspectFill" />
+                                            </Grid>
+                                        </Border>
+
+                                        <Label Grid.Row="1"
+                                               Text="{Binding Name}"
+                                               Style="{StaticResource DataTabularLabel}"
+                                               MaxLines="2"
+                                               LineBreakMode="TailTruncation"
+                                               VerticalTextAlignment="Start" />
+
+                                        <Grid Grid.Row="2"
+                                              ColumnDefinitions="*,Auto"
+                                              ColumnSpacing="8"
+                                              VerticalOptions="Fill">
+                                            <VerticalStackLayout Spacing="2"
+                                                                 VerticalOptions="Center">
+                                                <Label Text="{Binding PriceText}"
+                                                       Style="{StaticResource DataTabularLabel}"
+                                                       FontSize="14"
+                                                       LineBreakMode="NoWrap" />
+                                                <Label Text="{Binding StockText}"
+                                                       Style="{StaticResource BodyMdLabel}"
+                                                       FontSize="11"
+                                                       LineBreakMode="NoWrap" />
+                                            </VerticalStackLayout>
+                                            <Button Grid.Column="1"
+                                                    Text="+"
+                                                    Style="{StaticResource PillPrimaryButton}"
+                                                    WidthRequest="44"
+                                                    HeightRequest="44"
+                                                    Padding="0"
+                                                    FontSize="22"
+                                                    IsVisible="{Binding IsNotSelected}"
+                                                    CommandParameter="{Binding ProductId}"
+                                                    Clicked="OnSelectProductClicked" />
+                                            <HorizontalStackLayout Grid.Column="1"
+                                                                   Spacing="6"
+                                                                   VerticalOptions="Center"
+                                                                   IsVisible="{Binding IsSelected}">
+                                                <Button Text="−"
+                                                        Style="{StaticResource PillSecondaryButton}"
+                                                        WidthRequest="38"
+                                                        HeightRequest="38"
+                                                        Padding="0"
+                                                        FontSize="18"
+                                                        CommandParameter="{Binding ProductId}"
+                                                        Clicked="OnPickerDecreaseQuantityClicked" />
+                                                <Entry Text="{Binding SelectedQuantity}"
+                                                    Keyboard="Numeric"
+                                                    WidthRequest="48"
+                                                    HorizontalTextAlignment="Center"
+                                                    Style="{StaticResource MinimalistEntry}"
+                                                    Unfocused="OnPickerQuantityEntryUnfocused"
+                                                    Completed="OnPickerQuantityEntryCompleted" />
+                                                <Button Text="+"
+                                                        Style="{StaticResource PillPrimaryButton}"
+                                                        WidthRequest="38"
+                                                        HeightRequest="38"
+                                                        Padding="0"
+                                                        FontSize="18"
+                                                        CommandParameter="{Binding ProductId}"
+                                                        Clicked="OnPickerIncreaseQuantityClicked" />
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Button Grid.Row="3"
+                            Text="ĐÓNG"
+                            Style="{StaticResource PillSecondaryButton}"
+                            HorizontalOptions="End"
+                            Clicked="OnCloseProductPickerClicked" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
 </ContentPage>

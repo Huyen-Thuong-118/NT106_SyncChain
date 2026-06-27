@@ -14,5 +14,37 @@ public class DonHang
 
     public string TrangThai { get; set; } = "pending";
 
+    [MaxLength(100)]
+    public string? IdempotencyKey { get; set; }
+
+    public int ConcurrencyVersion { get; set; }
+
+    [MaxLength(150)]
+    public string TenNguoiNhan { get; set; } = string.Empty;
+
+    [MaxLength(30)]
+    public string SoDienThoai { get; set; } = string.Empty;
+
+    [MaxLength(150)]
+    public string EmailNguoiNhan { get; set; } = string.Empty;
+
+    [MaxLength(500)]
+    public string DiaChiGiaoHang { get; set; } = string.Empty;
+
+    [MaxLength(100)]
+    public string TinhThanh { get; set; } = string.Empty;
+
+    [MaxLength(100)]
+    public string PhuongXa { get; set; } = string.Empty;
+
+    [MaxLength(30)]
+    public string LoaiDichVu { get; set; } = "Tieu chuan";
+
+    public decimal TrongLuongKg { get; set; } = 1;
+
+    [MaxLength(500)]
+    public string GhiChu { get; set; } = string.Empty;
+
     public List<ChiTietDonHang> ChiTietDonHang { get; set; } = new();
+    public SyncChain.API.Models.VanChuyen? VanChuyen { get; set; }
 }

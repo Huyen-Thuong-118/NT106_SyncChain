@@ -1,8 +1,10 @@
 namespace SyncChain.API.DTOs.Admin;
 
-// Dữ liệu cập nhật role và trạng thái tài khoản nội bộ.
+// Du lieu cap nhat tai khoan noi bo.
 public class UpdateInternalUserDTO
 {
+    public string Email { get; set; } = string.Empty;
+    public string? Username { get; set; }
     public string Role { get; set; } = string.Empty;
     public bool IsActive { get; set; }
 }

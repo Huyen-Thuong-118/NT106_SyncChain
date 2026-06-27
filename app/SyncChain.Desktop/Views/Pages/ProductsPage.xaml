@@ -5,190 +5,179 @@
              xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
-        <VerticalStackLayout Padding="64,30" Spacing="24">
-
-            <!-- ═══════════════════════════════════════════════════════════
-                 HERO SECTION
-                 Full-width rounded container with overlay gradient,
-                 featured product badge, display-xl headline, body-md description,
-                 pill primary + secondary action buttons
-            ═══════════════════════════════════════════════════════════ -->
-            <Border StrokeThickness="0" Padding="0" HeightRequest="320">
+        <VerticalStackLayout Padding="48,30" Spacing="24">
+            <Border StrokeThickness="0" BackgroundColor="{DynamicResource SurfaceContainerHigh}" Padding="42,34">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="24" />
                 </Border.StrokeShape>
-                <Grid>
-                    <!-- Background fill -->
-                    <BoxView Color="{DynamicResource SurfaceContainerHigh}" />
-                    <!-- Overlay gradient -->
-                    <BoxView>
-                        <BoxView.Background>
-                            <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                <GradientStop Color="#E6f8f9ff" Offset="0.0" />
-                                <GradientStop Color="#66f8f9ff" Offset="0.5" />
-                                <GradientStop Color="#00f8f9ff" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </BoxView.Background>
-                    </BoxView>
-                    <!-- Hero content -->
-                    <VerticalStackLayout Padding="48" Spacing="16" VerticalOptions="Center">
-                        <!-- Featured product badge -->
-                        <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" Padding="12,6" HorizontalOptions="Start">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="12" />
-                            </Border.StrokeShape>
-                            <Label Text="⭐ SẢN PHẨM NỔI BẬT" Style="{StaticResource LabelCapsLabel}" TextColor="{DynamicResource Primary}" />
-                        </Border>
-                        <!-- Headline -->
-                        <Label Text="Quản lý Sản phẩm" Style="{StaticResource DisplayXlLabel}" />
-                        <!-- Description -->
-                        <Label Text="Theo dõi danh sách sản phẩm, tồn kho và trạng thái kinh doanh trong hệ thống SyncChain." Style="{StaticResource BodyMdLabel}" LineBreakMode="TailTruncation" MaxLines="2" />
-                        <!-- Action buttons -->
-                        <HorizontalStackLayout Spacing="12" Margin="0,8,0,0">
-                            <Button Text="+ THÊM SẢN PHẨM" Style="{StaticResource PillPrimaryButton}" />
-                            <Button Text="XUẤT BÁO CÁO" Style="{StaticResource PillSecondaryButton}" />
-                        </HorizontalStackLayout>
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="24">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Quản lý sản phẩm" Style="{StaticResource DisplayXlLabel}" />
+                        <Label Text="Theo dõi danh sách, tồn kho và hiệu suất bán hàng theo tháng."
+                               Style="{StaticResource BodyMdLabel}" />
                     </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="+ THÊM SẢN PHẨM"
+                            Style="{StaticResource PillPrimaryButton}"
+                            VerticalOptions="Center"
+                            IsVisible="{Binding CanManageProducts}"
+                            Clicked="OnAddProductClicked" />
                 </Grid>
             </Border>
 
-            <!-- ═══════════════════════════════════════════════════════════
-                 BENTO GRID SECTION
-                 2:1 column ratio with GlassCardBorder containers,
-                 SourceSerif4 headlines, descriptive text
-            ═══════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="2*,*" ColumnSpacing="24">
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16">
                 <Border Style="{StaticResource GlassCardBorder}">
-                    <VerticalStackLayout Spacing="12">
-                        <Label Text="Tổng quan kho hàng"
-                               FontFamily="SourceSerif4" FontSize="28" FontAttributes="Bold"
-                               TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="Hệ thống đang quản lý sản phẩm trong hệ thống SyncChain. Tồn kho ổn định với các mặt hàng đang bán."
-                               Style="{StaticResource BodyMdLabel}" />
-                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16" Margin="0,8,0,0">
-                            <VerticalStackLayout>
-                                <Label Text="{Binding TotalProducts}" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
-                                       VerticalOptions="Center" LineBreakMode="NoWrap" />
-                                <Label Text="Tổng sản phẩm" Style="{StaticResource LabelCapsLabel}" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout>
-                                <Label Text="{Binding ActiveProducts}" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
-                                       VerticalOptions="Center" LineBreakMode="NoWrap" />
-                                <Label Text="Đang bán" Style="{StaticResource LabelCapsLabel}" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout>
-                                <Label Text="{Binding LowStockProducts}" FontSize="32" FontAttributes="Bold" TextColor="{DynamicResource OnSurface}"
-                                       VerticalOptions="Center" LineBreakMode="NoWrap" />
-                                <Label Text="Sắp hết hàng" Style="{StaticResource LabelCapsLabel}" />
-                            </VerticalStackLayout>
-                        </Grid>
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="TỔNG SẢN PHẨM" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="{Binding TotalProducts}" FontSize="30" FontAttributes="Bold" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
-                    <VerticalStackLayout Spacing="12" VerticalOptions="Center">
-                        <Label Text="Hiệu suất"
-                               FontFamily="SourceSerif4" FontSize="28" FontAttributes="Bold"
-                               TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="Doanh thu tăng 18% so với tháng trước. Danh mục Điện tử dẫn đầu với 75% tổng doanh số."
-                               Style="{StaticResource BodyMdLabel}" />
-                        <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
-                            <Border BackgroundColor="{DynamicResource StatusEmerald}" StrokeThickness="0" Padding="10,4">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="12" />
-                                </Border.StrokeShape>
-                                <Label Text="↑ 18%" FontSize="12" FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
-                            </Border>
-                            <Label Text="so với tháng trước" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                        </HorizontalStackLayout>
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="ĐANG BÁN" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="{Binding ActiveProducts}" FontSize="30" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="SẮP HẾT HÀNG" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Text="{Binding LowStockProducts}" FontSize="30" FontAttributes="Bold" />
                     </VerticalStackLayout>
                 </Border>
             </Grid>
 
-            <!-- ═══════════════════════════════════════════════════════════
-                 INVENTORY DATA TABLE
-                 GlassCardBorder container with LabelCapsLabel headers
-                 and product rows bound to Products collection
-            ═══════════════════════════════════════════════════════════ -->
             <Border Style="{StaticResource GlassCardBorder}">
                 <VerticalStackLayout Spacing="16">
-                    <!-- Table header -->
-                    <Grid ColumnDefinitions="2.5*,1.2*,1.2*,0.8*,1.2*,1.2*" ColumnSpacing="12" Padding="8,0">
-                        <Label Text="Sản phẩm" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                        <Label Grid.Column="1" Text="Mã lô" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                        <Label Grid.Column="2" Text="Danh mục" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                        <Label Grid.Column="3" Text="Tồn kho" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                        <Label Grid.Column="4" Text="Trạng thái" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                        <Label Grid.Column="5" Text="Sức khỏe" Style="{StaticResource LabelCapsLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <Label Text="Danh sách sản phẩm"
+                               Style="{StaticResource HeadlineLgMobileLabel}" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                            <Label Text="Hiển thị theo danh mục" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
+                            <Picker x:Name="CategoryFilterPicker"
+                                    WidthRequest="210"
+                                    HeightRequest="48"
+                                    ItemsSource="{Binding CategoryFilters}"
+                                    ItemDisplayBinding="{Binding DisplayText}"
+                                    SelectedIndex="0"
+                                    SelectedIndexChanged="OnCategoryFilterChanged" />
+                            
+                        </HorizontalStackLayout>
                     </Grid>
-                    <!-- Separator -->
+
+                    <Grid ColumnDefinitions="2.4*,1.1*,1.4*,0.8*,1.2*,1.2*,120"
+                          ColumnSpacing="14" Padding="10,0">
+                        <Label Text="SẢN PHẨM" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="1" Text="MÃ" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="2" Text="DANH MỤC" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="3" Text="TỒN KHO" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="4" Text="TRẠNG THÁI" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="5" Text="HIỆU SUẤT" Style="{StaticResource LabelCapsLabel}" />
+                        <Label Grid.Column="6" Text="" Style="{StaticResource LabelCapsLabel}" />
+                    </Grid>
                     <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
 
-                    <!-- Product rows -->
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Products}" Spacing="8">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Products}" Spacing="6">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="models:ProductItem">
-                                <Border BackgroundColor="Transparent" StrokeThickness="0" Padding="8,12">
+                                <Border BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                                        StrokeThickness="0" Padding="10,12">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="12" />
                                     </Border.StrokeShape>
-                                    <Grid ColumnDefinitions="2.5*,1.2*,1.2*,0.8*,1.2*,1.2*" ColumnSpacing="12">
-                                        <!-- Product: thumbnail + name -->
+                                    <Grid ColumnDefinitions="2.4*,1.1*,1.4*,0.8*,1.2*,1.2*,120"
+                                          ColumnSpacing="14">
                                         <HorizontalStackLayout Spacing="12">
-                                            <Border BackgroundColor="{DynamicResource SurfaceContainerHigh}" StrokeThickness="0" WidthRequest="40" HeightRequest="40">
+                                            <Border WidthRequest="52" HeightRequest="52"
+                                                    BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                                                    StrokeThickness="0">
                                                 <Border.StrokeShape>
                                                     <RoundRectangle CornerRadius="10" />
                                                 </Border.StrokeShape>
-                                                <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="13" TextColor="{DynamicResource Primary}" />
+                                                <Grid>
+                                                    <Label Text="{Binding Initials}" HorizontalOptions="Center"
+                                                           VerticalOptions="Center" FontAttributes="Bold"
+                                                           TextColor="{DynamicResource Primary}" />
+                                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill" />
+                                                </Grid>
                                             </Border>
                                             <VerticalStackLayout VerticalOptions="Center" Spacing="2">
-                                                <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}" LineBreakMode="TailTruncation" />
-                                                <Label Text="{Binding Description}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" LineBreakMode="TailTruncation" MaximumWidthRequest="200" />
+                                                <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}"
+                                                       LineBreakMode="TailTruncation" />
+                                                <Label Text="{Binding Price}" FontSize="12"
+                                                       TextColor="{DynamicResource OnSurfaceVariant}" />
                                             </VerticalStackLayout>
                                         </HorizontalStackLayout>
-                                        <!-- Batch ID -->
-                                        <Label Grid.Column="1" Text="{Binding Code}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                                        <!-- Category badge -->
-                                        <Border Grid.Column="2" BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" Padding="12,4" HorizontalOptions="Start" VerticalOptions="Center">
+                                        <Label Grid.Column="1" Text="{Binding Code}" Style="{StaticResource DataTabularLabel}"
+                                               VerticalTextAlignment="Center" />
+                                        <Border Grid.Column="2" BackgroundColor="{DynamicResource PrimaryContainer}"
+                                                StrokeThickness="0" Padding="10,6"
+                                                HorizontalOptions="Fill" VerticalOptions="Center"
+                                                MinimumHeightRequest="38">
                                             <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="12" />
+                                                <RoundRectangle CornerRadius="10" />
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding BadgeText}" Style="{StaticResource CategoryBadgePill}" Padding="0" BackgroundColor="Transparent" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Category}" FontSize="12"
+                                                   LineBreakMode="WordWrap"
+                                                   VerticalTextAlignment="Center" />
                                         </Border>
-                                        <!-- Stock count -->
-                                        <Label Grid.Column="3" Text="{Binding Stock}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                                        <!-- Status dot + label -->
-                                        <HorizontalStackLayout Grid.Column="4" Spacing="8" VerticalOptions="Center">
-                                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="{Binding BadgeColor}" VerticalOptions="Center" />
-                                            <Label Text="{Binding BadgeText}" FontSize="12" TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                        <Label Grid.Column="3" Text="{Binding Stock}" Style="{StaticResource DataTabularLabel}"
+                                               VerticalTextAlignment="Center" />
+                                        <HorizontalStackLayout Grid.Column="4" Spacing="7" VerticalOptions="Center">
+                                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4"
+                                                     Color="{Binding BadgeColor}" />
+                                            <Label Text="{Binding BadgeText}" FontSize="12"
+                                                   VerticalTextAlignment="Center" />
                                         </HorizontalStackLayout>
-                                        <!-- Health progress bar -->
-                                        <Grid Grid.Column="5" VerticalOptions="Center">
-                                            <ProgressBar Progress="{Binding HealthProgress}" ProgressColor="{DynamicResource Primary}" HeightRequest="6" />
-                                        </Grid>
+                                        <HorizontalStackLayout Grid.Column="5" Spacing="5" VerticalOptions="Center">
+                                            <Label Text="{Binding PerformanceIcon}" FontSize="16"
+                                                   FontAttributes="Bold" TextColor="{Binding PerformanceColor}" />
+                                            <Label Text="{Binding PerformanceText}" FontSize="13"
+                                                   FontAttributes="Bold" TextColor="{Binding PerformanceColor}" />
+                                        </HorizontalStackLayout>
+                                        <Button Grid.Column="6"
+                                                WidthRequest="120"
+                                                Text="CHI TIẾT"
+                                                Style="{StaticResource PillSecondaryButton}"
+                                                Padding="12,7"
+                                                CommandParameter="{Binding Id}"
+                                                Clicked="OnOpenDetailClicked" />
                                     </Grid>
                                 </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
+
+                    <Label Text="{Binding EmptyProductsText}" Style="{StaticResource BodyMdLabel}"
+                           HorizontalTextAlignment="Center" Margin="0,10" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- ═══════════════════════════════════════════════════════════
-                 PAGINATION
-                 "Trước"/"Tiếp" pill buttons with Vietnamese record count
-            ═══════════════════════════════════════════════════════════ -->
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                <Label Text="{Binding PaginationText}" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                <HorizontalStackLayout Grid.Column="1" Spacing="8">
-                    <Button Text="TRƯỚC" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
-                    <Button Text="1" Style="{StaticResource PillPrimaryButton}" Padding="14,10" />
-                    <Button Text="2" Style="{StaticResource PillSecondaryButton}" Padding="14,10" />
-                    <Button Text="3" Style="{StaticResource PillSecondaryButton}" Padding="14,10" />
-                    <Button Text="TIẾP" Style="{StaticResource PillSecondaryButton}" Padding="18,10" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                <Label Text="{Binding PaginationText}" Style="{StaticResource BodyMdLabel}"
+                       VerticalTextAlignment="Center" />
+                <HorizontalStackLayout Grid.Column="1" Spacing="6">
+                    <Button Text="TRƯỚC" Style="{StaticResource PillSecondaryButton}"
+                            IsEnabled="{Binding CanGoPrevious}"
+                            Clicked="OnPreviousPageClicked" />
+                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding PageButtons}" Spacing="6">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:PageButtonItem">
+                                <Button Text="{Binding Text}"
+                                        WidthRequest="44" HeightRequest="42" Padding="4"
+                                        BackgroundColor="{Binding BackgroundColor}"
+                                        TextColor="{Binding TextColor}"
+                                        BorderColor="{DynamicResource Primary}"
+                                        BorderWidth="1"
+                                        CornerRadius="10"
+                                        CommandParameter="{Binding PageNumber}"
+                                        Clicked="OnPageClicked" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                    <Button Text="SAU" Style="{StaticResource PillSecondaryButton}"
+                            IsEnabled="{Binding CanGoNext}"
+                            Clicked="OnNextPageClicked" />
                 </HorizontalStackLayout>
             </Grid>
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
-
