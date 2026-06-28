@@ -142,7 +142,7 @@ public partial class OrdersPage : ContentPage
 			CreatedAt = order.NgayTao.ToLocalTime().ToString("dd/MM/yyyy"),
 			ProductSummary = order.ProductNames.Count == 0 ? $"{order.ProductCount} sản phẩm" :
 				string.Join(", ", order.ProductNames),
-			Total = $"{order.TongTien:N0} đ",
+			Total = $"{(order.ProductTotal > 0 ? order.ProductTotal : order.TongTien):N0} đ",
 			Status = text,
 			StatusColor = color,
 			ConcurrencyVersion = order.ConcurrencyVersion

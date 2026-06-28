@@ -152,8 +152,14 @@ public partial class ProductFormPage : ContentPage, IQueryAttributable
 			if (selected.Count == 0)
 				return;
 
-			_selectedImages.Clear();
-			_selectedImages.AddRange(selected);
+			foreach (var image in selected)
+			{
+				if (_selectedImages.All(x =>
+					!string.Equals(x.FullPath, image.FullPath, StringComparison.OrdinalIgnoreCase)))
+				{
+					_selectedImages.Add(image);
+				}
+			}
 			var existing = ParseImageUrls(ImageUrlEntry.Text)
 				.Select(x => new ProductImageItem { Url = x });
 			var local = _selectedImages.Select(x => new ProductImageItem { Url = x.FullPath });

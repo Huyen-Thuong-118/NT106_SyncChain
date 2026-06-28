@@ -38,12 +38,18 @@ public class ReportController : ControllerBase
             .Select(g => new { Status = g.Key, Count = g.Count() })
             .ToListAsync();
 
-        var netRevenue = await ordersQuery
-            .Where(x => x.TrangThai == OrderStatuses.Done)
-            .SumAsync(x => (decimal?)x.TongTien) ?? 0;
-        var cancelledValue = await ordersQuery
-            .Where(x => x.TrangThai == OrderStatuses.Cancel)
-            .SumAsync(x => (decimal?)x.TongTien) ?? 0;
+        var netRevenue = await _db.ChiTietDonHang.AsNoTracking()
+            .Where(x => x.DonHang != null &&
+                        x.DonHang.TrangThai == OrderStatuses.Done &&
+                        x.DonHang.NgayTao >= from &&
+                        x.DonHang.NgayTao <= to)
+            .SumAsync(x => (decimal?)(x.SoLuong * x.DonGia)) ?? 0;
+        var cancelledValue = await _db.ChiTietDonHang.AsNoTracking()
+            .Where(x => x.DonHang != null &&
+                        x.DonHang.TrangThai == OrderStatuses.Cancel &&
+                        x.DonHang.NgayTao >= from &&
+                        x.DonHang.NgayTao <= to)
+            .SumAsync(x => (decimal?)(x.SoLuong * x.DonGia)) ?? 0;
         var shippingFee = await _db.VanChuyen.AsNoTracking()
             .Where(x => x.DonHang.TrangThai == OrderStatuses.Done &&
                         x.DonHang.NgayTao >= from && x.DonHang.NgayTao <= to)
@@ -75,7 +81,7 @@ public class ReportController : ControllerBase
             },
             Revenue = new RevenueSummaryDTO
             {
-                Gross = netRevenue + shippingFee,
+                Gross = netRevenue,
                 Net = netRevenue,
                 ShippingFee = shippingFee,
                 CancelledValue = cancelledValue
@@ -257,7 +263,7 @@ public class ReportController : ControllerBase
                 x.MaDonHang,
                 x.NgayTao,
                 x.TrangThai,
-                x.TongTien,
+                ProductTotal = x.ChiTietDonHang.Sum(i => i.SoLuong * i.DonGia),
                 ShippingFee = x.VanChuyen == null ? 0 : x.VanChuyen.PhiVanChuyen
             })
             .ToListAsync();
@@ -267,7 +273,7 @@ public class ReportController : ControllerBase
             .GroupBy(x => BuildPeriod(x.NgayTao, groupBy))
             .Select(g =>
             {
-                var net = g.Sum(x => x.TongTien);
+                var net = g.Sum(x => x.ProductTotal);
                 var shippingFee = g.Sum(x => x.ShippingFee);
                 return new RevenueReportItemDTO
                 {
@@ -275,13 +281,13 @@ public class ReportController : ControllerBase
                     OrderCount = g.Count(),
                     NetRevenue = net,
                     ShippingFee = shippingFee,
-                    GrossRevenue = net + shippingFee
+                    GrossRevenue = net
                 };
             })
             .OrderBy(x => x.Period)
             .ToList();
 
-        var totalNet = doneOrders.Sum(x => x.TongTien);
+        var totalNet = doneOrders.Sum(x => x.ProductTotal);
         var totalShipping = doneOrders.Sum(x => x.ShippingFee);
 
         return Ok(new RevenueReportDTO
@@ -291,10 +297,10 @@ public class ReportController : ControllerBase
             GroupBy = groupBy,
             NetRevenue = totalNet,
             ShippingFee = totalShipping,
-            GrossRevenue = totalNet + totalShipping,
+            GrossRevenue = totalNet,
             CancelledValue = orders
                 .Where(x => x.TrangThai == OrderStatuses.Cancel)
-                .Sum(x => x.TongTien),
+                .Sum(x => x.ProductTotal),
             Items = items
         });
     }
@@ -421,7 +427,7 @@ public class ReportController : ControllerBase
             .Select(g => new
             {
                 Date = g.Key,
-                Total = g.Sum(x => x.TongTien)
+                Total = g.Sum(x => x.ChiTietDonHang.Sum(i => i.SoLuong * i.DonGia))
             })
             .OrderByDescending(x => x.Date)
             .ToListAsync();

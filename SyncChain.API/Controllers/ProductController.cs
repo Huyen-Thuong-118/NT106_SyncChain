@@ -52,8 +52,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    // Lấy chi tiết sản phẩm kèm thống kê và lịch sử kho.
-    [Authorize(Policy = "InventoryRead")]
+    // Lấy chi tiết sản phẩm.
+    [Authorize(Policy = "StaffOrAbove")]
     [HttpGet("{id}/detail")]
     public IActionResult GetDetail(int id)
     {

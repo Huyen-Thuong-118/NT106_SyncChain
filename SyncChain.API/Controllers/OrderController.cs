@@ -87,6 +87,7 @@ public class OrderController : ControllerBase
                     x.MaDonHang,
                     x.MaNguoiDung,
                     x.TongTien,
+                    ProductTotal = x.ChiTietDonHang.Sum(i => i.SoLuong * i.DonGia),
                     x.NgayTao,
                     x.TrangThai,
                     x.ConcurrencyVersion,

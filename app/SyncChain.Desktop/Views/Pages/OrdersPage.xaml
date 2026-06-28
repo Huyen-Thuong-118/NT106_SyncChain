@@ -116,11 +116,6 @@
                             </Grid>
                             <BoxView Grid.Row="5" Color="{DynamicResource OutlineVariant}" />
 
-                            <Grid Grid.Row="6" ColumnDefinitions="*,Auto">
-                                <Label Text="Tổng doanh thu" Style="{StaticResource BodyMdLabel}" />
-                                <Label Grid.Column="1" Text="{Binding TotalRevenue}"
-                                       Style="{StaticResource DataTabularLabel}" FontSize="20" />
-                            </Grid>
                         </Grid>
                     </VerticalStackLayout>
                 </Border>

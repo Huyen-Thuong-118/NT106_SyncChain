@@ -10,8 +10,10 @@
                 <Button Text="← QUAY LẠI" Style="{StaticResource PillSecondaryButton}" Clicked="OnBackClicked" />
                 <Label Grid.Column="1" />
                 <Button Grid.Column="2" Text="CHỈNH SỬA" Style="{StaticResource PillPrimaryButton}"
+                        IsVisible="{Binding CanManageProducts}"
                         Clicked="OnEditClicked" />
                 <Button Grid.Column="3" Text="XÓA" Style="{StaticResource PillSecondaryButton}"
+                        IsVisible="{Binding CanManageProducts}"
                         Clicked="OnDeleteClicked" />
             </Grid>
 
@@ -130,7 +132,8 @@
                             </VerticalStackLayout>
                         </Grid>
 
-                        <HorizontalStackLayout Spacing="10" Margin="0,8,0,0">
+                        <HorizontalStackLayout Spacing="10" Margin="0,8,0,0"
+                                               IsVisible="{Binding CanManageProducts}">
                             <Button Text="NHẬP THÊM HÀNG" Style="{StaticResource PillPrimaryButton}"
                                     Clicked="OnImportStockClicked" />
                             <Button Text="{Binding StatusActionText}" Style="{StaticResource PillSecondaryButton}"

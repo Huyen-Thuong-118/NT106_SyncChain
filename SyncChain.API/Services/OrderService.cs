@@ -332,7 +332,8 @@ public class OrderService
             total += product.GiaBan * item.SoLuong;
         }
 
-        order.TongTien = total;
+        var shippingFee = Math.Max(0, dto.ShippingFee);
+        order.TongTien = total + shippingFee;
         _db.ChiTietDonHang.AddRange(details);
         _audit.AddSuccess(
             AuditActions.Create,
@@ -341,7 +342,9 @@ public class OrderService
             after: new
             {
                 status = order.TrangThai,
-                total,
+                subtotal = total,
+                shippingFee,
+                total = order.TongTien,
                 items = requestedItems.Select(x => new
                 {
                     productId = x.MaSanPham,
@@ -356,7 +359,7 @@ public class OrderService
         {
             Message = "Tao don thanh cong",
             MaDonHang = order.MaDonHang,
-            TongTien = total
+            TongTien = order.TongTien
         };
     }
 

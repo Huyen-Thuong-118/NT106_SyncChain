@@ -11,6 +11,8 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 	private int _productId;
 	private SanPhamApi? _product;
 
+	public bool CanManageProducts =>
+		ApiClientProvider.Role?.Trim().ToLowerInvariant() is "admin" or "manager";
 	public string ProductCode { get; private set; } = string.Empty;
 	public string ProductName { get; private set; } = string.Empty;
 	public string ProductInitials { get; private set; } = "SP";
@@ -126,7 +128,7 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 	{
 		foreach (var property in new[]
 		{
-			nameof(ProductCode), nameof(ProductName), nameof(ProductInitials),
+			nameof(CanManageProducts), nameof(ProductCode), nameof(ProductName), nameof(ProductInitials),
 			nameof(ProductDescription), nameof(ProductStatus), nameof(ProductStatusColor),
 			nameof(StatusActionText), nameof(Price), nameof(ImportPrice), nameof(Stock),
 			nameof(SoldCount), nameof(Category), nameof(PerformanceIcon),
@@ -147,11 +149,19 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 		OnPropertyChanged(nameof(SelectedImageUrl));
 	}
 
-	private async void OnEditClicked(object? sender, EventArgs e) =>
+	private async void OnEditClicked(object? sender, EventArgs e)
+	{
+		if (!CanManageProducts)
+			return;
+
 		await Shell.Current.GoToAsync($"{nameof(ProductFormPage)}?productId={_productId}");
+	}
 
 	private async void OnImportStockClicked(object? sender, EventArgs e)
 	{
+		if (!CanManageProducts)
+			return;
+
 		var quantityText = await DisplayPromptAsync(
 			"Nhập thêm hàng", "Nhập số lượng cần cộng vào tồn kho:",
 			"Nhập", "Hủy", keyboard: Keyboard.Numeric);
@@ -174,6 +184,9 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 
 	private async void OnToggleStatusClicked(object? sender, EventArgs e)
 	{
+		if (!CanManageProducts)
+			return;
+
 		if (_product == null) return;
 		var newStatus = _product.TrangThai == "Ngung ban" ? "Hoat dong" : "Ngung ban";
 		var response = await _http.PutAsync(
@@ -188,6 +201,9 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 
 	private async void OnDeleteClicked(object? sender, EventArgs e)
 	{
+		if (!CanManageProducts)
+			return;
+
 		if (!await DisplayAlertAsync("Xóa sản phẩm", $"Bạn có chắc muốn xóa {ProductName}?", "Xóa", "Hủy"))
 			return;
 		var response = await _http.DeleteAsync($"api/product/{_productId}");

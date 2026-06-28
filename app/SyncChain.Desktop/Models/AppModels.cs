@@ -605,6 +605,7 @@ public sealed class DonHangApi
 	public List<string> ProductNames { get; set; } = new();
 	public int ProductCount { get; set; }
 	public ShippingApi? Shipping { get; set; }
+	public decimal ProductTotal { get; set; }
 }
 
 public sealed class OrderDetailApi

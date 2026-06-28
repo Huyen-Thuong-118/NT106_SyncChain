@@ -44,6 +44,12 @@ public partial class DashboardPage : ContentPage
 	protected override async void OnAppearing()
 	{
 		base.OnAppearing();
+		if (ApiClientProvider.Role?.Trim().ToLowerInvariant() is not ("admin" or "manager"))
+		{
+			await Shell.Current.GoToAsync("//orders");
+			return;
+		}
+
 		await LoadDashboardAsync();
 	}
 
@@ -107,12 +113,14 @@ public partial class DashboardPage : ContentPage
 				}
 			];
 
-			Alerts = await LoadLowStockAlertsAsync();
-			Activities = await LoadRecentActivitiesAsync();
-			TopProducts = await LoadTopProductsAsync();
-			InventoryDistribution = await LoadInventoryDistributionAsync();
+			Alerts = await LoadOrDefaultAsync(LoadLowStockAlertsAsync);
+			Activities = ApiClientProvider.Role?.Trim().ToLowerInvariant() == "admin"
+				? await LoadOrDefaultAsync(LoadRecentActivitiesAsync)
+				: [];
+			TopProducts = await LoadOrDefaultAsync(LoadTopProductsAsync);
+			InventoryDistribution = await LoadOrDefaultAsync(LoadInventoryDistributionAsync);
 			TrendData = dashboard.Trend;
-			OrderTrend = await LoadOrderTrendAsync();
+			OrderTrend = await LoadOrDefaultAsync(LoadOrderTrendAsync);
 			InventorySlices = BuildInventorySlices(InventoryDistribution);
 			UpdateInventoryShare();
 			ApplyCharts();
@@ -139,6 +147,19 @@ public partial class DashboardPage : ContentPage
 		catch (Exception ex)
 		{
 			System.Diagnostics.Debug.WriteLine($"[DashboardPage] Load error: {ex.Message}");
+		}
+	}
+
+	private static async Task<IReadOnlyList<T>> LoadOrDefaultAsync<T>(Func<Task<IReadOnlyList<T>>> load)
+	{
+		try
+		{
+			return await load();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine($"[DashboardPage] Optional load error: {ex.Message}");
+			return [];
 		}
 	}
 

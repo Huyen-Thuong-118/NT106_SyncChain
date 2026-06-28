@@ -156,7 +156,7 @@
                                         <Label Text="{Binding PinText}" FontSize="11" FontAttributes="Bold" VerticalOptions="Start" />
                                         <VerticalStackLayout Grid.Column="1" Spacing="4">
                                             <Label Text="{Binding DisplayText}" IsVisible="{Binding IsTextVisible}" FontFamily="Inter" FontSize="14" LineBreakMode="WordWrap" />
-                                            <Image Source="{Binding FileUrl}" IsVisible="{Binding IsImage}" MaximumHeightRequest="280" Aspect="AspectFit" />
+                                            <Image Source="{Binding FileUrl}" IsVisible="{Binding IsImage}" MaximumHeightRequest="520" WidthRequest="420" Aspect="AspectFit" />
                                             <WebView Source="{Binding FileUrl}" IsVisible="{Binding IsVideo}" HeightRequest="260" WidthRequest="420" />
                                             <Border IsVisible="{Binding IsFileCard}" BackgroundColor="#eeeeee" StrokeThickness="0" Padding="16,12">
                                                 <Border.StrokeShape>

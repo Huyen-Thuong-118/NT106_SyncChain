@@ -540,6 +540,7 @@ public partial class CreateOrderPage : ContentPage
 						? ServicePicker.SelectedItem?.ToString() ?? "Tiêu chuẩn"
 						: "Tiêu chuẩn",
 					trongLuongKg = 1,
+					shippingFee = requiresShipping ? ShippingFee : 0,
 					ghiChu = NoteEditor.Text?.Trim() ?? string.Empty
 				})
 			};

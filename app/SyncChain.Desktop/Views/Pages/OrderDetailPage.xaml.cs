@@ -74,9 +74,12 @@ public partial class OrderDetailPage : ContentPage, IQueryAttributable
 			: _order.DiaChiGiaoHang;
 		CustomerInitials = BuildInitials(CustomerName);
 		OrderNote = string.IsNullOrWhiteSpace(_order.GhiChu) ? "Không có ghi chú." : _order.GhiChu;
-		Subtotal = $"{_order.TongTien:N0} đ";
-		ShippingFee = $"{_order.Shipping?.ShippingFee ?? 0:N0} đ";
-		TotalAmount = $"{_order.TongTien + (_order.Shipping?.ShippingFee ?? 0):N0} đ";
+		var subtotal = _order.Details.Sum(x => x.SoLuong * x.DonGia);
+		var shippingFee = _order.Shipping?.ShippingFee ?? Math.Max(0, _order.TongTien - subtotal);
+		var totalAmount = subtotal + shippingFee;
+		Subtotal = $"{subtotal:N0} đ";
+		ShippingFee = $"{shippingFee:N0} đ";
+		TotalAmount = $"{totalAmount:N0} đ";
 		Carrier = string.IsNullOrWhiteSpace(_order.Shipping?.Carrier) ? "Chưa tạo vận chuyển" : _order.Shipping.Carrier;
 		TrackingNumber = string.IsNullOrWhiteSpace(_order.Shipping?.TrackingNumber) ? "Chưa có" : _order.Shipping.TrackingNumber;
 		EstimatedDelivery = _order.Shipping?.EstimatedDeliveryAt?.ToLocalTime().ToString("dd/MM/yyyy") ?? "Chưa tính";
@@ -139,7 +142,7 @@ public partial class OrderDetailPage : ContentPage, IQueryAttributable
 			ward = _order.PhuongXa,
 			serviceType = _order.LoaiDichVu,
 			weightKg = _order.TrongLuongKg,
-			orderTotal = _order.TongTien
+			orderTotal = _order.Details.Sum(x => x.SoLuong * x.DonGia)
 		});
 		if (!response.IsSuccessStatusCode) return;
 		_estimate = await response.Content.ReadFromJsonAsync<DeliveryEstimateApi>();

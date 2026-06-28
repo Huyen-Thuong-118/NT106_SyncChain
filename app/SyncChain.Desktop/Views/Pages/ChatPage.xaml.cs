@@ -351,7 +351,8 @@ public partial class ChatPage : ContentPage
 			return;
 
 		var type = DetectAttachmentType(file.FileName, file.FullPath);
-		await SendCurrentMessageAsync(type, file.FileName, file.FullPath);
+		var upload = await UploadAttachmentAsync(file);
+		await SendCurrentMessageAsync(type, upload.FileName, upload.FileUrl);
 	}
 
 	private async Task SendCurrentMessageAsync(string type, string? contentOverride, string? fileUrl)
@@ -396,8 +397,7 @@ public partial class ChatPage : ContentPage
 
 		var baseActions = new List<string> { "Thu hồi", message.IsPinned ? "Bỏ ghim" : "Ghim", "Trả lời tin nhắn này", "Thả cảm xúc" };
 		if (message.MessageType is "file" or "image" or "video"
-			&& !string.IsNullOrWhiteSpace(message.FileUrl)
-			&& File.Exists(message.FileUrl))
+			&& !string.IsNullOrWhiteSpace(message.FileUrl))
 			baseActions.Insert(0, "Mở file");
 		if (message.IsPoll)
 		{
@@ -407,9 +407,14 @@ public partial class ChatPage : ContentPage
 		var action = await DisplayActionSheetAsync("Tin nhan", "Hủy", null, baseActions.ToArray());
 		if (action == "Mở file")
 		{
-			await Launcher.OpenAsync(new OpenFileRequest(
-				string.IsNullOrWhiteSpace(message.FileName) ? Path.GetFileName(message.FileUrl) : message.FileName,
-				new ReadOnlyFile(message.FileUrl)));
+			if (Uri.TryCreate(message.FileUrl, UriKind.Absolute, out var uri))
+				await Launcher.OpenAsync(uri);
+			else if (File.Exists(message.FileUrl))
+			{
+				await Launcher.OpenAsync(new OpenFileRequest(
+					string.IsNullOrWhiteSpace(message.FileName) ? Path.GetFileName(message.FileUrl) : message.FileName,
+					new ReadOnlyFile(message.FileUrl)));
+			}
 			return;
 		}
 		else if (action == "Thu hồi")
@@ -1044,7 +1049,7 @@ public partial class ChatPage : ContentPage
 			Content = message.Content,
 			MessageType = message.MessageType,
 			FileName = message.FileName,
-			FileUrl = message.FileUrl,
+			FileUrl = ResolveFileUrl(message.FileUrl),
 			CallStatus = message.CallStatus,
 			CallDurationSeconds = message.CallDurationSeconds,
 			IsPinned = message.IsPinned,
@@ -1055,6 +1060,31 @@ public partial class ChatPage : ContentPage
 			Time = message.SentAt.ToLocalTime().ToString("HH:mm"),
 			IsOutgoing = ApiClientProvider.UserId.HasValue && message.SenderId == ApiClientProvider.UserId.Value
 		};
+	}
+
+	private async Task<AttachmentUploadResponse> UploadAttachmentAsync(FileResult file)
+	{
+		await using var stream = await file.OpenReadAsync();
+		using var content = new MultipartFormDataContent();
+		using var fileContent = new StreamContent(stream);
+		if (!string.IsNullOrWhiteSpace(file.ContentType))
+			fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+		content.Add(fileContent, "file", file.FileName);
+
+		var response = await _http.PostAsync("api/chat/attachments", content);
+		response.EnsureSuccessStatusCode();
+
+		return await response.Content.ReadFromJsonAsync<AttachmentUploadResponse>()
+			?? new AttachmentUploadResponse { FileName = file.FileName };
+	}
+
+	private static string ResolveFileUrl(string? value)
+	{
+		if (string.IsNullOrWhiteSpace(value))
+			return string.Empty;
+		return Uri.TryCreate(value, UriKind.Absolute, out _)
+			? value
+			: new Uri(ApiClientProvider.Client.BaseAddress!, value.TrimStart('/')).ToString();
 	}
 
 	private static string PreviewText(string type, string content) => type switch
@@ -1101,5 +1131,11 @@ public partial class ChatPage : ContentPage
 		public int CallerId { get; set; }
 		public int ReceiverId { get; set; }
 		public int UserId { get; set; }
+	}
+
+	private sealed class AttachmentUploadResponse
+	{
+		public string FileName { get; set; } = string.Empty;
+		public string FileUrl { get; set; } = string.Empty;
 	}
 }

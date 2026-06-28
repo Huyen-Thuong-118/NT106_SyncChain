@@ -16,11 +16,13 @@ public class ChatController : ControllerBase
 {
     private readonly ChatService _chat;
     private readonly IHubContext<ChatHub> _hub;
+    private readonly IWebHostEnvironment _environment;
 
-    public ChatController(ChatService chat, IHubContext<ChatHub> hub)
+    public ChatController(ChatService chat, IHubContext<ChatHub> hub, IWebHostEnvironment environment)
     {
         _chat = chat;
         _hub = hub;
+        _environment = environment;
     }
 
     [HttpGet("users")]
@@ -71,6 +73,33 @@ public class ChatController : ControllerBase
         var message = await _chat.SendMessageAsync(GetRequiredUserId(), request);
         await PushMessageAsync(message);
         return Ok(message);
+    }
+
+    [HttpPost("attachments")]
+    public async Task<IActionResult> UploadAttachment(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(new { message = "File khong hop le." });
+
+        var webRoot = _environment.WebRootPath;
+        if (string.IsNullOrWhiteSpace(webRoot))
+            webRoot = Path.Combine(_environment.ContentRootPath, "wwwroot");
+
+        var uploadRoot = Path.Combine(webRoot, "uploads", "chat");
+        Directory.CreateDirectory(uploadRoot);
+
+        var extension = Path.GetExtension(file.FileName);
+        var fileName = $"{Guid.NewGuid():N}{extension}";
+        var filePath = Path.Combine(uploadRoot, fileName);
+
+        await using (var stream = System.IO.File.Create(filePath))
+            await file.CopyToAsync(stream);
+
+        return Ok(new
+        {
+            fileName = file.FileName,
+            fileUrl = $"/uploads/chat/{fileName}"
+        });
     }
 
     [HttpPost("messages/{messageId:long}/pin")]

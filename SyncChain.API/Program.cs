@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SyncChain.API.Configuration;
@@ -207,6 +209,14 @@ using (var scope = app.Services.CreateScope())
     // EnsureCreated() tá»± táº¡o toÃ n bá»™ schema (ká»ƒ cáº£ GiaoDichKho vÃ  cÃ¡c cá»™t
     // má»›i cá»§a SanPham) theo Ä‘Ãºng cÃº phÃ¡p PostgreSQL tá»« model EF.
     db.Database.EnsureCreated();
+
+    var hasDonHangTable = db.Database.SqlQueryRaw<int>(
+        "SELECT CASE WHEN to_regclass('public.\"DonHang\"') IS NULL THEN 0 ELSE 1 END AS \"Value\"").Single();
+    if (hasDonHangTable == 0)
+    {
+        db.GetService<IRelationalDatabaseCreator>().CreateTables();
+    }
+
     db.Database.ExecuteSqlRaw("""
         ALTER TABLE "DonHang" ADD COLUMN IF NOT EXISTS "TenNguoiNhan" character varying(150) NOT NULL DEFAULT '';
         ALTER TABLE "DonHang" ADD COLUMN IF NOT EXISTS "SoDienThoai" character varying(30) NOT NULL DEFAULT '';

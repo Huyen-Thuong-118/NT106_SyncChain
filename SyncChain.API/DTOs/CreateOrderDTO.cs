@@ -12,5 +12,6 @@ public class CreateOrderDTO
     public string PhuongXa { get; set; } = string.Empty;
     public string LoaiDichVu { get; set; } = "Tieu chuan";
     public decimal TrongLuongKg { get; set; } = 1;
+    public decimal ShippingFee { get; set; }
     public string GhiChu { get; set; } = string.Empty;
 }

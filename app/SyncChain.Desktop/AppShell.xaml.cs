@@ -20,8 +20,12 @@ public partial class AppShell : Shell
 		DashboardFlyout.IsVisible = role is "admin" or "manager";
 		ImportsFlyout.IsVisible = role is "admin" or "manager";
 		LogsFlyout.IsVisible = role == "admin";
-		if (role == "staff")
-			CurrentItem = OrdersFlyout;
+		CurrentItem = role switch
+		{
+			"staff" => OrdersFlyout,
+			"admin" or "manager" => DashboardFlyout,
+			_ => OrdersFlyout
+		};
 	}
 
 	private void OnLogoutClicked(object? sender, EventArgs e)
