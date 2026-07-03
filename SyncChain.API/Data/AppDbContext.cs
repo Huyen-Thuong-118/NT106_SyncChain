@@ -43,6 +43,9 @@ public class AppDbContext : DbContext
     public DbSet<GioHang> GioHang { get; set; }
     public DbSet<ChiTietGioHang> ChiTietGioHang { get; set; }
 
+    // Thanh toán đơn hàng (module khách hàng).
+    public DbSet<ThanhToan> ThanhToan { get; set; }
+
     // Cáº¥u hÃ¬nh quan há»‡ giá»¯a Ä‘Æ¡n hÃ ng, sáº£n pháº©m vÃ  lá»‹ch sá»­ kho.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

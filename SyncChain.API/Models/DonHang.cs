@@ -45,6 +45,10 @@ public class DonHang
     [MaxLength(500)]
     public string GhiChu { get; set; } = string.Empty;
 
+    // Phương thức thanh toán (module khách hàng): cod | vnpay | momo.
+    [MaxLength(30)]
+    public string PhuongThucThanhToan { get; set; } = "cod";
+
     public List<ChiTietDonHang> ChiTietDonHang { get; set; } = new();
     public SyncChain.API.Models.VanChuyen? VanChuyen { get; set; }
 }
