@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using SyncChain.Desktop.Models;
+using SyncChain.Desktop.Services;
 
 namespace SyncChain.Desktop.Views.Pages;
 
@@ -42,8 +43,24 @@ public partial class OrdersPage : ContentPage
 
 	private async Task LoadOrdersAsync()
 	{
-		_allOrders = await _http.GetFromJsonAsync<List<DonHangApi>>("api/order") ?? [];
-		ApplyFilters();
+		// OnAppearing là async void: nếu để exception thoát ra khỏi đây thì .NET MAUI
+		// không có nơi bắt và sẽ đánh sập ứng dụng. GET api/order có [Authorize];
+		// khi chưa có JWT (vd vào thẳng shell mà không đăng nhập) backend trả 401 →
+		// HttpRequestException. Ta chuyển 401 thành luồng quay về đăng nhập, và không
+		// nuốt lặng các lỗi khác mà hiển thị cho người dùng.
+		try
+		{
+			_allOrders = await _http.GetFromJsonAsync<List<DonHangApi>>("api/order") ?? [];
+			ApplyFilters();
+		}
+		catch (HttpRequestException ex) when (ex.IsUnauthorized())
+		{
+			await this.HandleUnauthorizedAsync();
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlertAsync("Không tải được đơn hàng", ex.Message, "OK");
+		}
 	}
 
 	private void ApplyFilters()
