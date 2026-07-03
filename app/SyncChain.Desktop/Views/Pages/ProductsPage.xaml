@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage x:Class="SyncChain.Desktop.Views.Pages.ProductsPage"
+             x:Name="Root"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:SyncChain.Desktop.Models"
@@ -161,9 +162,16 @@
                                             <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4" Color="{Binding BadgeColor}" VerticalOptions="Center" />
                                             <Label Text="{Binding BadgeText}" FontSize="12" TextColor="{DynamicResource OnSurface}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         </HorizontalStackLayout>
-                                        <!-- Health progress bar -->
+                                        <!-- Staff: thanh sức khỏe tồn kho | Khách hàng: nút mua -->
                                         <Grid Grid.Column="5" VerticalOptions="Center">
-                                            <ProgressBar Progress="{Binding HealthProgress}" ProgressColor="{DynamicResource Primary}" HeightRequest="6" />
+                                            <ProgressBar Progress="{Binding HealthProgress}" ProgressColor="{DynamicResource Primary}" HeightRequest="6"
+                                                         IsVisible="{Binding IsStaff, Source={x:Reference Root}}" />
+                                            <VerticalStackLayout Spacing="6" IsVisible="{Binding IsCustomer, Source={x:Reference Root}}">
+                                                <Button Text="THÊM VÀO GIỎ" Style="{StaticResource PillPrimaryButton}" Padding="10,6" FontSize="10"
+                                                        CommandParameter="{Binding MaSanPham}" Clicked="OnAddToCartClicked" />
+                                                <Button Text="CHI TIẾT" Style="{StaticResource PillSecondaryButton}" Padding="10,6" FontSize="10"
+                                                        CommandParameter="{Binding MaSanPham}" Clicked="OnOpenDetailClicked" />
+                                            </VerticalStackLayout>
                                         </Grid>
                                     </Grid>
                                 </Border>

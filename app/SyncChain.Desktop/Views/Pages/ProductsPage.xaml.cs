@@ -1,12 +1,17 @@
 using System.Net.Http.Json;
 using Microsoft.Maui.Controls;
 using SyncChain.Desktop.Models;
+using SyncChain.Desktop.Services;
 
 namespace SyncChain.Desktop.Views.Pages;
 
 public partial class ProductsPage : ContentPage
 {
 	private readonly HttpClient _http;
+
+	// Khách hàng thấy nút "Thêm vào giỏ / Chi tiết"; nhân sự nội bộ thấy thanh sức khỏe tồn kho.
+	public bool IsCustomer => TokenStore.Role == "customer";
+	public bool IsStaff => !IsCustomer;
 
 	public IReadOnlyList<ProductItem> Products { get; private set; } = Array.Empty<ProductItem>();
 
@@ -29,12 +34,30 @@ public partial class ProductsPage : ContentPage
 		await LoadProductsAsync();
 	}
 
+	private string _searchQuery = "";
+	private string _sortMode = "";
+	private bool _inStockOnly = false;
+
+	public async void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+	{
+		_searchQuery = e.NewTextValue?.Trim() ?? "";
+		await LoadProductsAsync();
+	}
+
+	public async void OnInStockToggled(object sender, ToggledEventArgs e)
+	{
+		_inStockOnly = e.Value;
+		await LoadProductsAsync();
+	}
+
 	private async Task LoadProductsAsync()
 	{
 		try
 		{
-			// Gọi API lấy danh sách sản phẩm
-			var products = await _http.GetFromJsonAsync<List<SanPhamApi>>("api/product");
+			var query = $"api/product?search={Uri.EscapeDataString(_searchQuery)}" +
+				(_inStockOnly ? "&inStockOnly=true" : "") +
+				(string.IsNullOrEmpty(_sortMode) ? "" : $"&sort={_sortMode}");
+			var products = await _http.GetFromJsonAsync<List<SanPhamApi>>(query);
 			if (products != null)
 			{
 				Products = products.Select(MapToProductItem).ToList();
@@ -95,6 +118,7 @@ public partial class ProductsPage : ContentPage
 
 		return new ProductItem
 		{
+			MaSanPham = sp.MaSanPham,
 			Code = $"SP-{sp.MaSanPham:0000}",
 			Name = sp.TenSanPham,
 			Description = sp.TrangThai == "Hoat dong" ? "Đang kinh doanh" : "Ngừng kinh doanh",
@@ -109,6 +133,33 @@ public partial class ProductsPage : ContentPage
 
 	private async void OnOpenDetailClicked(object? sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync(nameof(ProductDetailPage));
+		if (sender is Button btn && btn.CommandParameter is int maSp)
+			await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?productId={maSp}");
+		else
+			await Shell.Current.GoToAsync(nameof(ProductDetailPage));
 	}
+
+	public async void OnAddToCartClicked(object? sender, EventArgs e)
+	{
+		if (sender is Button btn && btn.CommandParameter is int maSp)
+		{
+			try
+			{
+				var response = await _http.PostAsJsonAsync("api/cart/items", new { MaSanPham = maSp, SoLuong = 1 });
+				if (response.IsSuccessStatusCode)
+					await Shell.Current.DisplayAlert("Thành công", "Đã thêm vào giỏ hàng", "OK");
+				else
+				{
+					var err = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+					await Shell.Current.DisplayAlert("Lỗi", err?.message ?? "Không thể thêm vào giỏ", "OK");
+				}
+			}
+			catch (Exception ex)
+			{
+				await Shell.Current.DisplayAlert("Lỗi", ex.Message, "OK");
+			}
+		}
+	}
+
+	private sealed record ErrorResponse(string message);
 }

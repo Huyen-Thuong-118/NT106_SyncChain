@@ -4,9 +4,17 @@ using SyncChain.Desktop.Models;
 
 namespace SyncChain.Desktop.Views.Pages;
 
+[QueryProperty(nameof(ProductId), "productId")]
 public partial class ProductDetailPage : ContentPage
 {
 	private readonly HttpClient _http;
+	private int _productId;
+
+	public int ProductId
+	{
+		get => _productId;
+		set => _productId = value;
+	}
 
 	// Thông tin sản phẩm
 	public string ProductCode { get; private set; } = "";
@@ -50,14 +58,17 @@ public partial class ProductDetailPage : ContentPage
 	{
 		try
 		{
-			// Lấy danh sách sản phẩm trước, rồi lấy chi tiết sản phẩm đầu tiên
-			var products = await _http.GetFromJsonAsync<List<SanPhamApi>>("api/product");
-			if (products == null || products.Count == 0) return;
-
-			var firstProduct = products.First();
+			// Xác định sản phẩm cần xem: ưu tiên productId từ navigation, nếu không có thì lấy sản phẩm đầu tiên
+			var targetId = _productId;
+			if (targetId <= 0)
+			{
+				var products = await _http.GetFromJsonAsync<List<SanPhamApi>>("api/product");
+				if (products == null || products.Count == 0) return;
+				targetId = products.First().MaSanPham;
+			}
 
 			// Gọi API lấy chi tiết sản phẩm
-			var detail = await _http.GetFromJsonAsync<ProductDetailApi>($"api/product/{firstProduct.MaSanPham}/detail");
+			var detail = await _http.GetFromJsonAsync<ProductDetailApi>($"api/product/{targetId}/detail");
 			if (detail?.Product == null) return;
 
 			var sp = detail.Product;

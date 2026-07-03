@@ -1,5 +1,8 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SyncChain.API.Data;
 using SyncChain.API.DTOs.Product;
 using SyncChain.API.Services;
 
@@ -11,19 +14,56 @@ public class ProductController : ControllerBase
 {
     private readonly ProductService _service;
     private readonly IWebHostEnvironment _environment;
+    private readonly AppDbContext _db;
 
-    public ProductController(ProductService service, IWebHostEnvironment environment)
+    public ProductController(ProductService service, IWebHostEnvironment environment, AppDbContext db)
     {
         _service = service;
         _environment = environment;
+        _db = db;
     }
 
-    // Trả về toàn bộ sản phẩm cho màn hình quản lý/bán hàng.
+    // Trả về sản phẩm, hỗ trợ search và filter.
     [Authorize]
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult GetAll(
+        [FromQuery] string? search = null,
+        [FromQuery] decimal? minPrice = null,
+        [FromQuery] decimal? maxPrice = null,
+        [FromQuery] bool? inStockOnly = null,
+        [FromQuery] string? sort = null)
     {
-        return Ok(_service.GetAll());
+        var query = _db.SanPham.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+            query = query.Where(x => EF.Functions.ILike(x.TenSanPham, $"%{search}%"));
+
+        if (minPrice.HasValue)
+            query = query.Where(x => x.GiaBan >= minPrice.Value);
+
+        if (maxPrice.HasValue)
+            query = query.Where(x => x.GiaBan <= maxPrice.Value);
+
+        if (inStockOnly == true)
+            query = query.Where(x => x.SoLuongTon > 0 && x.TrangThai != "Ngung ban");
+
+        query = sort switch
+        {
+            "price_asc"  => query.OrderBy(x => x.GiaBan),
+            "price_desc" => query.OrderByDescending(x => x.GiaBan),
+            "newest"     => query.OrderByDescending(x => x.MaSanPham),
+            _            => query.OrderBy(x => x.MaSanPham)
+        };
+
+        // Nhân sự nội bộ thấy đầy đủ (kèm giá nhập); khách hàng chỉ thấy dữ liệu công khai.
+        if (IsInternalRole(GetRole()))
+            return Ok(query.ToList());
+
+        return Ok(query.Select(x => new
+        {
+            x.MaSanPham, x.TenSanPham, x.GiaBan, x.SoLuongTon,
+            x.MucTonThap, x.TrangThai, x.HinhAnhUrl, x.MoTa
+        }).ToList());
     }
 
     // Lấy thông tin cơ bản của một sản phẩm.
@@ -31,7 +71,15 @@ public class ProductController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        return Ok(_service.GetById(id));
+        var sp = _service.GetById(id);
+        if (IsInternalRole(GetRole()))
+            return Ok(sp);
+
+        return Ok(new
+        {
+            sp.MaSanPham, sp.TenSanPham, sp.GiaBan, sp.SoLuongTon,
+            sp.MucTonThap, sp.TrangThai, sp.HinhAnhUrl, sp.MoTa
+        });
     }
 
     // Lấy chi tiết sản phẩm kèm thống kê và lịch sử kho.
@@ -39,7 +87,26 @@ public class ProductController : ControllerBase
     [HttpGet("{id}/detail")]
     public IActionResult GetDetail(int id)
     {
-        return Ok(_service.GetDetail(id));
+        if (IsInternalRole(GetRole()))
+            return Ok(_service.GetDetail(id));
+
+        // Khách hàng: ẩn giá nhập, doanh thu và lịch sử kho nội bộ.
+        var sp = _service.GetById(id);
+        var soldCount = _db.ChiTietDonHang
+            .Where(x => x.MaSanPham == id && x.DonHang != null && x.DonHang.TrangThai != "Cancelled")
+            .Sum(x => (int?)x.SoLuong) ?? 0;
+
+        return Ok(new
+        {
+            Product = new
+            {
+                sp.MaSanPham, sp.TenSanPham, sp.GiaBan, sp.SoLuongTon,
+                sp.MucTonThap, sp.TrangThai, sp.HinhAnhUrl, sp.MoTa
+            },
+            SoldCount = soldCount,
+            Revenue = 0m,
+            StockHistory = Array.Empty<object>()
+        });
     }
 
     // Tạo sản phẩm mới.
@@ -130,4 +197,10 @@ public class ProductController : ControllerBase
         var claim = User.FindFirst("user_id")?.Value;
         return int.TryParse(claim, out var userId) ? userId : null;
     }
+
+    // Đọc role hiện tại từ JWT.
+    private string GetRole() => User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
+
+    // Kiểm tra role thuộc nhóm nhân sự nội bộ (được xem dữ liệu nội bộ như giá nhập).
+    private static bool IsInternalRole(string role) => role is "admin" or "manager" or "staff";
 }
