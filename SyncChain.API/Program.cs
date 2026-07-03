@@ -365,6 +365,10 @@ using (var scope = app.Services.CreateScope())
             "NgayThem" timestamp with time zone NOT NULL DEFAULT now()
         );
         CREATE INDEX IF NOT EXISTS "IX_ChiTietGioHang_MaGioHang" ON "ChiTietGioHang" ("MaGioHang");
+
+        ALTER TABLE "NguoiDung" ADD COLUMN IF NOT EXISTS "Ho" text NOT NULL DEFAULT '';
+        ALTER TABLE "NguoiDung" ADD COLUMN IF NOT EXISTS "Ten" text NOT NULL DEFAULT '';
+        ALTER TABLE "NguoiDung" ADD COLUMN IF NOT EXISTS "SoDienThoai" text NOT NULL DEFAULT '';
         """);
 
     var roles = new[]
