@@ -36,6 +36,9 @@ public class AppDbContext : DbContext
     // Địa chỉ giao hàng của khách hàng (module khách hàng).
     public DbSet<DiaChi> DiaChi { get; set; }
 
+    // Thông báo cho khách hàng (module khách hàng).
+    public DbSet<ThongBao> ThongBao { get; set; }
+
     // Cáº¥u hÃ¬nh quan há»‡ giá»¯a Ä‘Æ¡n hÃ ng, sáº£n pháº©m vÃ  lá»‹ch sá»­ kho.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
