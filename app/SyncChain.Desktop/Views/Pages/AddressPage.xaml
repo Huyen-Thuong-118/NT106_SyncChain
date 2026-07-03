@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.AddressPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Địa chỉ giao hàng"
+             NavigationPage.HasNavigationBar="False">
+    <Grid RowDefinitions="Auto,*,Auto" Padding="32,24">
+
+        <Label Grid.Row="0" Text="Địa Chỉ Giao Hàng"
+               Style="{StaticResource HeadlineLgMobileLabel}"
+               TextColor="{DynamicResource OnSurface}"
+               Margin="0,0,0,16" />
+
+        <!-- Danh sách địa chỉ -->
+        <CollectionView x:Name="AddressList" Grid.Row="1"
+                        ItemsSource="{Binding Addresses}"
+                        EmptyView="Chưa có địa chỉ nào. Hãy thêm địa chỉ mới.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,6" Padding="16"
+                            BackgroundColor="#FAFAFA" Stroke="#E0E0E0" StrokeThickness="1">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                            <Label Grid.Row="0" Text="{Binding TenNguoiNhan}"
+                                   FontFamily="Inter" FontSize="15" FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" />
+                            <Label Grid.Row="1" Text="{Binding SoDienThoai}"
+                                   FontFamily="Inter" FontSize="13"
+                                   TextColor="{DynamicResource OnSurfaceVariant}" />
+                            <Label Grid.Row="2" Text="{Binding DiaChi}"
+                                   FontFamily="Inter" FontSize="13"
+                                   TextColor="{DynamicResource OnSurfaceVariant}"
+                                   LineBreakMode="WordWrap" />
+                            <HorizontalStackLayout Grid.Column="1" Grid.RowSpan="3"
+                                                   VerticalOptions="Center" Spacing="8">
+                                <Button Text="Mặc định"
+                                        Style="{StaticResource PillSecondaryButton}"
+                                        FontSize="11" HeightRequest="32" Padding="8,0"
+                                        CommandParameter="{Binding MaDiaChi}"
+                                        Clicked="OnSetDefaultClicked" />
+                                <Button Text="Xóa"
+                                        BackgroundColor="#FFCDD5" TextColor="#B00020"
+                                        FontFamily="Inter" FontSize="11"
+                                        HeightRequest="32" Padding="8,0"
+                                        CommandParameter="{Binding MaDiaChi}"
+                                        Clicked="OnDeleteClicked" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Form thêm địa chỉ -->
+        <Border Grid.Row="2" Margin="0,16,0,0" Padding="20"
+                BackgroundColor="#FAFAFA" Stroke="#E0E0E0" StrokeThickness="1">
+            <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+            <VerticalStackLayout Spacing="12">
+                <Label Text="THÊM ĐỊA CHỈ MỚI" Style="{StaticResource LabelCapsLabel}" />
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Entry x:Name="TenNguoiNhanEntry" Style="{StaticResource MinimalistEntry}" Placeholder="Tên người nhận" />
+                    <Entry x:Name="SdtEntry" Grid.Column="1" Style="{StaticResource MinimalistEntry}" Placeholder="Số điện thoại" Keyboard="Telephone" />
+                </Grid>
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                    <Entry x:Name="TinhEntry" Style="{StaticResource MinimalistEntry}" Placeholder="Tỉnh/Thành phố" />
+                    <Entry x:Name="QuanEntry" Grid.Column="1" Style="{StaticResource MinimalistEntry}" Placeholder="Quận/Huyện" />
+                    <Entry x:Name="PhuongEntry" Grid.Column="2" Style="{StaticResource MinimalistEntry}" Placeholder="Phường/Xã" />
+                </Grid>
+                <Entry x:Name="ChiTietEntry" Style="{StaticResource MinimalistEntry}" Placeholder="Số nhà, tên đường..." />
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <CheckBox x:Name="MacDinhCheck" Color="{DynamicResource Primary}" />
+                    <Label Grid.Column="1" Text="Đặt làm địa chỉ mặc định"
+                           Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
+                    <Button x:Name="AddButton" Grid.Column="2" Text="THÊM"
+                            Style="{StaticResource PillPrimaryButton}"
+                            Padding="20,0" Clicked="OnAddClicked" />
+                </Grid>
+                <Label x:Name="FormError" IsVisible="False" TextColor="#B00020" FontFamily="Inter" FontSize="12" />
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>
