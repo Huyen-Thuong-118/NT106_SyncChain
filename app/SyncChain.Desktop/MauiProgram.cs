@@ -1,14 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using SyncChain.Desktop.Services;
+using SyncChain.Desktop.Views.Pages;
 
 namespace SyncChain.Desktop;
 
 public static class MauiProgram
 {
-	// ═══════════════════════════════════════════════════════
-	//  BACKEND BASE URL — đổi thành địa chỉ server thật
-	// ═══════════════════════════════════════════════════════
-	public const string ApiBaseUrl = "http://localhost:3000/";
-
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
@@ -26,12 +23,19 @@ public static class MauiProgram
 				fonts.AddFont("MaterialSymbolsOutlined.ttf", "MaterialSymbols");
 			});
 
-		// Đăng ký HttpClient dùng chung cho toàn app
-		builder.Services.AddSingleton(sp =>
-		{
-			var client = new HttpClient { BaseAddress = new Uri(ApiBaseUrl) };
-			return client;
-		});
+		// Dùng HttpClient singleton có token từ TokenStore
+		builder.Services.AddSingleton(sp => AppHttpClient.Instance);
+
+		// Đăng ký các trang cần DI
+		builder.Services.AddTransient<CreateOrderPage>();
+		builder.Services.AddTransient<ProfilePage>();
+		builder.Services.AddTransient<AddressPage>();
+		builder.Services.AddTransient<CartPage>();
+		builder.Services.AddTransient<ForgotPasswordPage>();
+		builder.Services.AddTransient<OrderDetailPage>();
+		builder.Services.AddTransient<PaymentPage>();
+		builder.Services.AddTransient<OrderTrackingPage>();
+		builder.Services.AddTransient<NotificationPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

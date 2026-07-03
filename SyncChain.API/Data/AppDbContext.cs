@@ -4,19 +4,21 @@ using SyncChain.API.Models;
 namespace SyncChain.API.Data;
 public class AppDbContext : DbContext
 {
-    // Các bảng tài khoản và phân quyền.
     public DbSet<NguoiDung> NguoiDung { get; set; }
     public DbSet<PhanQuyen> PhanQuyen { get; set; }
-
-    public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options) { }
-
-    // Các bảng sản phẩm, đơn hàng và giao dịch kho.
     public DbSet<SanPham> SanPham { get; set; }
-
     public DbSet<DonHang> DonHang { get; set; }
     public DbSet<ChiTietDonHang> ChiTietDonHang { get; set; }
     public DbSet<GiaoDichKho> GiaoDichKho { get; set; }
+    public DbSet<DiaChi> DiaChi { get; set; }
+    public DbSet<OtpReset> OtpReset { get; set; }
+    public DbSet<GioHang> GioHang { get; set; }
+    public DbSet<ChiTietGioHang> ChiTietGioHang { get; set; }
+    public DbSet<ThanhToan> ThanhToan { get; set; }
+    public DbSet<ThongBao> ThongBao { get; set; }
+
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options) { }
 
     // Cấu hình quan hệ giữa đơn hàng, sản phẩm và lịch sử kho.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -52,5 +54,39 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<DonHang>().Property(x => x.MaNguoiDung).HasColumnName("makhachhang");
         modelBuilder.Entity<DonHang>().Property(x => x.TrangThai).HasColumnName("trangthaidon");
         modelBuilder.Entity<NguoiDung>().Property(x => x.IsActive).HasColumnName("kichhoat");
+
+        // DiaChi
+        modelBuilder.Entity<DiaChi>()
+            .HasOne(x => x.NguoiDung).WithMany().HasForeignKey(x => x.MaNguoiDung);
+        modelBuilder.Entity<DiaChi>().Property(x => x.LaMacDinh).HasColumnName("lamacdinh");
+
+        // OtpReset
+        modelBuilder.Entity<OtpReset>()
+            .HasOne(x => x.NguoiDung).WithMany().HasForeignKey(x => x.MaNguoiDung);
+        modelBuilder.Entity<OtpReset>().Property(x => x.MaOtpHash).HasColumnName("maotphash");
+        modelBuilder.Entity<OtpReset>().Property(x => x.HetHan).HasColumnName("hethan");
+        modelBuilder.Entity<OtpReset>().Property(x => x.DaDung).HasColumnName("dadung");
+
+        // GioHang
+        modelBuilder.Entity<GioHang>()
+            .HasOne(x => x.NguoiDung).WithMany().HasForeignKey(x => x.MaNguoiDung);
+        modelBuilder.Entity<GioHang>()
+            .HasMany(x => x.ChiTietGioHang).WithOne(x => x.GioHang).HasForeignKey(x => x.MaGioHang);
+
+        // ChiTietGioHang
+        modelBuilder.Entity<ChiTietGioHang>()
+            .HasOne(x => x.SanPham).WithMany().HasForeignKey(x => x.MaSanPham);
+        modelBuilder.Entity<ChiTietGioHang>()
+            .HasIndex(x => new { x.MaGioHang, x.MaSanPham }).IsUnique();
+
+        // ThanhToan
+        modelBuilder.Entity<ThanhToan>()
+            .HasOne(x => x.DonHang).WithMany().HasForeignKey(x => x.MaDonHang);
+        modelBuilder.Entity<ThanhToan>()
+            .Property(x => x.SoTien).HasPrecision(15, 2);
+
+        // ThongBao
+        modelBuilder.Entity<ThongBao>()
+            .HasOne(x => x.NguoiDung).WithMany().HasForeignKey(x => x.MaNguoiDung);
     }
 }

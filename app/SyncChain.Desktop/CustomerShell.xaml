@@ -16,72 +16,102 @@
     <Shell.FlyoutHeader>
         <Grid Padding="24,32,24,22">
             <HorizontalStackLayout Spacing="14" VerticalOptions="Center">
-                <Border BackgroundColor="{StaticResource Primary}"
-                        StrokeThickness="0"
-                        WidthRequest="46"
-                        HeightRequest="46">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="14" />
-                    </Border.StrokeShape>
-                    <Label Text="&#xe7ef;"
-                           FontFamily="MaterialSymbols"
-                           FontSize="24"
-                           TextColor="White"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+                <Border BackgroundColor="{StaticResource Primary}" StrokeThickness="0"
+                        WidthRequest="46" HeightRequest="46">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+                    <Label Text="&#xe7ef;" FontFamily="MaterialSymbols" FontSize="24"
+                           TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
                 <VerticalStackLayout Spacing="2" VerticalOptions="Center">
-                    <Label Text="SyncChain"
-                           FontFamily="SourceSerif4"
-                           FontSize="26"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource Primary}" />
-                    <Label Text="CỔNG KHÁCH HÀNG"
-                           FontFamily="Inter"
-                           FontSize="10"
-                           FontAttributes="Bold"
-                           TextTransform="Uppercase"
-                           TextColor="{StaticResource OnSurfaceVariant}"
-                           CharacterSpacing="1.8" />
+                    <Label Text="SyncChain" FontFamily="SourceSerif4" FontSize="26"
+                           FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+                    <Label Text="CỔNG KHÁCH HÀNG" FontFamily="Inter" FontSize="10"
+                           FontAttributes="Bold" TextTransform="Uppercase"
+                           TextColor="{StaticResource OnSurfaceVariant}" CharacterSpacing="1.8" />
                 </VerticalStackLayout>
             </HorizontalStackLayout>
         </Grid>
     </Shell.FlyoutHeader>
 
+    <Shell.FlyoutFooterTemplate>
+        <DataTemplate>
+            <VerticalStackLayout Padding="24,16,24,24">
+                <BoxView HeightRequest="1" Color="#33FFFFFF" Margin="0,0,0,16" />
+                <Label Text="Đăng xuất"
+                       FontFamily="Inter" FontSize="12" FontAttributes="Bold"
+                       TextTransform="Uppercase" TextColor="{StaticResource OnSurfaceVariant}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLogoutTapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </VerticalStackLayout>
+        </DataTemplate>
+    </Shell.FlyoutFooterTemplate>
+
     <Shell.ItemTemplate>
         <DataTemplate>
-            <Border BackgroundColor="#33FFFFFF"
-                    Stroke="#33FFFFFF"
-                    StrokeThickness="1"
-                    Margin="14,4"
-                    Padding="14,12">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12" />
-                </Border.StrokeShape>
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14"
-                      HeightRequest="34">
-                    <Image Grid.Column="0"
-                           Source="{Binding FlyoutIcon}"
-                           WidthRequest="22"
-                           HeightRequest="22"
-                           VerticalOptions="Center" />
-                    <Label Grid.Column="1"
-                           Text="{Binding Title}"
-                           FontFamily="Inter"
-                           FontSize="12"
-                           FontAttributes="Bold"
-                           TextTransform="Uppercase"
-                           TextColor="{StaticResource OnSurfaceVariant}"
+            <Border BackgroundColor="#33FFFFFF" Stroke="#33FFFFFF" StrokeThickness="1"
+                    Margin="14,4" Padding="14,12">
+                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14" HeightRequest="34">
+                    <Image Grid.Column="0" Source="{Binding FlyoutIcon}"
+                           WidthRequest="22" HeightRequest="22" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding Title}"
+                           FontFamily="Inter" FontSize="12" FontAttributes="Bold"
+                           TextTransform="Uppercase" TextColor="{StaticResource OnSurfaceVariant}"
                            VerticalOptions="Center" />
                 </Grid>
             </Border>
         </DataTemplate>
     </Shell.ItemTemplate>
 
-    <FlyoutItem Title="Trang khách hàng" Route="customer-home">
+    <FlyoutItem Title="Trang chủ" Route="customer-home">
         <FlyoutItem.FlyoutIcon>
             <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe88a;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
         </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:CustomerHomePage}" />
     </FlyoutItem>
+
+    <FlyoutItem Title="Sản phẩm" Route="products">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe8f8;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:ProductsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Giỏ hàng" Route="cart">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe8cc;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:CartPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Đơn hàng" Route="orders">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xeb40;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:OrdersPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Hồ sơ" Route="profile">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe7fd;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:ProfilePage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Địa chỉ" Route="address">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe0c8;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:AddressPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Thông báo" Route="notifications">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe7f4;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:NotificationPage}" />
+    </FlyoutItem>
+
 </Shell>

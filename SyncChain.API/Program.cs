@@ -1,6 +1,9 @@
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using SyncChain.API.Data;
-using SyncChain.API.Services; 
+using SyncChain.API.Services;
+using SyncChain.API.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -8,6 +11,12 @@ using Microsoft.OpenApi.Models;
 using SyncChain.API.Models;
 using System.Security.Claims;
 
+
+// Schema dùng 'timestamp without time zone' và toàn bộ code ghi thời gian bằng DateTime.Now
+// (Kind=Local). Npgsql 6+ mặc định từ chối ghi DateTime Local → lỗi "only UTC is supported".
+// Bật legacy timestamp behavior để ghi/đọc DateTime local hoạt động bình thường.
+// Phải đặt trước khi khởi tạo bất kỳ NpgsqlDataSource nào.
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,6 +91,20 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(jwtSettings["Key"]!)
         )
     };
+    // Cho phép SignalR gửi token qua query string ?access_token=
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = ctx =>
+        {
+            var token = ctx.Request.Query["access_token"];
+            if (!string.IsNullOrEmpty(token) &&
+                ctx.Request.Path.StartsWithSegments("/hubs"))
+            {
+                ctx.Token = token;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 builder.Services.AddAuthorization(options =>
@@ -105,6 +128,43 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<AddressService>();
+builder.Services.AddScoped<CartService>();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddSingleton<VnPayService>();
+builder.Services.AddHttpClient<MoMoService>();
+
+builder.Services.AddSignalR();
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("SignalRCors", policy =>
+        policy.WithOrigins("http://localhost:5292", "http://localhost:5000", "http://localhost")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
+});
+
+// Rate limiting: login và forgot-password
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("login", o =>
+    {
+        o.PermitLimit = 5;
+        o.Window = TimeSpan.FromMinutes(1);
+        o.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        o.QueueLimit = 0;
+    });
+    options.AddFixedWindowLimiter("otp", o =>
+    {
+        o.PermitLimit = 3;
+        o.Window = TimeSpan.FromMinutes(5);
+        o.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        o.QueueLimit = 0;
+    });
+    options.RejectionStatusCode = 429;
+});
 
 var app = builder.Build();
 
@@ -159,18 +219,57 @@ using (var scope = app.Services.CreateScope())
     }
 
     db.SaveChanges();
+
+    // Tạo bảng mới và thêm cột cho schema đã tồn tại (Neon cloud DB)
+    try
+    {
+        db.Database.ExecuteSqlRaw(@"
+CREATE TABLE IF NOT EXISTS thanhtoan (
+    mathanhtoan SERIAL PRIMARY KEY,
+    madonhang INTEGER NOT NULL REFERENCES donhang(madonhang),
+    phuongthuc TEXT NOT NULL,
+    trangthaithanhtoan TEXT NOT NULL DEFAULT 'Pending',
+    sotien NUMERIC(15,2) NOT NULL,
+    ngaytao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ngaycapnhat TIMESTAMP,
+    magiaodich TEXT,
+    dulieucallback TEXT
+);");
+        db.Database.ExecuteSqlRaw(@"
+CREATE TABLE IF NOT EXISTS thongbao (
+    mathongbao SERIAL PRIMARY KEY,
+    manguoidung INTEGER NOT NULL REFERENCES nguoidung(manguoidung),
+    loaithongbao TEXT NOT NULL,
+    tieude TEXT NOT NULL,
+    noidung TEXT NOT NULL,
+    dadoc BOOLEAN NOT NULL DEFAULT FALSE,
+    ngaytao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    madonhang INTEGER REFERENCES donhang(madonhang)
+);");
+        db.Database.ExecuteSqlRaw(
+            "ALTER TABLE donhang ADD COLUMN IF NOT EXISTS phuongthucthanhtoan TEXT DEFAULT 'COD';");
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning("Schema patch warning: {msg}", ex.Message);
+    }
 }
 
 
 
+app.UseRateLimiter();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseStaticFiles();
+
+app.UseCors("SignalRCors");
 
 // Bật xác thực và phân quyền trước khi map controller.
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHub<OrderHub>("/hubs/order");
 app.MapControllers();
 
 app.Run();

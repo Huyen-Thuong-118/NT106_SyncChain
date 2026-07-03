@@ -5,9 +5,28 @@ public partial class CustomerShell : Shell
 	public CustomerShell()
 	{
 		InitializeComponent();
-		Routing.RegisterRoute(nameof(Views.Pages.OrderDetailPage), typeof(Views.Pages.OrderDetailPage));
+		Routing.RegisterRoute(nameof(Views.Pages.OrderDetailPage),    typeof(Views.Pages.OrderDetailPage));
+		Routing.RegisterRoute(nameof(Views.Pages.ProductDetailPage),  typeof(Views.Pages.ProductDetailPage));
+		Routing.RegisterRoute(nameof(Views.Pages.ProfilePage),        typeof(Views.Pages.ProfilePage));
+		Routing.RegisterRoute(nameof(Views.Pages.AddressPage),        typeof(Views.Pages.AddressPage));
+		Routing.RegisterRoute(nameof(Views.Pages.CartPage),           typeof(Views.Pages.CartPage));
+		Routing.RegisterRoute(nameof(Views.Pages.PaymentPage),        typeof(Views.Pages.PaymentPage));
+		Routing.RegisterRoute(nameof(Views.Pages.OrderTrackingPage),  typeof(Views.Pages.OrderTrackingPage));
+		Routing.RegisterRoute(nameof(Views.Pages.NotificationPage),   typeof(Views.Pages.NotificationPage));
 		Navigated += (_, _) => FlyoutIsPresented = false;
+
+		App.SignalR.OnNewNotification += OnNewNotification;
 	}
+
+	private async void OnNewNotification(string title, string content)
+	{
+		await MainThread.InvokeOnMainThreadAsync(async () =>
+		{
+			await Shell.Current.DisplayAlert($"🔔 {title}", content, "OK");
+		});
+	}
+
+	private void OnLogoutTapped(object? sender, EventArgs e) => App.ShowLogin();
 
 #if WINDOWS
 	protected override void OnHandlerChanged()
