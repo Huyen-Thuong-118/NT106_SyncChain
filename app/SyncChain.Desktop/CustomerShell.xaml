@@ -105,7 +105,7 @@
         <FlyoutItem.FlyoutIcon>
             <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xeb40;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
         </FlyoutItem.FlyoutIcon>
-        <ShellContent ContentTemplate="{DataTemplate pages:OrdersPage}" />
+        <ShellContent ContentTemplate="{DataTemplate pages:CustomerOrdersPage}" />
     </FlyoutItem>
 
     <FlyoutItem Title="Địa chỉ" Route="address">

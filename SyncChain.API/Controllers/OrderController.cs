@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using SyncChain.API.Data;
 using SyncChain.API.DTOs;
 using SyncChain.API.Exceptions;
+using SyncChain.API.Models;
 using SyncChain.API.Services;
 
 namespace SyncChain.API.Controllers;
@@ -255,6 +256,109 @@ public class OrderController : ControllerBase
     }
 
     // Äá»c mÃ£ ngÆ°á»i dÃ¹ng tá»« JWT.
+    // Theo doi don hang: tra ve don + timeline + chi tiet + thanh toan gan nhat.
+    // Khach chi xem duoc don cua chinh minh; nhan su noi bo xem duoc tat ca.
+    [Authorize]
+    [HttpGet("{id}/tracking")]
+    public IActionResult GetTracking(int id)
+    {
+        var userId = GetUserId();
+        if (userId == null)
+            return Unauthorized();
+
+        var order = _db.DonHang.FirstOrDefault(x => x.MaDonHang == id);
+        if (order == null)
+            return NotFound();
+
+        if (!IsInternalRole(GetRole()) && order.MaNguoiDung != userId.Value)
+            return Forbid();
+
+        var chiTiet = _db.ChiTietDonHang
+            .Include(x => x.SanPham)
+            .Where(x => x.MaDonHang == id)
+            .Select(x => new
+            {
+                x.MaSanPham,
+                x.SoLuong,
+                x.DonGia,
+                SanPham = new
+                {
+                    x.SanPham.MaSanPham,
+                    x.SanPham.TenSanPham,
+                    x.SanPham.GiaBan,
+                    x.SanPham.SoLuongTon,
+                    x.SanPham.MucTonThap,
+                    x.SanPham.TrangThai
+                }
+            })
+            .ToList();
+
+        var payment = _db.ThanhToan
+            .Where(x => x.MaDonHang == id)
+            .OrderByDescending(x => x.NgayTao)
+            .Select(x => new
+            {
+                x.MaThanhToan,
+                x.PhuongThuc,
+                x.TrangThaiThanhToan,
+                x.SoTien,
+                x.NgayTao,
+                x.NgayCapNhat
+            })
+            .FirstOrDefault();
+
+        return Ok(new
+        {
+            order = new
+            {
+                order.MaDonHang,
+                order.MaNguoiDung,
+                order.TongTien,
+                order.TrangThai,
+                order.NgayTao,
+                order.PhuongThucThanhToan,
+                NguoiNhan = string.IsNullOrWhiteSpace(order.TenNguoiNhan) ? null : order.TenNguoiNhan,
+                SoDienThoaiNhan = string.IsNullOrWhiteSpace(order.SoDienThoai) ? null : order.SoDienThoai,
+                DiaChiGiao = string.IsNullOrWhiteSpace(order.DiaChiGiaoHang) ? null : order.DiaChiGiaoHang
+            },
+            payment,
+            chiTiet,
+            timeline = BuildTrackingTimeline(order.TrangThai)
+        });
+    }
+
+    // Sinh timeline theo trang thai hien tai (dung bo trang thai lowercase chuan).
+    private static object[] BuildTrackingTimeline(string status)
+    {
+        if (status == OrderStatuses.Cancel)
+        {
+            return new object[]
+            {
+                new { step = OrderStatuses.Pending, trangThai = "hoanThanh" },
+                new { step = OrderStatuses.Cancel, trangThai = "huyBo" }
+            };
+        }
+
+        var flow = new[]
+        {
+            OrderStatuses.Pending,
+            OrderStatuses.Processing,
+            OrderStatuses.Shipping,
+            OrderStatuses.Done
+        };
+        var currentIndex = Array.IndexOf(flow, status);
+
+        return flow
+            .Select((step, index) => (object)new
+            {
+                step,
+                trangThai = index < currentIndex ? "hoanThanh"
+                    : index == currentIndex ? "hienTai"
+                    : "choDoi"
+            })
+            .ToArray();
+    }
+
     private int? GetUserId()
     {
         var claim = User.FindFirst("user_id")?.Value;

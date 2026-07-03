@@ -30,6 +30,26 @@ public partial class LoginPage : ContentPage
 		BackgroundImageSource = Services.SigninBackground.CreateSource();
 	}
 
+	// Part 8 - Health check: kiểm tra backend trước khi người dùng thao tác.
+	// Nếu backend/DB không sẵn sàng thì báo thân thiện chứ không để app lỗi khó hiểu.
+	protected override async void OnAppearing()
+	{
+		base.OnAppearing();
+		AppLog.Info("Login", $"Kiểm tra backend tại {ApiClientProvider.ApiBaseUrl}");
+		var healthy = await ApiClientProvider.IsBackendHealthyAsync();
+		if (!healthy)
+		{
+			AppLog.Warn("Login", "Backend /health không phản hồi");
+			await DisplayAlertAsync("Máy chủ chưa sẵn sàng",
+				$"Không kết nối được tới máy chủ ({ApiClientProvider.ApiBaseUrl}).\n\n" +
+				"Hãy chạy backend (scripts/run-backend.ps1 hoặc run-all.ps1) rồi thử lại.", "OK");
+		}
+		else
+		{
+			AppLog.Info("Login", "Backend OK");
+		}
+	}
+
 	private async void OnLoginClicked(object? sender, EventArgs e)
 	{
 		await LoginAsync(customerShell: false);
@@ -51,6 +71,7 @@ public partial class LoginPage : ContentPage
 		{
 			var email = EmailEntry.Text?.Trim() ?? string.Empty;
 			var password = PasswordEntry.Text ?? string.Empty;
+			AppLog.Info("Login", $"Nút đăng nhập được bấm (cổng={(customerShell ? "khách hàng" : "quản trị")})");
 
 			if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
 			{
@@ -58,6 +79,7 @@ public partial class LoginPage : ContentPage
 				return;
 			}
 
+			AppLog.Info("Login", $"Gọi POST api/Auth/login cho {email}");
 			var response = await _http.PostAsJsonAsync("api/Auth/login", new
 			{
 				email,
@@ -68,6 +90,7 @@ public partial class LoginPage : ContentPage
 			if (!response.IsSuccessStatusCode)
 			{
 				var message = await response.Content.ReadAsStringAsync();
+				AppLog.Warn("Login", $"Đăng nhập thất bại ({(int)response.StatusCode}): {message}");
 				await DisplayAlertAsync("Đăng nhập thất bại", string.IsNullOrWhiteSpace(message) ? "Sai thông tin đăng nhập." : message, "OK");
 				return;
 			}
@@ -75,9 +98,11 @@ public partial class LoginPage : ContentPage
 			var login = await response.Content.ReadFromJsonAsync<LoginResponseApi>();
 			if (string.IsNullOrWhiteSpace(login?.Token))
 			{
+				AppLog.Warn("Login", "Backend không trả token");
 				await DisplayAlertAsync("Đăng nhập thất bại", "Backend không trả token.", "OK");
 				return;
 			}
+			AppLog.Info("Login", $"Đăng nhập OK (role={login.User?.Role}), token đã nhận");
 
 			var role = login.User?.Role?.Trim().ToLowerInvariant();
 			if (customerShell && role != "customer")
@@ -93,6 +118,7 @@ public partial class LoginPage : ContentPage
 			}
 
 			ApiClientProvider.SetSession(login.Token, login.User?.Role, login.User?.MaNguoiDung);
+			AppLog.Info("Login", $"Token đã lưu + gắn Authorization header, mở {(customerShell ? "CustomerShell" : "AppShell")}");
 			if (customerShell)
 				App.ShowCustomerShell();
 			else
@@ -100,6 +126,7 @@ public partial class LoginPage : ContentPage
 		}
 		catch (Exception ex)
 		{
+			AppLog.Error("Login", "Lỗi khi gọi API đăng nhập", ex);
 			await DisplayAlertAsync("Không kết nối được API", ex.Message, "OK");
 		}
 	}

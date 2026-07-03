@@ -1,5 +1,7 @@
+using System.Net;
 using System.Net.Http.Json;
 using SyncChain.Desktop.Models;
+using SyncChain.Desktop.Services;
 
 namespace SyncChain.Desktop.Views.Pages;
 
@@ -20,14 +22,14 @@ public partial class CustomerHomePage : ContentPage
 	public IReadOnlyList<CustomerMetric> Metrics { get; private set; } =
 	[
 		new("Đơn đang xử lý", "0", "Đang tải...", "ORD", Blue),
-		new("Điểm tích lũy", "0", "Hạng bạc", "VIP", Mist),
-		new("Voucher", "0", "Đang tải...", "VC", Ice),
+		new("Đã hoàn thành", "0", "Đang tải...", "OK", Mist),
+		new("Tổng đơn", "0", "Đang tải...", "ALL", Ice),
 		new("Hỗ trợ", "24/7", "Phản hồi nhanh", "CS", Sapphire)
 	];
 
 	public IReadOnlyList<CustomerOrderCard> RecentOrders { get; private set; } =
 	[
-		new("#ORD-0001", "Đang xử lý", DateTime.Now.ToString("dd/MM/yyyy"), "0 đ", Blue)
+		new("#ORD-0001", "Chờ duyệt", DateTime.Now.ToString("dd/MM/yyyy"), "0 đ", Blue)
 	];
 
 	public IReadOnlyList<CustomerAction> QuickActions { get; } =
@@ -103,38 +105,40 @@ public partial class CustomerHomePage : ContentPage
 				OnPropertyChanged(nameof(SuggestedProducts));
 			}
 
-			// Lấy đơn hàng gần đây
+			// Lấy đơn hàng gần đây (dùng nguồn hiển thị trạng thái dùng chung —
+			// khớp bộ trạng thái lowercase của backend).
 			var orders = await _http.GetFromJsonAsync<List<DonHangApi>>("api/order");
 			if (orders != null)
 			{
-				RecentOrders = orders.Take(3).Select(o => new CustomerOrderCard(
-					$"#ORD-{o.MaDonHang:0000}",
-					o.TrangThai switch
-					{
-						"Draft"      => "Chờ duyệt",
-						"Approved"   => "Đã duyệt",
-						"Processing" => "Đang xử lý",
-						"Done"       => "Hoàn tất",
-						"Cancelled"  => "Đã hủy",
-						_ => o.TrangThai
-					},
-					o.NgayTao.ToString("dd/MM/yyyy"),
-					$"{o.TongTien:N0} đ",
-					o.TrangThai == "Done" ? Sapphire : Blue
-				)).ToList();
+				RecentOrders = orders
+					.OrderByDescending(o => o.NgayTao)
+					.Take(3)
+					.Select(o => new CustomerOrderCard(
+						$"#ORD-{o.MaDonHang:0000}",
+						OrderStatusDisplay.Label(o.TrangThai),
+						o.NgayTao.ToLocalTime().ToString("dd/MM/yyyy"),
+						$"{o.TongTien:N0} đ",
+						o.TrangThai == "done" ? Sapphire : Blue))
+					.ToList();
 
-				// Cập nhật metrics
+				// Metrics trung thực từ dữ liệu đơn thật (bỏ số liệu bịa trước đây).
+				var dangXuLy = orders.Count(o => OrderStatusDisplay.IsActive(o.TrangThai));
+				var hoanThanh = orders.Count(o => o.TrangThai == "done");
 				Metrics =
 				[
-					new("Đơn đang xử lý", orders.Count(o => o.TrangThai is "Draft" or "Approved" or "Processing").ToString(), "Đơn cần theo dõi", "ORD", Blue),
-					new("Điểm tích lũy", "1,240", "Hạng bạc", "VIP", Mist),
-					new("Voucher", "05", "2 mã sắp hết hạn", "VC", Ice),
+					new("Đơn đang xử lý", dangXuLy.ToString("N0"), "Đơn cần theo dõi", "ORD", Blue),
+					new("Đã hoàn thành", hoanThanh.ToString("N0"), "Đơn đã nhận", "OK", Mist),
+					new("Tổng đơn", orders.Count.ToString("N0"), "Tất cả đơn của bạn", "ALL", Ice),
 					new("Hỗ trợ", "24/7", "Phản hồi nhanh", "CS", Sapphire)
 				];
 
 				OnPropertyChanged(nameof(RecentOrders));
 				OnPropertyChanged(nameof(Metrics));
 			}
+		}
+		catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+		{
+			await this.HandleUnauthorizedAsync();
 		}
 		catch (Exception ex)
 		{
@@ -144,7 +148,8 @@ public partial class CustomerHomePage : ContentPage
 
 	private async void OnTrackOrderClicked(object? sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync(nameof(OrderDetailPage));
+		// Mở tab "Đơn hàng của tôi" để khách chọn đơn cần theo dõi.
+		await Shell.Current.GoToAsync("//orders");
 	}
 
 	private void OnLogoutClicked(object? sender, EventArgs e)

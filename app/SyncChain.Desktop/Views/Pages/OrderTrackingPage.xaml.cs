@@ -1,6 +1,7 @@
+using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
 using SyncChain.Desktop.Models;
+using SyncChain.Desktop.Services;
 
 namespace SyncChain.Desktop.Views.Pages;
 
@@ -9,6 +10,7 @@ public partial class OrderTrackingPage : ContentPage
 {
     private readonly HttpClient _http;
     private int _orderId;
+    private decimal _orderTotal;
     private bool _subscribedToSignalR;
 
     public int OrderId { get => _orderId; set { _orderId = value; } }
@@ -51,78 +53,36 @@ public partial class OrderTrackingPage : ContentPage
     {
         try
         {
-            // Deserialize tracking response
-            var json = await _http.GetStringAsync($"api/order/{_orderId}/tracking");
-            using var doc  = JsonDocument.Parse(json);
-            var root       = doc.RootElement;
-            var order      = root.GetProperty("order");
-            var timeline   = root.GetProperty("timeline");
-            var chiTiet    = root.GetProperty("chiTiet");
-            var hasPayment = root.TryGetProperty("payment", out var payment) &&
-                             payment.ValueKind != JsonValueKind.Null;
+            var data = await _http.GetFromJsonAsync<OrderTrackingResponse>($"api/order/{_orderId}/tracking");
+            if (data?.Order == null)
+                return;
 
-            // Header
-            OrderCodeLabel.Text = $"#ORD-{order.GetProperty("maDonHang").GetInt32():0000}";
-            OrderDateLabel.Text = order.GetProperty("ngayTao").GetDateTime().ToString("dd/MM/yyyy HH:mm");
+            var order = data.Order;
+            _orderTotal = order.TongTien;
 
-            var trangThai = order.GetProperty("trangThai").GetString() ?? "";
-            StatusLabel.Text = trangThai switch
-            {
-                "Draft"      => "Chờ duyệt",
-                "Approved"   => "Đã duyệt",
-                "Processing" => "Đang xử lý",
-                "Done"       => "Hoàn tất",
-                "Cancelled"  => "Đã hủy",
-                _            => trangThai
-            };
-            StatusBadge.BackgroundColor = trangThai switch
-            {
-                "Done"      => Color.FromArgb("#d3e5f1"),
-                "Approved"  => Color.FromArgb("#dae2fd"),
-                "Processing"=> Color.FromArgb("#dbeafe"),
-                "Cancelled" => Color.FromArgb("#ffdad6"),
-                _           => Color.FromArgb("#eef0f2")
-            };
+            // Header + trạng thái (dùng nguồn hiển thị trạng thái dùng chung).
+            OrderCodeLabel.Text = $"#ORD-{order.MaDonHang:0000}";
+            OrderDateLabel.Text = order.NgayTao.ToLocalTime().ToString("dd/MM/yyyy HH:mm");
+            (StatusLabel.Text, StatusBadge.BackgroundColor) = OrderStatusDisplay.Badge(order.TrangThai);
 
-            var ptt = order.TryGetProperty("phuongThucThanhToan", out var pm)
-                ? pm.GetString()?.ToUpperInvariant() ?? "—"
-                : "—";
-            PaymentLabel.Text = hasPayment
-                ? $"{ptt} • {payment.GetProperty("trangThaiThanhToan").GetString()}"
+            var ptt = string.IsNullOrWhiteSpace(order.PhuongThucThanhToan)
+                ? "—"
+                : order.PhuongThucThanhToan.ToUpperInvariant();
+            PaymentLabel.Text = data.Payment != null
+                ? $"{ptt} • {data.Payment.TrangThaiThanhToan}"
                 : $"{ptt} • Chưa thanh toán";
 
-            // Nút Thanh toán chỉ hiển thị khi Draft
-            PayButton.IsVisible = trangThai == "Draft";
+            // Chỉ cho thanh toán khi đơn còn chờ duyệt và chưa có giao dịch hoàn tất.
+            PayButton.IsVisible = order.TrangThai == "pending" &&
+                (data.Payment == null || data.Payment.TrangThaiThanhToan != "Completed");
 
-            // Địa chỉ
-            RecipientLabel.Text = order.TryGetProperty("nguoiNhan", out var nr) && nr.ValueKind != JsonValueKind.Null
-                ? nr.GetString() : "Chưa có thông tin";
-            AddressLabel.Text = order.TryGetProperty("diaChiGiao", out var dc) && dc.ValueKind != JsonValueKind.Null
-                ? dc.GetString() : "Chưa có địa chỉ";
+            RecipientLabel.Text = string.IsNullOrWhiteSpace(order.NguoiNhan) ? "Chưa có thông tin" : order.NguoiNhan;
+            AddressLabel.Text = string.IsNullOrWhiteSpace(order.DiaChiGiao) ? "Chưa có địa chỉ" : order.DiaChiGiao;
 
             // Timeline
             TimelineStack.Children.Clear();
-            foreach (var step in timeline.EnumerateArray())
+            foreach (var step in data.Timeline)
             {
-                var stepName  = step.GetProperty("step").GetString() ?? "";
-                var stepState = step.GetProperty("trangThai").GetString() ?? "";
-                var color = stepState switch
-                {
-                    "hoanThanh" => Color.FromArgb("#22c55e"),
-                    "hienTai"   => Color.FromArgb("#3b82f6"),
-                    "huyBo"     => Color.FromArgb("#ef4444"),
-                    _           => Color.FromArgb("#9ca3af")
-                };
-                var label = stepName switch
-                {
-                    "Draft"      => "Chờ duyệt",
-                    "Approved"   => "Đã duyệt",
-                    "Processing" => "Đang xử lý",
-                    "Done"       => "Hoàn tất",
-                    "Cancelled"  => "Đã hủy",
-                    _            => stepName
-                };
-
                 var row = new Grid
                 {
                     ColumnDefinitions =
@@ -138,7 +98,7 @@ public partial class OrderTrackingPage : ContentPage
                 {
                     WidthRequest       = 16,
                     HeightRequest      = 16,
-                    BackgroundColor    = color,
+                    BackgroundColor    = step.Color,
                     StrokeThickness    = 0,
                     StrokeShape        = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 8 },
                     HorizontalOptions  = LayoutOptions.Center
@@ -146,9 +106,9 @@ public partial class OrderTrackingPage : ContentPage
                 row.Add(dot, 0, 0);
                 row.Add(new Label
                 {
-                    Text = label,
-                    FontAttributes = stepState == "hienTai" ? FontAttributes.Bold : FontAttributes.None,
-                    TextColor = color,
+                    Text = step.Label,
+                    FontAttributes = step.TrangThai == "hienTai" ? FontAttributes.Bold : FontAttributes.None,
+                    TextColor = step.Color,
                     VerticalTextAlignment = TextAlignment.Center
                 }, 1, 0);
 
@@ -156,16 +116,11 @@ public partial class OrderTrackingPage : ContentPage
             }
 
             // Sản phẩm
-            var total = order.GetProperty("tongTien").GetDecimal();
-            TotalLabel.Text = $"{total:N0} đ";
+            TotalLabel.Text = $"{order.TongTien:N0} đ";
             ProductStack.Children.Clear();
-            foreach (var item in chiTiet.EnumerateArray())
+            foreach (var item in data.ChiTiet)
             {
-                var sp  = item.GetProperty("sanPham");
-                var ten = sp.GetProperty("tenSanPham").GetString() ?? "";
-                var qty = item.GetProperty("soLuong").GetInt32();
-                var gia = item.GetProperty("donGia").GetDecimal();
-
+                var ten = item.SanPham?.TenSanPham ?? $"SP-{item.MaSanPham}";
                 var g = new Grid
                 {
                     ColumnDefinitions =
@@ -177,13 +132,17 @@ public partial class OrderTrackingPage : ContentPage
                     ColumnSpacing = 16
                 };
                 g.Add(new Label { Text = ten, VerticalTextAlignment = TextAlignment.Center }, 0, 0);
-                g.Add(new Label { Text = $"x{qty}", VerticalTextAlignment = TextAlignment.Center,
+                g.Add(new Label { Text = $"x{item.SoLuong}", VerticalTextAlignment = TextAlignment.Center,
                     TextColor = Color.FromArgb("#6b7280") }, 1, 0);
-                g.Add(new Label { Text = $"{gia * qty:N0} đ",
+                g.Add(new Label { Text = $"{item.DonGia * item.SoLuong:N0} đ",
                     VerticalTextAlignment = TextAlignment.Center,
                     HorizontalTextAlignment = TextAlignment.End }, 2, 0);
                 ProductStack.Children.Add(g);
             }
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            await this.HandleUnauthorizedAsync();
         }
         catch (Exception ex)
         {
@@ -194,7 +153,7 @@ public partial class OrderTrackingPage : ContentPage
     private async void OnPayClicked(object? sender, EventArgs e)
     {
         await Shell.Current.GoToAsync(
-            $"{nameof(PaymentPage)}?orderId={_orderId}&orderCode=ORD-{_orderId:0000}");
+            $"{nameof(PaymentPage)}?orderId={_orderId}&amount={_orderTotal}&orderCode=ORD-{_orderId:0000}");
     }
 
     private async void OnBackClicked(object? sender, EventArgs e)

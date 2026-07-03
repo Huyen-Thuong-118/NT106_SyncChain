@@ -14,6 +14,9 @@ public partial class CustomerShell : Shell
 		if (!string.IsNullOrEmpty(Services.ApiClientProvider.Token))
 			_ = App.SignalR.StartAsync(Services.ApiClientProvider.Token!);
 
+		// Gỡ trước khi gắn để không nhân đôi handler khi shell được tạo lại
+		// (đăng xuất rồi đăng nhập lại) → tránh popup thông báo bị lặp.
+		App.SignalR.OnNewNotification -= OnNewNotification;
 		App.SignalR.OnNewNotification += OnNewNotification;
 	}
 

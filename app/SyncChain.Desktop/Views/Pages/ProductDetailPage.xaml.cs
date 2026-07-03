@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using SyncChain.Desktop.Models;
@@ -13,6 +14,12 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 
 	public bool CanManageProducts =>
 		ApiClientProvider.Role?.Trim().ToLowerInvariant() is "admin" or "manager";
+	// Khách hàng: hiện khu mua hàng thay cho các thao tác quản trị.
+	public bool IsCustomer =>
+		ApiClientProvider.Role?.Trim().ToLowerInvariant() == "customer";
+	// Chỉ cho thêm giỏ khi là khách, sản phẩm đang bán và còn hàng.
+	public bool CanBuy =>
+		IsCustomer && _product != null && _product.TrangThai != "Ngung ban" && _product.SoLuongTon > 0;
 	public string ProductCode { get; private set; } = string.Empty;
 	public string ProductName { get; private set; } = string.Empty;
 	public string ProductInitials { get; private set; } = "SP";
@@ -134,7 +141,8 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 			nameof(SoldCount), nameof(Category), nameof(PerformanceIcon),
 			nameof(PerformanceText), nameof(PerformanceColor), nameof(ProductImages),
 			nameof(SelectedImageUrl), nameof(ImageCountText), nameof(RatingText), nameof(RatingStars),
-			nameof(ReviewCountText), nameof(ReviewEmptyText)
+			nameof(ReviewCountText), nameof(ReviewEmptyText),
+			nameof(IsCustomer), nameof(CanBuy)
 		})
 			OnPropertyChanged(property);
 	}
@@ -248,6 +256,38 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 		}
 		catch { }
 		return string.IsNullOrWhiteSpace(text) ? $"HTTP {(int)response.StatusCode}" : text.Trim('"');
+	}
+
+	// Khách thêm sản phẩm vào giỏ (POST api/cart/items).
+	private async void OnAddToCartClicked(object? sender, EventArgs e)
+	{
+		if (!CanBuy) return;
+		if (!int.TryParse(QtyEntry.Text?.Trim(), out var quantity) || quantity <= 0)
+			quantity = 1;
+
+		try
+		{
+			var response = await _http.PostAsJsonAsync("api/cart/items",
+				new { MaSanPham = _productId, SoLuong = quantity });
+			if (!response.IsSuccessStatusCode)
+			{
+				await DisplayAlertAsync("Không thêm được vào giỏ", await ReadErrorAsync(response), "OK");
+				return;
+			}
+
+			var viewCart = await DisplayAlertAsync("Đã thêm vào giỏ",
+				$"Đã thêm {quantity} sản phẩm vào giỏ hàng.", "Xem giỏ", "Tiếp tục mua");
+			if (viewCart)
+				await Shell.Current.GoToAsync("//cart");
+		}
+		catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+		{
+			await this.HandleUnauthorizedAsync();
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlertAsync("Lỗi kết nối", ex.Message, "OK");
+		}
 	}
 
 	private async void OnBackClicked(object? sender, EventArgs e) =>
