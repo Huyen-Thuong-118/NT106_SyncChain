@@ -45,39 +45,40 @@
 
                         <VerticalStackLayout Spacing="6">
                             <Label Text="HỌ VÀ TÊN" Style="{StaticResource LabelCapsLabel}" />
-                            <Entry Style="{StaticResource MinimalistEntry}" Placeholder="Nguyễn Văn A" />
+                            <Entry x:Name="FullNameEntry" Style="{StaticResource MinimalistEntry}" Placeholder="Nguyễn Văn A" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Spacing="6">
                             <Label Text="EMAIL" Style="{StaticResource LabelCapsLabel}" />
-                            <Entry Style="{StaticResource MinimalistEntry}" Placeholder="email@example.com" Keyboard="Email" />
+                            <Entry x:Name="EmailEntry" Style="{StaticResource MinimalistEntry}" Placeholder="email@example.com" Keyboard="Email" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Spacing="6">
                             <Label Text="TÊN ĐĂNG NHẬP" Style="{StaticResource LabelCapsLabel}" />
-                            <Entry Style="{StaticResource MinimalistEntry}" Placeholder="ten_dang_nhap" />
+                            <Entry x:Name="UsernameEntry" Style="{StaticResource MinimalistEntry}" Placeholder="ten_dang_nhap" />
                         </VerticalStackLayout>
 
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
                             <VerticalStackLayout Spacing="6">
                                 <Label Text="MẬT KHẨU" Style="{StaticResource LabelCapsLabel}" />
-                                <Entry Style="{StaticResource MinimalistEntry}" Placeholder="••••••••" IsPassword="True" />
+                                <Entry x:Name="PasswordEntry" Style="{StaticResource MinimalistEntry}" Placeholder="••••••••" IsPassword="True" />
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1" Spacing="6">
                                 <Label Text="XÁC NHẬN MẬT KHẨU" Style="{StaticResource LabelCapsLabel}" />
-                                <Entry Style="{StaticResource MinimalistEntry}" Placeholder="••••••••" IsPassword="True" />
+                                <Entry x:Name="ConfirmPasswordEntry" Style="{StaticResource MinimalistEntry}" Placeholder="••••••••" IsPassword="True" />
                             </VerticalStackLayout>
                         </Grid>
 
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,4,0,0">
-                            <CheckBox IsChecked="True" Color="{DynamicResource Primary}" />
+                            <CheckBox x:Name="TermsCheckBox" IsChecked="True" Color="{DynamicResource Primary}" />
                             <Label Grid.Column="1"
                                    Text="Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của hệ thống."
                                    Style="{StaticResource BodyMdLabel}"
                                    VerticalTextAlignment="Center" />
                         </Grid>
 
-                        <Button Text="ĐĂNG KÝ"
+                        <Button x:Name="RegisterButton"
+                                Text="ĐĂNG KÝ"
                                 Style="{StaticResource PillPrimaryButton}"
                                 Clicked="OnRegisterClicked" />
 
