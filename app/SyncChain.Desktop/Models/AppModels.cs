@@ -952,6 +952,12 @@ public sealed class ProfileApi
 	public string Email { get; set; } = string.Empty;
 	public string Role { get; set; } = string.Empty;
 	public bool IsActive { get; set; }
+
+	// Thông tin cá nhân khách hàng (module khách hàng).
+	public string? Ho { get; set; }
+	public string? Ten { get; set; }
+	public string? SoDienThoai { get; set; }
+	public string HoTen => $"{Ho} {Ten}".Trim();
 }
 
 public sealed class CreateOrderRequest

@@ -40,13 +40,21 @@ public class AuthService
         if (role == null)
             throw new Exception("Chua co role customer trong DB");
 
+        // Ưu tiên tên đăng nhập client gửi; nếu trống thì lấy phần trước @ của email.
+        var tenDangNhap = string.IsNullOrWhiteSpace(dto.TenDangNhap)
+            ? email.Split('@')[0]
+            : dto.TenDangNhap.Trim();
+
         var user = new NguoiDung
         {
             Email = email,
-            TenDangNhap = email,
+            TenDangNhap = tenDangNhap,
             MatKhauHash = BCrypt.Net.BCrypt.HashPassword(password),
             MaVaiTro = role.MaVaiTro,
-            IsActive = true
+            IsActive = true,
+            Ho = dto.Ho?.Trim() ?? "",
+            Ten = dto.Ten?.Trim() ?? "",
+            SoDienThoai = dto.SoDienThoai?.Trim() ?? ""
         };
 
         using var transaction = _db.Database.BeginTransaction();
@@ -165,6 +173,9 @@ public class AuthService
             user.MaNguoiDung,
             user.TenDangNhap,
             user.Email,
+            user.Ho,
+            user.Ten,
+            user.SoDienThoai,
             role = roleName,
             user.IsActive
         };
@@ -173,21 +184,25 @@ public class AuthService
     // Cập nhật tên hiển thị rồi trả lại hồ sơ mới.
     public object UpdateProfile(int userId, UpdateProfileDTO dto)
     {
-        var username = dto.Username.Trim();
-        if (string.IsNullOrWhiteSpace(username))
-            throw new Exception("Ten hien thi khong duoc de trong");
-
         var user = _db.NguoiDung.FirstOrDefault(x => x.MaNguoiDung == userId)
             ?? throw new Exception("Khong tim thay tai khoan");
 
+        var username = dto.Username?.Trim() ?? "";
         var oldUsername = user.TenDangNhap;
-        user.TenDangNhap = username;
+        if (!string.IsNullOrWhiteSpace(username))
+            user.TenDangNhap = username;
+
+        // Cập nhật thông tin cá nhân khách hàng nếu có gửi lên.
+        if (!string.IsNullOrWhiteSpace(dto.Ho)) user.Ho = dto.Ho.Trim();
+        if (!string.IsNullOrWhiteSpace(dto.Ten)) user.Ten = dto.Ten.Trim();
+        if (!string.IsNullOrWhiteSpace(dto.SoDienThoai)) user.SoDienThoai = dto.SoDienThoai.Trim();
+
         _audit.AddSuccess(
             AuditActions.Update,
             "NguoiDung",
             userId.ToString(),
             before: new { username = oldUsername },
-            after: new { username });
+            after: new { username = user.TenDangNhap, user.Ho, user.Ten, user.SoDienThoai });
         _db.SaveChanges();
 
         return GetProfile(userId);

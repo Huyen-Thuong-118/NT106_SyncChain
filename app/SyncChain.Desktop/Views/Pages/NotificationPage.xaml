@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.NotificationPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SyncChain.Desktop.Models"
+             NavigationPage.HasNavigationBar="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="64,40" Spacing="20" MaximumWidthRequest="680"
+                             HorizontalOptions="Center">
+
+            <!-- Header -->
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                <Label Text="Thông báo" Style="{StaticResource DisplayXlLabel}" VerticalOptions="Center" />
+                <Button Grid.Column="1" Text="ĐỌC TẤT CẢ" Style="{StaticResource PillSecondaryButton}"
+                        Clicked="OnMarkAllReadClicked" />
+                <Button Grid.Column="2" Text="LÀM MỚI" Style="{StaticResource PillPrimaryButton}"
+                        Clicked="OnRefreshClicked" />
+            </Grid>
+
+            <!-- Banner chưa đọc -->
+            <Border x:Name="UnreadBanner" Style="{StaticResource GlassCardBorder}"
+                    BackgroundColor="{DynamicResource PrimaryContainer}" IsVisible="False">
+                <Label x:Name="UnreadLabel" Style="{StaticResource BodyMdLabel}"
+                       TextColor="{DynamicResource Primary}" />
+            </Border>
+
+            <!-- List (code-behind renders items into NotifStack) -->
+            <VerticalStackLayout x:Name="NotifStack" Spacing="4" />
+
+            <Label x:Name="EmptyLabel" Text="Chưa có thông báo nào"
+                   Style="{StaticResource BodyMdLabel}"
+                   HorizontalTextAlignment="Center" Padding="0,32"
+                   IsVisible="False" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

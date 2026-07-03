@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.CartPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Giỏ hàng"
+             NavigationPage.HasNavigationBar="False">
+    <Grid RowDefinitions="Auto,*,Auto" Padding="32,24">
+
+        <Label Grid.Row="0" Text="Giỏ Hàng"
+               Style="{StaticResource HeadlineLgMobileLabel}"
+               Margin="0,0,0,16" />
+
+        <CollectionView x:Name="CartList" Grid.Row="1"
+                        ItemsSource="{Binding Items}"
+                        EmptyView="Giỏ hàng trống. Hãy thêm sản phẩm!">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,6" Padding="16"
+                            BackgroundColor="#FAFAFA" Stroke="#E0E0E0" StrokeThickness="1">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="12">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding TenSanPham}"
+                                       FontFamily="Inter" FontSize="14" FontAttributes="Bold"
+                                       TextColor="{DynamicResource OnSurface}" />
+                                <Label Text="{Binding GiaBan, StringFormat='{0:N0} đ/sp'}"
+                                       FontFamily="Inter" FontSize="13"
+                                       TextColor="{DynamicResource Primary}" />
+                                <Label Text="{Binding ThanhTien, StringFormat='Thành tiền: {0:N0} đ'}"
+                                       FontFamily="Inter" FontSize="12"
+                                       TextColor="{DynamicResource OnSurfaceVariant}" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Text="{Binding SoLuong, StringFormat='SL: {0}'}"
+                                   FontFamily="Inter" FontSize="13"
+                                   VerticalTextAlignment="Center" />
+                            <Button Grid.Column="2" Text="-"
+                                    BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                                    TextColor="{DynamicResource OnSurface}"
+                                    HeightRequest="36" WidthRequest="36"
+                                    CommandParameter="{Binding MaSanPham}"
+                                    Clicked="OnDecreaseClicked" />
+                            <Button Grid.Column="3" Text="✕"
+                                    BackgroundColor="#FFCDD5" TextColor="#B00020"
+                                    HeightRequest="36" WidthRequest="36"
+                                    CommandParameter="{Binding MaSanPham}"
+                                    Clicked="OnRemoveClicked" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Tổng tiền + Checkout -->
+        <Border Grid.Row="2" Margin="0,16,0,0" Padding="20"
+                BackgroundColor="{DynamicResource PrimaryContainer}" Stroke="#E0E0E0" StrokeThickness="1">
+            <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout>
+                    <Label Text="{Binding SoLuong, StringFormat='{0} sản phẩm'}"
+                           FontFamily="Inter" FontSize="13"
+                           TextColor="{DynamicResource OnSurfaceVariant}" />
+                    <Label Text="{Binding TongTien, StringFormat='Tổng: {0:N0} đ'}"
+                           FontFamily="Inter" FontSize="18" FontAttributes="Bold"
+                           TextColor="{DynamicResource Primary}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" x:Name="CheckoutButton"
+                        Text="ĐẶT HÀNG"
+                        Style="{StaticResource PillPrimaryButton}"
+                        Clicked="OnCheckoutClicked" />
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

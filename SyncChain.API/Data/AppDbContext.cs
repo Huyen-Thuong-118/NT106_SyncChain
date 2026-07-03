@@ -33,6 +33,19 @@ public class AppDbContext : DbContext
     public DbSet<ChatPollOption> ChatPollOptions { get; set; }
     public DbSet<ChatPollVote> ChatPollVotes { get; set; }
 
+    // Địa chỉ giao hàng của khách hàng (module khách hàng).
+    public DbSet<DiaChi> DiaChi { get; set; }
+
+    // Thông báo cho khách hàng (module khách hàng).
+    public DbSet<ThongBao> ThongBao { get; set; }
+
+    // Giỏ hàng khách hàng (module khách hàng).
+    public DbSet<GioHang> GioHang { get; set; }
+    public DbSet<ChiTietGioHang> ChiTietGioHang { get; set; }
+
+    // Thanh toán đơn hàng (module khách hàng).
+    public DbSet<ThanhToan> ThanhToan { get; set; }
+
     // Cáº¥u hÃ¬nh quan há»‡ giá»¯a Ä‘Æ¡n hÃ ng, sáº£n pháº©m vÃ  lá»‹ch sá»­ kho.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -251,5 +264,19 @@ public class AppDbContext : DbContext
             .WithMany(x => x.SanPhams)
             .HasForeignKey(x => x.MaDanhMuc)
             .OnDelete(DeleteBehavior.SetNull);
+
+        // Giỏ hàng: cấu hình FK tường minh để tránh EF tạo shadow FK
+        // (property MaGioHang/MaSanPham không khớp convention mặc định của EF).
+        modelBuilder.Entity<ChiTietGioHang>()
+            .HasOne(x => x.GioHang)
+            .WithMany(x => x.ChiTietGioHang)
+            .HasForeignKey(x => x.MaGioHang)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ChiTietGioHang>()
+            .HasOne(x => x.SanPham)
+            .WithMany()
+            .HasForeignKey(x => x.MaSanPham)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
