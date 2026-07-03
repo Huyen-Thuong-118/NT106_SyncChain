@@ -6,10 +6,7 @@
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
         <VerticalStackLayout Padding="48,30" Spacing="24">
-            <Border StrokeThickness="0" BackgroundColor="{DynamicResource SurfaceContainerHigh}" Padding="42,34">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="24" />
-                </Border.StrokeShape>
+            <Border Style="{StaticResource PageHeaderCard}">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="24">
                     <VerticalStackLayout Spacing="10">
                         <Label Text="Quản lý sản phẩm" Style="{StaticResource DisplayXlLabel}" />

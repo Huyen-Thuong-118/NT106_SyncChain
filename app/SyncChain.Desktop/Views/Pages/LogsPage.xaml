@@ -7,6 +7,7 @@
     <Grid>
         <ScrollView>
             <VerticalStackLayout Padding="64,30" Spacing="24">
+                <Border Style="{StaticResource PageHeaderCard}">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
                     <VerticalStackLayout>
                         <Label Text="Nhật ký hoạt động" Style="{StaticResource DisplayXlLabel}" />
@@ -17,6 +18,7 @@
                             Style="{StaticResource PillSecondaryButton}"
                             Clicked="OnReloadClicked" />
                 </Grid>
+                </Border>
 
                 <Border Style="{StaticResource GlassCardBorder}">
                     <Grid ColumnDefinitions="2*,1*,1.2*,1*,Auto"

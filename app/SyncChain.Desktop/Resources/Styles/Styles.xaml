@@ -107,8 +107,18 @@
     </Style>
 
     <Style x:Key="PageHeaderCard" TargetType="Border" BasedOn="{StaticResource GlassCardBorder}">
-        <Setter Property="BackgroundColor" Value="{DynamicResource GlassWhite80}" />
+        <Setter Property="BackgroundColor" Value="#F7FFFFFF" />
+        <Setter Property="Stroke" Value="#33213145" />
+        <Setter Property="StrokeThickness" Value="1.5" />
         <Setter Property="Padding" Value="32,26" />
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#33213145"
+                        Offset="0,14"
+                        Radius="34"
+                        Opacity="0.18" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="DataRowBorder" TargetType="Border">
@@ -159,9 +169,9 @@
          INPUT STYLES
     ═══════════════════════════════════════════════════════════════ -->
 
-    <!-- MinimalistEntry: transparent bg, bottom border in OutlineVariant -->
+    <!-- MinimalistEntry: compact input with native bordered chrome on Windows -->
     <Style x:Key="MinimalistEntry" TargetType="Entry">
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainerLowest}" />
         <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
         <Setter Property="PlaceholderColor" Value="{DynamicResource OnSurfaceVariant}" />
         <Setter Property="FontFamily" Value="Inter" />
@@ -172,7 +182,7 @@
 
     <!-- Default Entry style -->
     <Style TargetType="Entry">
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainerLowest}" />
         <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
         <Setter Property="PlaceholderColor" Value="{DynamicResource OnSurfaceVariant}" />
         <Setter Property="FontFamily" Value="Inter" />
@@ -183,7 +193,7 @@
 
     <!-- Default Editor style -->
     <Style TargetType="Editor">
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainerLowest}" />
         <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
         <Setter Property="PlaceholderColor" Value="{DynamicResource OnSurfaceVariant}" />
         <Setter Property="FontFamily" Value="Inter" />
@@ -193,8 +203,10 @@
 
     <!-- Default Picker style -->
     <Style TargetType="Picker">
-        <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor" Value="#FF0C1D30" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainerLowest}" />
+        <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+        <Setter Property="TitleColor" Value="{DynamicResource OnSurfaceVariant}" />
+        <Setter Property="FontFamily" Value="Inter" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="MinimumHeightRequest" Value="56" />
         <Setter Property="HeightRequest" Value="56" />
@@ -203,11 +215,12 @@
 
     <!-- Default DatePicker style -->
     <Style TargetType="DatePicker">
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceContainerLowest}" />
         <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
         <Setter Property="FontFamily" Value="Inter" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="MinimumHeightRequest" Value="56" />
+        <Setter Property="HeightRequest" Value="56" />
     </Style>
 
     <!-- ═══════════════════════════════════════════════════════════════
