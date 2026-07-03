@@ -212,6 +212,8 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+    app.Logger.LogInformation("[Startup] Đang kết nối PostgreSQL và khởi tạo schema...");
+
     // EnsureCreated() tá»± táº¡o toÃ n bá»™ schema (ká»ƒ cáº£ GiaoDichKho vÃ  cÃ¡c cá»™t
     // má»›i cá»§a SanPham) theo Ä‘Ãºng cÃº phÃ¡p PostgreSQL tá»« model EF.
     db.Database.EnsureCreated();
@@ -423,7 +425,22 @@ using (var scope = app.Services.CreateScope())
     }
 
     db.SaveChanges();
+
+    app.Logger.LogInformation("[Startup] Schema + seed hoàn tất (roles + tài khoản admin@gmail.com).");
 }
+
+// ── Log gọn từng HTTP request: method, path, status, thời gian xử lý. ──
+app.Use(async (context, next) =>
+{
+    var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+    await next();
+    stopwatch.Stop();
+    app.Logger.LogInformation("[HTTP] {Method} {Path} -> {Status} ({Elapsed} ms)",
+        context.Request.Method,
+        context.Request.Path.Value,
+        context.Response.StatusCode,
+        stopwatch.ElapsedMilliseconds);
+});
 
 app.UseExceptionHandler(errorApp =>
 {
@@ -486,5 +503,34 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<ChatHub>("/hubs/chat");
 app.MapHub<SyncChain.API.Hubs.OrderHub>("/hubs/order");
+
+// ── Health check (ẩn danh): Desktop probe trước khi mở shell. ──
+// Trả 200 khi DB kết nối được, 503 khi không — không bao giờ ném exception.
+app.MapGet("/health", async (AppDbContext db) =>
+{
+    bool canConnect;
+    try
+    {
+        canConnect = await db.Database.CanConnectAsync();
+    }
+    catch
+    {
+        canConnect = false;
+    }
+
+    var payload = new
+    {
+        status = canConnect ? "healthy" : "degraded",
+        database = canConnect ? "connected" : "disconnected",
+        timeUtc = DateTime.UtcNow
+    };
+
+    return canConnect
+        ? Results.Ok(payload)
+        : Results.Json(payload, statusCode: StatusCodes.Status503ServiceUnavailable);
+});
+
+app.Logger.LogInformation("[Startup] SyncChain API sẵn sàng tại {Urls}",
+    string.Join(", ", app.Urls.Count > 0 ? app.Urls : new[] { "http://localhost:5292" }));
 
 app.Run();

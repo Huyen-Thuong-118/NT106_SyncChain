@@ -35,6 +35,21 @@ public static class ApiClientProvider
 		Client.DefaultRequestHeaders.Authorization = null;
 	}
 
+	// Kiểm tra backend còn sống + DB kết nối được (endpoint /health, ẩn danh).
+	// Không bao giờ ném exception — trả false khi không kết nối được.
+	public static async Task<bool> IsBackendHealthyAsync()
+	{
+		try
+		{
+			using var response = await Client.GetAsync("health");
+			return response.IsSuccessStatusCode;
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
 	private static string NormalizeBaseUrl(string value)
 	{
 		var trimmed = string.IsNullOrWhiteSpace(value) ? "http://localhost:5292/" : value.Trim();

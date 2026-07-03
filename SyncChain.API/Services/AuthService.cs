@@ -13,12 +13,14 @@ public class AuthService
     private readonly AppDbContext _db;
     private readonly IConfiguration _config;
     private readonly IAuditService _audit;
+    private readonly ILogger<AuthService> _logger;
 
-    public AuthService(AppDbContext db, IConfiguration config, IAuditService audit)
+    public AuthService(AppDbContext db, IConfiguration config, IAuditService audit, ILogger<AuthService> logger)
     {
         _db = db;
         _config = config;
         _audit = audit;
+        _logger = logger;
     }
 
     // Tạo tài khoản customer sau khi kiểm tra email và mật khẩu.
@@ -26,12 +28,16 @@ public class AuthService
     {
         var email = dto.Email.Trim().ToLowerInvariant();
         var password = dto.Password.Trim();
+        _logger.LogInformation("[Auth] Nhận yêu cầu đăng ký cho {Email}", email);
 
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             throw new Exception("Thieu email hoac mat khau");
 
         if (_db.NguoiDung.Any(x => x.Email == email))
+        {
+            _logger.LogWarning("[Auth] Đăng ký bị từ chối: email {Email} đã tồn tại", email);
             throw new Exception("Email da ton tai");
+        }
 
         if (password.Length < 6)
             throw new Exception("Mat khau phai >= 6 ky tu");
@@ -69,6 +75,7 @@ public class AuthService
         _db.SaveChanges();
         transaction.Commit();
 
+        _logger.LogInformation("[Auth] Đã tạo tài khoản customer id={UserId} ({Email})", user.MaNguoiDung, email);
         return "Dang ky thanh cong";
     }
 
@@ -80,11 +87,14 @@ public class AuthService
 
         var email = dto.Email.Trim().ToLowerInvariant();
         var password = dto.Password.Trim();
+        _logger.LogInformation("[Auth] Nhận yêu cầu đăng nhập cho {Email}", email);
 
         var user = _db.NguoiDung.FirstOrDefault(x => x.Email == email);
 
         if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.MatKhauHash))
         {
+            _logger.LogWarning("[Auth] Đăng nhập thất bại cho {Email}: {Reason}",
+                email, user == null ? "không tìm thấy tài khoản" : "sai mật khẩu");
             _audit.AddFailureAsync(
                     AuditActions.LoginFailed,
                     "Authentication",
@@ -108,6 +118,7 @@ public class AuthService
         }
 
         var roleName = ResolveRoleName(user.MaVaiTro);
+        _logger.LogInformation("[Auth] Tìm thấy user id={UserId}, mật khẩu hợp lệ, vai trò={Role}", user.MaNguoiDung, roleName);
 
         var jwtSettings = _config.GetSection("Jwt");
 
@@ -133,6 +144,7 @@ public class AuthService
             expires: DateTime.Now.AddHours(2),
             signingCredentials: creds
         );
+        _logger.LogInformation("[Auth] Đã sinh JWT cho user id={UserId} (hết hạn sau 2 giờ)", user.MaNguoiDung);
 
         _audit.AddSuccess(
             AuditActions.Login,
