@@ -57,7 +57,7 @@ public class AddressService
     public object Update(int userId, int id, UpdateAddressDTO dto)
     {
         var address = _db.DiaChi.FirstOrDefault(x => x.MaDiaChi == id && x.MaNguoiDung == userId)
-            ?? throw new Exception("Không tìm thấy địa chỉ");
+            ?? throw new KeyNotFoundException("Không tìm thấy địa chỉ");
 
         Validate(dto.TenNguoiNhan, dto.SoDienThoai, dto.TinhThanh,
                  dto.QuanHuyen, dto.PhuongXa, dto.DiaChiChiTiet);
@@ -80,7 +80,7 @@ public class AddressService
     public void Delete(int userId, int id)
     {
         var address = _db.DiaChi.FirstOrDefault(x => x.MaDiaChi == id && x.MaNguoiDung == userId)
-            ?? throw new Exception("Không tìm thấy địa chỉ");
+            ?? throw new KeyNotFoundException("Không tìm thấy địa chỉ");
         _db.DiaChi.Remove(address);
         _db.SaveChanges();
     }
@@ -88,7 +88,7 @@ public class AddressService
     public object SetDefault(int userId, int id)
     {
         var address = _db.DiaChi.FirstOrDefault(x => x.MaDiaChi == id && x.MaNguoiDung == userId)
-            ?? throw new Exception("Không tìm thấy địa chỉ");
+            ?? throw new KeyNotFoundException("Không tìm thấy địa chỉ");
         ClearDefault(userId);
         address.LaMacDinh = true;
         _db.SaveChanges();

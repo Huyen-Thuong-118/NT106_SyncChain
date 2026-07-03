@@ -21,6 +21,7 @@ public class CartController : ControllerBase
     public IActionResult AddItem([FromBody] CartItemDTO dto)
     {
         try { return Ok(_service.AddItem(GetUserId(), dto)); }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 
@@ -28,6 +29,7 @@ public class CartController : ControllerBase
     public IActionResult UpdateItem(int maSanPham, [FromQuery] int soLuong)
     {
         try { return Ok(_service.UpdateItem(GetUserId(), maSanPham, soLuong)); }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 
@@ -35,6 +37,7 @@ public class CartController : ControllerBase
     public IActionResult RemoveItem(int maSanPham)
     {
         try { return Ok(_service.RemoveItem(GetUserId(), maSanPham)); }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 

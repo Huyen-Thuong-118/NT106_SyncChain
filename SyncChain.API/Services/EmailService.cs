@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using SyncChain.API.Models;
 
 namespace SyncChain.API.Services;
 
@@ -86,11 +87,12 @@ public class EmailService
         var subject = $"[SyncChain] Cập nhật trạng thái đơn #{orderId}";
         var statusVi = newStatus switch
         {
-            "Approved"   => "Đã duyệt",
-            "Processing" => "Đang xử lý",
-            "Done"       => "Hoàn tất",
-            "Cancelled"  => "Đã hủy",
-            _            => newStatus
+            OrderStatuses.Pending    => "Chờ xử lý",
+            OrderStatuses.Processing => "Đang xử lý",
+            OrderStatuses.Shipping   => "Đang giao",
+            OrderStatuses.Done       => "Hoàn tất",
+            OrderStatuses.Cancel     => "Đã hủy",
+            _                        => newStatus
         };
         var body = BuildTemplate(
             $"Đơn hàng #{orderId}: {statusVi}",
