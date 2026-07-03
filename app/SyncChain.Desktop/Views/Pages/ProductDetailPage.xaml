@@ -102,11 +102,17 @@
                         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="16" ColumnSpacing="18">
                             <VerticalStackLayout>
                                 <Label Text="GIÁ BÁN" Style="{StaticResource LabelCapsLabel}" />
-                                <Label Text="{Binding Price}" FontSize="24" FontAttributes="Bold" />
+                                <Label Text="{Binding Price}"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource OnSurface}" />
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1">
                                 <Label Text="GIÁ NHẬP" Style="{StaticResource LabelCapsLabel}" />
-                                <Label Text="{Binding ImportPrice}" FontSize="24" FontAttributes="Bold" />
+                                <Label Text="{Binding ImportPrice}"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource OnSurface}" />
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Row="1">
                                 <Label Text="LOẠI SẢN PHẨM" Style="{StaticResource LabelCapsLabel}" />
@@ -115,11 +121,17 @@
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Row="1" Grid.Column="1">
                                 <Label Text="TỒN KHO" Style="{StaticResource LabelCapsLabel}" />
-                                <Label Text="{Binding Stock}" FontSize="24" FontAttributes="Bold" />
+                                <Label Text="{Binding Stock}"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource OnSurface}" />
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Row="2">
                                 <Label Text="ĐÃ BÁN" Style="{StaticResource LabelCapsLabel}" />
-                                <Label Text="{Binding SoldCount}" FontSize="24" FontAttributes="Bold" />
+                                <Label Text="{Binding SoldCount}"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource OnSurface}" />
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Row="2" Grid.Column="1">
                                 <Label Text="HIỆU SUẤT THÁNG" Style="{StaticResource LabelCapsLabel}" />
@@ -178,7 +190,10 @@
                     <Label Text="Đánh giá" Style="{StaticResource HeadlineLgMobileLabel}" />
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="24">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="{Binding RatingText}" FontSize="34" FontAttributes="Bold" />
+                            <Label Text="{Binding RatingText}"
+                                   FontSize="34"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" />
                             <Label Text="{Binding RatingStars}" FontSize="22" TextColor="#F5A623" />
                             <Label Text="{Binding ReviewCountText}" Style="{StaticResource BodyMdLabel}" />
                         </VerticalStackLayout>

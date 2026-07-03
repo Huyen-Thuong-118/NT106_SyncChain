@@ -130,19 +130,23 @@
                                                 </Border>
                                                 <Label Text="{Binding Title}"
                                                        Style="{StaticResource DataTabularLabel}"
+                                                       TextColor="{DynamicResource OnSurface}"
                                                        VerticalTextAlignment="Center"
                                                        LineBreakMode="TailTruncation" />
                                             </HorizontalStackLayout>
                                             <Label Grid.Column="1" Text="{Binding Description}"
                                                    Style="{StaticResource BodyMdLabel}"
+                                                   TextColor="{DynamicResource OnSurface}"
                                                    VerticalTextAlignment="Center"
                                                    LineBreakMode="TailTruncation" />
                                             <Label Grid.Column="2" Text="{Binding Tag}"
                                                    Style="{StaticResource BodyMdLabel}"
+                                                   TextColor="{DynamicResource OnSurface}"
                                                    VerticalTextAlignment="Center"
                                                    LineBreakMode="TailTruncation" />
                                             <Label Grid.Column="3" Text="{Binding Time}"
                                                    Style="{StaticResource BodyMdLabel}"
+                                                   TextColor="{DynamicResource OnSurfaceVariant}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="4" Text="{Binding ResultText}"
                                                    TextColor="{Binding Accent}"

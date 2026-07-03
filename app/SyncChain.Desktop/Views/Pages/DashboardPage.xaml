@@ -189,7 +189,11 @@
                                             <Label Text="{Binding Code}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontSize="9" FontAttributes="Bold" />
                                         </Border>
                                         <VerticalStackLayout Grid.Column="1" Spacing="3">
-                                            <Label Text="{Binding Name}" FontSize="14" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{DynamicResource OnSurface}"
+                                                   LineBreakMode="TailTruncation" />
                                             <Label Text="{Binding Code}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
                                         </VerticalStackLayout>
                                         <Label Grid.Column="2"
@@ -221,7 +225,11 @@
                                             <Label Text="{Binding Icon}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontSize="12" FontAttributes="Bold" />
                                         </Border>
                                         <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                            <Label Text="{Binding Title}" FontSize="15" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Title}"
+                                                   FontSize="15"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{DynamicResource OnSurface}"
+                                                   LineBreakMode="TailTruncation" />
                                             <Label Text="{Binding Time}" FontSize="12" FontAttributes="Bold" TextColor="{DynamicResource OnSurfaceVariant}" />
                                         </VerticalStackLayout>
                                         <BoxView Grid.Column="2" Color="{Binding Accent}" WidthRequest="9" HeightRequest="9" CornerRadius="4.5" VerticalOptions="Center" />
