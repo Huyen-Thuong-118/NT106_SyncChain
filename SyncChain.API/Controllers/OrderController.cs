@@ -242,6 +242,18 @@ public class OrderController : ControllerBase
         return Ok(await _service.UpdateStatusAsync(id, request, status, userId));
     }
 
+    // Khach hang tu huy don cua chinh minh khi don con cho xu ly.
+    [Authorize]
+    [HttpPut("{id}/cancel")]
+    public async Task<IActionResult> CancelOwnOrder(int id)
+    {
+        var userId = GetUserId();
+        if (userId == null)
+            return Unauthorized();
+
+        return Ok(await _service.CancelOwnOrderAsync(id, userId.Value));
+    }
+
     // Äá»c mÃ£ ngÆ°á»i dÃ¹ng tá»« JWT.
     private int? GetUserId()
     {

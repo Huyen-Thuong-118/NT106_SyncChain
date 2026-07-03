@@ -22,6 +22,7 @@ public class AddressController : ControllerBase
     public IActionResult Create([FromBody] CreateAddressDTO dto)
     {
         try { return Ok(_service.Create(GetUserId(), dto)); }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 
@@ -29,6 +30,7 @@ public class AddressController : ControllerBase
     public IActionResult Update(int id, [FromBody] UpdateAddressDTO dto)
     {
         try { return Ok(_service.Update(GetUserId(), id, dto)); }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 
@@ -40,6 +42,7 @@ public class AddressController : ControllerBase
             _service.Delete(GetUserId(), id);
             return Ok(new { message = "Xóa địa chỉ thành công" });
         }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 
@@ -47,6 +50,7 @@ public class AddressController : ControllerBase
     public IActionResult SetDefault(int id)
     {
         try { return Ok(_service.SetDefault(GetUserId(), id)); }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
         catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 

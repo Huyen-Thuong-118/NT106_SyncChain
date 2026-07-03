@@ -19,15 +19,17 @@ public class PaymentController : ControllerBase
     private readonly MoMoService _momo;
     private readonly INotificationService _notify;
     private readonly EmailService _email;
+    private readonly OrderService _orders;
 
     public PaymentController(AppDbContext db, VnPayService vnpay, MoMoService momo,
-        INotificationService notify, EmailService email)
+        INotificationService notify, EmailService email, OrderService orders)
     {
         _db     = db;
         _vnpay  = vnpay;
         _momo   = momo;
         _notify = notify;
         _email  = email;
+        _orders = orders;
     }
 
     private int? GetUserId()
@@ -174,10 +176,10 @@ public class PaymentController : ControllerBase
         payment.NgayCapNhat        = DateTime.UtcNow;
         payment.DuLieuCallback     = rawCallback;
 
+        // Thanh toán online thành công chỉ ghi nhận giao dịch; đơn giữ nguyên
+        // pending để nhân sự xử lý (giống COD). Trạng thái đơn do luồng xử lý
+        // của nhân sự điều khiển qua OrderService.
         var order = await _db.DonHang.FindAsync(payment.MaDonHang);
-        if (order != null && success && order.TrangThai == "Draft")
-            order.TrangThai = "Approved";
-
         await _db.SaveChangesAsync();
 
         if (order != null)
@@ -189,7 +191,8 @@ public class PaymentController : ControllerBase
             await _notify.PushPaymentResultAsync(order.MaNguoiDung, order.MaDonHang, success, "VNPay");
             if (success)
             {
-                await _notify.PushOrderStatusAsync(order.MaNguoiDung, order.MaDonHang, "Approved");
+                // Thanh toan online thanh cong: tu dong chuyen don sang "dang xu ly".
+                await _orders.AdvanceToProcessingAfterPaymentAsync(order.MaDonHang);
                 if (owner != null)
                 {
                     _email.SendOrderConfirmation(owner.Email, name, order.MaDonHang, order.TongTien, "VNPay");
@@ -245,10 +248,10 @@ public class PaymentController : ControllerBase
         payment.NgayCapNhat        = DateTime.UtcNow;
         payment.DuLieuCallback     = rawCallback;
 
+        // Thanh toán online thành công chỉ ghi nhận giao dịch; đơn giữ nguyên
+        // pending để nhân sự xử lý (giống COD). Trạng thái đơn do luồng xử lý
+        // của nhân sự điều khiển qua OrderService.
         var order = await _db.DonHang.FindAsync(payment.MaDonHang);
-        if (order != null && success && order.TrangThai == "Draft")
-            order.TrangThai = "Approved";
-
         await _db.SaveChangesAsync();
 
         if (order != null)
@@ -260,7 +263,8 @@ public class PaymentController : ControllerBase
             await _notify.PushPaymentResultAsync(order.MaNguoiDung, order.MaDonHang, success, "MoMo");
             if (success)
             {
-                await _notify.PushOrderStatusAsync(order.MaNguoiDung, order.MaDonHang, "Approved");
+                // Thanh toan online thanh cong: tu dong chuyen don sang "dang xu ly".
+                await _orders.AdvanceToProcessingAfterPaymentAsync(order.MaDonHang);
                 if (owner != null)
                 {
                     _email.SendOrderConfirmation(owner.Email, name, order.MaDonHang, order.TongTien, "MoMo");
@@ -296,6 +300,9 @@ public class PaymentController : ControllerBase
                 x.SoTien, x.NgayTao, x.NgayCapNhat, x.MaGiaoDich
             })
             .FirstOrDefaultAsync();
+
+        if (payment == null)
+            return NotFound(new { message = "Đơn hàng chưa có giao dịch thanh toán" });
 
         return Ok(payment);
     }

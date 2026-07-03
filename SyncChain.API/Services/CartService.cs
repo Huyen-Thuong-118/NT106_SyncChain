@@ -41,7 +41,7 @@ public class CartService
             throw new Exception("Số lượng phải lớn hơn 0");
 
         var product = _db.SanPham.Find(dto.MaSanPham)
-            ?? throw new Exception("Sản phẩm không tồn tại");
+            ?? throw new KeyNotFoundException("Sản phẩm không tồn tại");
 
         if (product.TrangThai == "Ngung ban")
             throw new Exception("Sản phẩm đã ngừng kinh doanh");
@@ -82,7 +82,7 @@ public class CartService
         var cart = GetOrCreateCart(userId);
         var item = _db.ChiTietGioHang
             .FirstOrDefault(x => x.MaGioHang == cart.MaGioHang && x.MaSanPham == maSanPham)
-            ?? throw new Exception("Sản phẩm không có trong giỏ");
+            ?? throw new KeyNotFoundException("Sản phẩm không có trong giỏ");
 
         var product = _db.SanPham.Find(maSanPham)!;
         if (soLuong > product.SoLuongTon)
@@ -99,7 +99,7 @@ public class CartService
         var cart = GetOrCreateCart(userId);
         var item = _db.ChiTietGioHang
             .FirstOrDefault(x => x.MaGioHang == cart.MaGioHang && x.MaSanPham == maSanPham)
-            ?? throw new Exception("Sản phẩm không có trong giỏ");
+            ?? throw new KeyNotFoundException("Sản phẩm không có trong giỏ");
 
         _db.ChiTietGioHang.Remove(item);
         cart.NgayCapNhat = DateTime.UtcNow;

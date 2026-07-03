@@ -156,16 +156,26 @@ public partial class OrderDetailPage : ContentPage, IQueryAttributable
 	private void ConfigureActions()
 	{
 		if (_order == null) return;
-		(PrimaryActionText, HasPrimaryAction) = _order.TrangThai switch
-		{
-			"pending" => ("CHUYỂN SANG ĐANG XỬ LÝ", true),
-			"processing" when _order.Shipping != null
-			    => ("CHUYỂN SANG CHỜ GIAO HÀNG", true),
-			"processing" => ("TẠO VẬN CHUYỂN", true),
-			"shipping" => ("XÁC NHẬN ĐÃ GIAO", true),
-			_ => (string.Empty, false)
-		};
-		CanCancel = _order.TrangThai is "pending" or "processing" or "shipping";
+
+		// Các thao tác đẩy trạng thái/vận chuyển là của nhân sự nội bộ.
+		var isInternal = ApiClientProvider.Role is "staff" or "manager" or "admin";
+
+		(PrimaryActionText, HasPrimaryAction) = isInternal
+			? _order.TrangThai switch
+			{
+				"pending" => ("CHUYỂN SANG ĐANG XỬ LÝ", true),
+				"processing" when _order.Shipping != null
+				    => ("CHUYỂN SANG CHỜ GIAO HÀNG", true),
+				"processing" => ("TẠO VẬN CHUYỂN", true),
+				"shipping" => ("XÁC NHẬN ĐÃ GIAO", true),
+				_ => (string.Empty, false)
+			}
+			: (string.Empty, false);
+
+		// Nhân sự hủy được ở nhiều trạng thái; khách chỉ hủy đơn đang chờ xử lý.
+		CanCancel = isInternal
+			? _order.TrangThai is "pending" or "processing" or "shipping"
+			: _order.TrangThai == "pending";
 	}
 
 	private async void OnPrimaryActionClicked(object? sender, EventArgs e)
@@ -241,8 +251,25 @@ public partial class OrderDetailPage : ContentPage, IQueryAttributable
 
 	private async void OnCancelOrderClicked(object? sender, EventArgs e)
 	{
-		if (await DisplayAlertAsync("Hủy đơn hàng", "Bạn có chắc muốn hủy đơn này?", "Hủy đơn", "Không"))
+		if (_order == null) return;
+		if (!await DisplayAlertAsync("Hủy đơn hàng", "Bạn có chắc muốn hủy đơn này?", "Hủy đơn", "Không"))
+			return;
+
+		// Khách hàng dùng endpoint tự hủy; nhân sự nội bộ dùng luồng cập nhật trạng thái.
+		if (string.Equals(ApiClientProvider.Role, "customer", StringComparison.OrdinalIgnoreCase))
+		{
+			var response = await _http.PutAsync($"api/order/{_orderId}/cancel", null);
+			if (!response.IsSuccessStatusCode)
+			{
+				await DisplayAlertAsync("Không hủy được đơn", await ReadErrorAsync(response), "OK");
+				return;
+			}
+			await LoadAsync();
+		}
+		else
+		{
 			await UpdateOrderStatusAsync("cancel");
+		}
 	}
 
 	private async void OnPrintInvoiceClicked(object? sender, EventArgs e)

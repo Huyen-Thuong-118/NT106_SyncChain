@@ -41,11 +41,12 @@ public class NotificationService : INotificationService
     {
         var statusVi = status switch
         {
-            "Approved"   => "Đã duyệt",
-            "Processing" => "Đang xử lý",
-            "Done"       => "Hoàn tất",
-            "Cancelled"  => "Đã hủy",
-            _            => status
+            OrderStatuses.Pending    => "Chờ xử lý",
+            OrderStatuses.Processing => "Đang xử lý",
+            OrderStatuses.Shipping   => "Đang giao",
+            OrderStatuses.Done       => "Hoàn tất",
+            OrderStatuses.Cancel     => "Đã hủy",
+            _                        => status
         };
         await SaveNotificationAsync(userId, "order_status",
             $"Đơn hàng #{orderId} cập nhật",

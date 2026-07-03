@@ -2,6 +2,7 @@
 using Npgsql;
 using SyncChain.API.Data;
 using SyncChain.API.DTOs;
+using SyncChain.API.DTOs.Shipping;
 using SyncChain.API.Exceptions;
 using SyncChain.API.Models;
 
@@ -13,17 +14,20 @@ public class OrderService
     private readonly InventoryService _inventory;
     private readonly IAuditService _audit;
     private readonly DeliveryEstimateService _deliveryEstimate;
+    private readonly INotificationService _notify;
 
     public OrderService(
         AppDbContext db,
         InventoryService inventory,
         IAuditService audit,
-        DeliveryEstimateService deliveryEstimate)
+        DeliveryEstimateService deliveryEstimate,
+        INotificationService notify)
     {
         _db = db;
         _inventory = inventory;
         _audit = audit;
         _deliveryEstimate = deliveryEstimate;
+        _notify = notify;
     }
 
     public async Task<OrderCreationResultDTO> CreateOrderAsync(
@@ -192,6 +196,9 @@ public class OrderService
 
         await transaction.CommitAsync();
 
+        // Báo cho khách hàng chủ đơn khi trạng thái thay đổi.
+        await _notify.PushOrderStatusAsync(snapshot.OwnerId, orderId, requestedStatus);
+
         return new OrderStatusResultDTO
         {
             MaDonHang = orderId,
@@ -199,6 +206,133 @@ public class OrderService
             TrangThaiMoi = requestedStatus,
             ConcurrencyVersion = expectedVersion + 1
         };
+    }
+
+    // Khach hang tu huy don cua chinh minh khi don con dang cho xu ly.
+    public async Task<OrderStatusResultDTO> CancelOwnOrderAsync(int orderId, int userId)
+    {
+        await using var transaction = await _db.Database.BeginTransactionAsync();
+
+        var snapshot = await GetOrderSnapshotAsync(orderId);
+        if (snapshot == null || snapshot.OwnerId != userId)
+            throw new OrderNotFoundException(orderId);
+
+        if (snapshot.Status != OrderStatuses.Pending)
+        {
+            // Khach chi huy duoc don o trang thai cho xu ly.
+            throw new InvalidOrderStateException(
+                orderId,
+                snapshot.Status,
+                OrderStatuses.Cancel,
+                OrderStatuses.Pending,
+                snapshot.Version);
+        }
+
+        var hasOnlinePaid = await _db.ThanhToan.AnyAsync(x =>
+            x.MaDonHang == orderId &&
+            x.TrangThaiThanhToan == "Completed" &&
+            (x.PhuongThuc == "vnpay" || x.PhuongThuc == "momo"));
+        if (hasOnlinePaid)
+        {
+            throw new ValidationApiException(
+                "Don da thanh toan online, vui long lien he ho tro de duoc hoan tien.",
+                new { orderId });
+        }
+
+        var changedRows = await _db.DonHang
+            .Where(x => x.MaDonHang == orderId &&
+                        x.TrangThai == OrderStatuses.Pending &&
+                        x.ConcurrencyVersion == snapshot.Version)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.TrangThai, OrderStatuses.Cancel)
+                .SetProperty(x => x.ConcurrencyVersion, x => x.ConcurrencyVersion + 1));
+
+        if (changedRows != 1)
+        {
+            var current = await GetOrderSnapshotAsync(orderId);
+            if (current == null)
+                throw new OrderNotFoundException(orderId);
+
+            throw BuildConcurrencyConflict(
+                orderId,
+                current,
+                OrderStatuses.Cancel,
+                OrderStatuses.Pending);
+        }
+
+        await RestoreCancelledOrderStockAsync(orderId, userId);
+
+        _audit.AddSuccess(
+            AuditActions.OrderStatusChange,
+            "DonHang",
+            orderId.ToString(),
+            before: new { status = OrderStatuses.Pending, version = snapshot.Version },
+            after: new { status = OrderStatuses.Cancel, version = snapshot.Version + 1 },
+            metadata: new { stockRestored = true, cancelledByCustomer = true });
+        await _db.SaveChangesAsync();
+
+        await transaction.CommitAsync();
+
+        await _notify.PushOrderStatusAsync(userId, orderId, OrderStatuses.Cancel);
+
+        return new OrderStatusResultDTO
+        {
+            MaDonHang = orderId,
+            TrangThaiCu = OrderStatuses.Pending,
+            TrangThaiMoi = OrderStatuses.Cancel,
+            ConcurrencyVersion = snapshot.Version + 1
+        };
+    }
+
+    // Tu dong day don tu "pending" sang "processing" sau khi thanh toan online
+    // thanh cong. Idempotent: don khong con o pending (da xu ly / huy) thi bo qua.
+    public async Task<bool> AdvanceToProcessingAfterPaymentAsync(int orderId)
+    {
+        await using var transaction = await _db.Database.BeginTransactionAsync();
+
+        var snapshot = await GetOrderSnapshotAsync(orderId);
+        if (snapshot == null || snapshot.Status != OrderStatuses.Pending)
+            return false;
+
+        var changedRows = await _db.DonHang
+            .Where(x => x.MaDonHang == orderId &&
+                        x.TrangThai == OrderStatuses.Pending &&
+                        x.ConcurrencyVersion == snapshot.Version)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.TrangThai, OrderStatuses.Processing)
+                .SetProperty(x => x.ConcurrencyVersion, x => x.ConcurrencyVersion + 1));
+
+        if (changedRows != 1)
+            return false;
+
+        _audit.AddSuccess(
+            AuditActions.OrderStatusChange,
+            "DonHang",
+            orderId.ToString(),
+            before: new { status = OrderStatuses.Pending, version = snapshot.Version },
+            after: new { status = OrderStatuses.Processing, version = snapshot.Version + 1 },
+            metadata: new { autoAdvancedByPayment = true });
+        await _db.SaveChangesAsync();
+
+        await transaction.CommitAsync();
+
+        await _notify.PushOrderStatusAsync(snapshot.OwnerId, orderId, OrderStatuses.Processing);
+        return true;
+    }
+
+    // Xoa cac dong gio hang ung voi san pham vua dat (luu cung transaction don).
+    private async Task RemoveOrderedItemsFromCartAsync(int userId, List<int> productIds)
+    {
+        var cart = await _db.GioHang.FirstOrDefaultAsync(x => x.MaNguoiDung == userId);
+        if (cart == null) return;
+
+        var items = await _db.ChiTietGioHang
+            .Where(x => x.MaGioHang == cart.MaGioHang && productIds.Contains(x.MaSanPham))
+            .ToListAsync();
+        if (items.Count == 0) return;
+
+        _db.ChiTietGioHang.RemoveRange(items);
+        cart.NgayCapNhat = DateTime.UtcNow;
     }
 
     private async Task RestoreCancelledOrderStockAsync(int orderId, int? userId)
@@ -231,7 +365,7 @@ public class OrderService
         return await _db.DonHang
             .AsNoTracking()
             .Where(x => x.MaDonHang == orderId)
-            .Select(x => new OrderStatusSnapshot(x.TrangThai, x.ConcurrencyVersion))
+            .Select(x => new OrderStatusSnapshot(x.TrangThai, x.ConcurrencyVersion, x.MaNguoiDung))
             .FirstOrDefaultAsync();
     }
 
@@ -332,9 +466,37 @@ public class OrderService
             total += product.GiaBan * item.SoLuong;
         }
 
-        var shippingFee = Math.Max(0, dto.ShippingFee);
+        var isOnlineOrder = string.IsNullOrWhiteSpace(dto.SalesChannel) ||
+            dto.SalesChannel.Trim().Equals("Online", StringComparison.OrdinalIgnoreCase);
+
+        // Phi ship: don khach tu dat luon tinh lai phia server (khong tin client);
+        // don noi bo (cua hang/Facebook) do nhan su nhap.
+        decimal shippingFee;
+        if (isOnlineOrder)
+        {
+            var estimate = _deliveryEstimate.Estimate(new EstimateDeliveryDTO
+            {
+                OrderDate = order.NgayTao,
+                Province = order.TinhThanh,
+                Ward = order.PhuongXa,
+                ServiceType = order.LoaiDichVu,
+                WeightKg = order.TrongLuongKg,
+                OrderTotal = total
+            });
+            shippingFee = Math.Max(0, estimate.ShippingFee);
+        }
+        else
+        {
+            shippingFee = Math.Max(0, dto.ShippingFee);
+        }
+
         order.TongTien = total + shippingFee;
         _db.ChiTietDonHang.AddRange(details);
+
+        // Don khach tu dat: xoa cac san pham da mua khoi gio hang.
+        if (isOnlineOrder)
+            await RemoveOrderedItemsFromCartAsync(userId, productIds);
+
         _audit.AddSuccess(
             AuditActions.Create,
             "DonHang",
@@ -453,5 +615,5 @@ public class OrderService
     }
 
     private sealed record RequestedOrderItem(int MaSanPham, int SoLuong);
-    private sealed record OrderStatusSnapshot(string Status, int Version);
+    private sealed record OrderStatusSnapshot(string Status, int Version, int OwnerId);
 }
