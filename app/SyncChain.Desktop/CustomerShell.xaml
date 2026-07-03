@@ -84,4 +84,46 @@
         </FlyoutItem.FlyoutIcon>
         <ShellContent ContentTemplate="{DataTemplate pages:CustomerHomePage}" />
     </FlyoutItem>
+
+    <FlyoutItem Title="Sản phẩm" Route="products">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe8f8;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:ProductsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Giỏ hàng" Route="cart">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe8cc;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:CartPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Đơn hàng" Route="orders">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xeb40;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:OrdersPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Địa chỉ" Route="address">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe0c8;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:AddressPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Hồ sơ" Route="profile">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe7fd;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:ProfilePage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Thông báo" Route="notifications">
+        <FlyoutItem.FlyoutIcon>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe7f4;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
+        </FlyoutItem.FlyoutIcon>
+        <ShellContent ContentTemplate="{DataTemplate pages:NotificationPage}" />
+    </FlyoutItem>
 </Shell>

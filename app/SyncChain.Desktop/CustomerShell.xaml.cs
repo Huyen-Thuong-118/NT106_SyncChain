@@ -6,7 +6,23 @@ public partial class CustomerShell : Shell
 	{
 		InitializeComponent();
 		Routing.RegisterRoute(nameof(Views.Pages.OrderDetailPage), typeof(Views.Pages.OrderDetailPage));
+		Routing.RegisterRoute(nameof(Views.Pages.OrderTrackingPage), typeof(Views.Pages.OrderTrackingPage));
+		Routing.RegisterRoute(nameof(Views.Pages.PaymentPage), typeof(Views.Pages.PaymentPage));
 		Navigated += (_, _) => FlyoutIsPresented = false;
+
+		// Kết nối SignalR khi cổng khách hàng mở (đã đăng nhập, có token).
+		if (!string.IsNullOrEmpty(Services.ApiClientProvider.Token))
+			_ = App.SignalR.StartAsync(Services.ApiClientProvider.Token!);
+
+		App.SignalR.OnNewNotification += OnNewNotification;
+	}
+
+	private void OnNewNotification(string title, string content)
+	{
+		MainThread.BeginInvokeOnMainThread(async () =>
+		{
+			try { await DisplayAlert($"🔔 {title}", content, "OK"); } catch { }
+		});
 	}
 
 #if WINDOWS
