@@ -25,19 +25,28 @@
                 <Border Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="4">
                         <Label Text="TỔNG SẢN PHẨM" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="{Binding TotalProducts}" FontSize="30" FontAttributes="Bold" />
+                        <Label Text="{Binding TotalProducts}"
+                               FontSize="30"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource OnSurface}" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="4">
                         <Label Text="ĐANG BÁN" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="{Binding ActiveProducts}" FontSize="30" FontAttributes="Bold" />
+                        <Label Text="{Binding ActiveProducts}"
+                               FontSize="30"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource OnSurface}" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
                     <VerticalStackLayout Spacing="4">
                         <Label Text="SẮP HẾT HÀNG" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="{Binding LowStockProducts}" FontSize="30" FontAttributes="Bold" />
+                        <Label Text="{Binding LowStockProducts}"
+                               FontSize="30"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource OnSurface}" />
                     </VerticalStackLayout>
                 </Border>
             </Grid>
@@ -113,6 +122,8 @@
                                                 <RoundRectangle CornerRadius="10" />
                                             </Border.StrokeShape>
                                             <Label Text="{Binding Category}" FontSize="12"
+                                                   TextColor="{DynamicResource Primary}"
+                                                   FontAttributes="Bold"
                                                    LineBreakMode="WordWrap"
                                                    VerticalTextAlignment="Center" />
                                         </Border>
@@ -122,6 +133,8 @@
                                             <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4"
                                                      Color="{Binding BadgeColor}" />
                                             <Label Text="{Binding BadgeText}" FontSize="12"
+                                                   TextColor="{DynamicResource OnSurface}"
+                                                   FontAttributes="Bold"
                                                    VerticalTextAlignment="Center" />
                                         </HorizontalStackLayout>
                                         <HorizontalStackLayout Grid.Column="5" Spacing="5" VerticalOptions="Center">
