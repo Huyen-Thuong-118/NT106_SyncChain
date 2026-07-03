@@ -1,8 +1,8 @@
 namespace SyncChain.API.DTOs;
 
-// Dữ liệu client gửi khi đăng nhập.
 public class LoginDTO
 {
-    public string Email { get; set; } = "";
+    // Chấp nhận email, tên đăng nhập hoặc số điện thoại
+    public string Identifier { get; set; } = "";
     public string Password { get; set; } = "";
 }

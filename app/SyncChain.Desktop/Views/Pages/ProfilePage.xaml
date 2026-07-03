@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="SyncChain.Desktop.Views.Pages.ProfilePage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Hồ sơ"
+             NavigationPage.HasNavigationBar="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="32" Spacing="24">
+
+            <Label Text="Hồ Sơ Tài Khoản"
+                   Style="{StaticResource HeadlineLgMobileLabel}"
+                   TextColor="{DynamicResource OnSurface}" />
+
+            <Border x:Name="ErrorBanner" IsVisible="False"
+                    BackgroundColor="#FFF3F3" Stroke="#FFCDD5" StrokeThickness="1" Padding="12,8">
+                <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                <Label x:Name="ErrorLabel" TextColor="#B00020" FontFamily="Inter" FontSize="13" />
+            </Border>
+
+            <Border x:Name="SuccessBanner" IsVisible="False"
+                    BackgroundColor="#F0FFF4" Stroke="#C6F6D5" StrokeThickness="1" Padding="12,8">
+                <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                <Label x:Name="SuccessLabel" TextColor="#276749" FontFamily="Inter" FontSize="13" />
+            </Border>
+
+            <Border BackgroundColor="#FAFAFA" Stroke="#E0E0E0" StrokeThickness="1" Padding="24">
+                <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+                <VerticalStackLayout Spacing="16">
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="HỌ" Style="{StaticResource LabelCapsLabel}" />
+                            <Entry x:Name="HoEntry" Style="{StaticResource MinimalistEntry}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="TÊN" Style="{StaticResource LabelCapsLabel}" />
+                            <Entry x:Name="TenEntry" Style="{StaticResource MinimalistEntry}" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="TÊN ĐĂNG NHẬP" Style="{StaticResource LabelCapsLabel}" />
+                        <Entry x:Name="UsernameEntry" Style="{StaticResource MinimalistEntry}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="SỐ ĐIỆN THOẠI" Style="{StaticResource LabelCapsLabel}" />
+                        <Entry x:Name="PhoneEntry" Style="{StaticResource MinimalistEntry}" Keyboard="Telephone" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="EMAIL" Style="{StaticResource LabelCapsLabel}" />
+                        <Entry x:Name="EmailEntry" Style="{StaticResource MinimalistEntry}" Keyboard="Email" />
+                    </VerticalStackLayout>
+
+                    <Button x:Name="SaveButton" Text="LƯU THAY ĐỔI"
+                            Style="{StaticResource PillPrimaryButton}"
+                            Clicked="OnSaveClicked" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Đổi mật khẩu -->
+            <Border BackgroundColor="#FAFAFA" Stroke="#E0E0E0" StrokeThickness="1" Padding="24">
+                <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="ĐỔI MẬT KHẨU" Style="{StaticResource LabelCapsLabel}" />
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="MẬT KHẨU HIỆN TẠI" Style="{StaticResource LabelCapsLabel}" />
+                        <Entry x:Name="CurrentPasswordEntry" Style="{StaticResource MinimalistEntry}" Placeholder="••••••••" IsPassword="True" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="MẬT KHẨU MỚI" Style="{StaticResource LabelCapsLabel}" />
+                        <Entry x:Name="NewPasswordEntry" Style="{StaticResource MinimalistEntry}" Placeholder="••••••••" IsPassword="True" />
+                    </VerticalStackLayout>
+                    <Button x:Name="ChangePassButton" Text="ĐỔI MẬT KHẨU"
+                            Style="{StaticResource PillSecondaryButton}"
+                            Clicked="OnChangePasswordClicked" />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

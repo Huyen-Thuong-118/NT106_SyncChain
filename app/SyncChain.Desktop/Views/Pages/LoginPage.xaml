@@ -39,45 +39,73 @@
                                    Style="{StaticResource HeadlineLgMobileLabel}"
                                    TextColor="{DynamicResource OnSurface}"
                                    HorizontalTextAlignment="Center" />
-                            <Label Text="Vui lòng nhập thông tin tài khoản"
+                            <Label Text="Nhập email, tên đăng nhập hoặc số điện thoại"
                                    Style="{StaticResource BodyMdLabel}"
                                    TextColor="{DynamicResource OnSurfaceVariant}"
                                    HorizontalTextAlignment="Center" />
                         </VerticalStackLayout>
 
-                        <VerticalStackLayout Spacing="6">
-                            <Label Text="TÊN ĐĂNG NHẬP" Style="{StaticResource LabelCapsLabel}" />
-                            <Entry Style="{StaticResource MinimalistEntry}" Placeholder="Nhập tên đăng nhập" />
+                        <!-- Thông báo lỗi chung -->
+                        <Border x:Name="GeneralError"
+                                IsVisible="False"
+                                BackgroundColor="#FFF3F3"
+                                Stroke="#FFCDD5"
+                                StrokeThickness="1"
+                                Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            <Label x:Name="GeneralErrorLabel"
+                                   TextColor="#B00020"
+                                   FontFamily="Inter"
+                                   FontSize="13" />
+                        </Border>
+
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="TÊN ĐĂNG NHẬP / EMAIL / SĐT"
+                                   Style="{StaticResource LabelCapsLabel}" />
+                            <Entry x:Name="IdentifierEntry"
+                                   Style="{StaticResource MinimalistEntry}"
+                                   Placeholder="Nhập email, tên tài khoản hoặc số điện thoại"
+                                   ReturnType="Next" />
+                            <Label x:Name="IdentifierError"
+                                   IsVisible="False"
+                                   TextColor="#B00020"
+                                   FontFamily="Inter"
+                                   FontSize="12" />
                         </VerticalStackLayout>
 
-                        <VerticalStackLayout Spacing="6">
+                        <VerticalStackLayout Spacing="4">
                             <Label Text="MẬT KHẨU" Style="{StaticResource LabelCapsLabel}" />
-                            <Entry Style="{StaticResource MinimalistEntry}" Placeholder="••••••••" IsPassword="True" />
+                            <Entry x:Name="PasswordEntry"
+                                   Style="{StaticResource MinimalistEntry}"
+                                   Placeholder="••••••••"
+                                   IsPassword="True"
+                                   ReturnType="Done"
+                                   ReturnCommand="{Binding Source={x:Reference LoginButton}, Path=Command}" />
+                            <Label x:Name="PasswordError"
+                                   IsVisible="False"
+                                   TextColor="#B00020"
+                                   FontFamily="Inter"
+                                   FontSize="12" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Spacing="6">
-                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                                <CheckBox IsChecked="True" Color="{DynamicResource Primary}" />
-                                <Label Grid.Column="1"
-                                       Text="Ghi nhớ đăng nhập"
-                                       Style="{StaticResource BodyMdLabel}"
-                                       VerticalTextAlignment="Center" />
-                            </Grid>
-
                             <Label Text="Quên mật khẩu?"
                                    TextColor="{DynamicResource Primary}"
                                    FontFamily="Inter"
                                    FontSize="14"
-                                   HorizontalTextAlignment="End" />
+                                   HorizontalTextAlignment="End">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnForgotPasswordClicked" />
+                                </Label.GestureRecognizers>
+                            </Label>
                         </VerticalStackLayout>
 
-                        <Button Text="ĐĂNG NHẬP QUẢN TRỊ"
+                        <Button x:Name="LoginButton"
+                                Text="ĐĂNG NHẬP"
                                 Style="{StaticResource PillPrimaryButton}"
                                 Clicked="OnLoginClicked" />
-
-                        <Button Text="ĐĂNG NHẬP KHÁCH HÀNG"
-                                Style="{StaticResource PillSecondaryButton}"
-                                Clicked="OnCustomerLoginClicked" />
 
                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="6" Margin="0,8,0,0">
                             <Label Text="Chưa có tài khoản?"

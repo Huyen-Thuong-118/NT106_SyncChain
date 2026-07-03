@@ -11,94 +11,76 @@ public class AuthController : ControllerBase
 {
     private readonly AuthService _auth;
 
-    public AuthController(AuthService auth)
-    {
-        _auth = auth;
-    }
+    public AuthController(AuthService auth) => _auth = auth;
 
-    // Đăng ký tài khoản khách hàng mới.
     [HttpPost("register")]
-    public IActionResult Register([FromBody] RegisterDTO dto)
+    public async Task<IActionResult> Register([FromBody] RegisterCustomerDTO dto)
     {
-        try
-        {
-            var result = _auth.Register(dto);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        try { return Ok(await _auth.RegisterCustomerAsync(dto)); }
+        catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 
-    // Đăng nhập và trả JWT cho ứng dụng client.
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginDTO dto)
     {
-        try
-        {
-            var result = _auth.Login(dto);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return Unauthorized(ex.Message);
-        }
+        try { return Ok(_auth.Login(dto)); }
+        catch (Exception ex) { return Unauthorized(new { message = ex.Message }); }
     }
 
-    // Lấy thông tin hồ sơ từ user id trong token.
     [Authorize]
     [HttpGet("profile")]
     public IActionResult Profile()
     {
-        try
-        {
-            return Ok(_auth.GetProfile(GetCurrentUserId()));
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        try { return Ok(_auth.GetProfile(GetUserId())); }
+        catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 
-    // Cập nhật tên hiển thị của tài khoản hiện tại.
     [Authorize]
     [HttpPut("profile")]
-    public IActionResult UpdateProfile([FromBody] UpdateProfileDTO dto)
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateCustomerProfileDTO dto)
     {
-        try
-        {
-            return Ok(_auth.UpdateProfile(GetCurrentUserId(), dto));
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        try { return Ok(await _auth.UpdateCustomerProfileAsync(GetUserId(), dto)); }
+        catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 
-    // Đổi mật khẩu sau khi xác thực mật khẩu cũ.
     [Authorize]
     [HttpPut("change-password")]
     public IActionResult ChangePassword([FromBody] ChangePasswordDTO dto)
     {
         try
         {
-            _auth.ChangePassword(GetCurrentUserId(), dto);
-            return Ok("Da doi mat khau");
+            _auth.ChangePassword(GetUserId(), dto);
+            return Ok(new { message = "Đổi mật khẩu thành công" });
         }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
     }
 
-    // Đọc mã người dùng từ claim trong JWT.
-    private int GetCurrentUserId()
+    [HttpPost("forgot-password")]
+    public IActionResult ForgotPassword([FromBody] ForgotPasswordDTO dto)
+    {
+        try
+        {
+            _auth.ForgotPassword(dto);
+            return Ok(new { message = "OTP đã được gửi đến email của bạn" });
+        }
+        catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
+    }
+
+    [HttpPost("reset-password")]
+    public IActionResult ResetPassword([FromBody] ResetPasswordOtpDTO dto)
+    {
+        try
+        {
+            _auth.ResetPasswordWithOtp(dto);
+            return Ok(new { message = "Đặt lại mật khẩu thành công" });
+        }
+        catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
+    }
+
+    private int GetUserId()
     {
         var value = User.FindFirst("user_id")?.Value;
-        if (!int.TryParse(value, out var userId))
-            throw new Exception("Token khong hop le");
-
-        return userId;
+        if (!int.TryParse(value, out var id)) throw new Exception("Token không hợp lệ");
+        return id;
     }
 }
