@@ -1,4 +1,6 @@
+using System.Net;
 using System.Net.Http.Json;
+using SyncChain.Desktop.Services;
 
 namespace SyncChain.Desktop.Views.Pages;
 
@@ -37,6 +39,10 @@ public partial class CartPage : ContentPage
 			OnPropertyChanged(nameof(Items));
 			OnPropertyChanged(nameof(TongTien));
 			OnPropertyChanged(nameof(SoLuong));
+		}
+		catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+		{
+			await this.HandleUnauthorizedAsync();
 		}
 		catch (Exception ex)
 		{
@@ -79,10 +85,11 @@ public partial class CartPage : ContentPage
 			return;
 		}
 
-		// Chọn địa chỉ giao hàng trước khi đặt
+		// Bắt buộc chọn địa chỉ giao hàng trước khi đặt (server nạp thông tin
+		// người nhận từ mã địa chỉ này).
 		int? selectedAddressId = await PickAddressAsync();
-		if (selectedAddressId == null)
-			return; // user hủy
+		if (selectedAddressId == null || selectedAddressId <= 0)
+			return; // user hủy hoặc chưa có địa chỉ
 
 		CheckoutButton.IsEnabled = false;
 		try
@@ -90,20 +97,33 @@ public partial class CartPage : ContentPage
 			var response = await _http.PostAsJsonAsync("api/order", new
 			{
 				Items = Items.Select(x => new { x.MaSanPham, x.SoLuong }).ToList(),
-				MaDiaChi = selectedAddressId > 0 ? selectedAddressId : (int?)null
+				MaDiaChi = selectedAddressId
 			});
 
-			if (response.IsSuccessStatusCode)
-			{
-				await _http.DeleteAsync("api/cart");
-				await DisplayAlert("Thành công", "Đặt hàng thành công!", "OK");
-				await LoadCartAsync();
-			}
-			else
+			if (!response.IsSuccessStatusCode)
 			{
 				var err = await response.Content.ReadFromJsonAsync<ErrorResponse>();
 				await DisplayAlert("Lỗi", err?.message ?? "Đặt hàng thất bại", "OK");
+				return;
 			}
+
+			// Đơn đã tạo (trạng thái pending) → sang bước thanh toán để chốt phương thức
+			// (COD/VNPay/MoMo). Không xoá giỏ ở đây: server đã gỡ các sản phẩm vừa đặt,
+			// giỏ sẽ tự làm mới khi quay lại tab.
+			var result = await response.Content.ReadFromJsonAsync<OrderCreationResult>();
+			if (result == null || result.MaDonHang <= 0)
+			{
+				await DisplayAlert("Đặt hàng thành công", "Đơn đã được tạo.", "OK");
+				await LoadCartAsync();
+				return;
+			}
+
+			await Shell.Current.GoToAsync(
+				$"{nameof(PaymentPage)}?orderId={result.MaDonHang}&amount={result.TongTien}&orderCode=ORD-{result.MaDonHang:0000}");
+		}
+		catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+		{
+			await this.HandleUnauthorizedAsync();
 		}
 		catch (Exception ex)
 		{
@@ -115,7 +135,7 @@ public partial class CartPage : ContentPage
 		}
 	}
 
-	// Trả về MaDiaChi đã chọn, hoặc null nếu user hủy.
+	// Trả về MaDiaChi đã chọn, hoặc null nếu user hủy / chưa có địa chỉ.
 	private async Task<int?> PickAddressAsync()
 	{
 		List<AddressItem>? addresses = null;
@@ -127,12 +147,13 @@ public partial class CartPage : ContentPage
 
 		if (addresses == null || addresses.Count == 0)
 		{
-			var proceed = await DisplayAlert(
-				"Chưa có địa chỉ",
-				"Bạn chưa thêm địa chỉ giao hàng. Đặt hàng không có địa chỉ?",
-				"Tiếp tục", "Hủy");
-			// -1 = proceed without address (MaDiaChi sẽ không được gửi lên API)
-			return proceed ? (int?)-1 : null;
+			var goToAddress = await DisplayAlert(
+				"Chưa có địa chỉ giao hàng",
+				"Bạn cần thêm địa chỉ giao hàng trước khi đặt đơn.",
+				"Thêm địa chỉ", "Để sau");
+			if (goToAddress)
+				await Shell.Current.GoToAsync("//address");
+			return null;
 		}
 
 		// Đặt địa chỉ mặc định ở đầu danh sách gợi ý
@@ -160,4 +181,6 @@ public partial class CartPage : ContentPage
 		bool LaMacDinh, string DiaChi);
 
 	private sealed record ErrorResponse(string message);
+
+	private sealed record OrderCreationResult(int MaDonHang, decimal TongTien);
 }

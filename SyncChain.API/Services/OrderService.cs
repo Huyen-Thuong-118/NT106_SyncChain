@@ -420,18 +420,22 @@ public class OrderService
                 throw new ProductUnavailableException(product.MaSanPham, product.TenSanPham);
         }
 
+        // Nguồn thông tin giao hàng: ưu tiên sổ địa chỉ (MaDiaChi) khi khách tự đặt;
+        // nếu không có thì dùng các trường nhân sự nhập trực tiếp trên DTO.
+        var recipient = await ResolveRecipientAsync(userId, dto);
+
         var order = new DonHang
         {
             MaNguoiDung = userId,
             NgayTao = DateTime.UtcNow,
             TrangThai = OrderStatuses.Pending,
             IdempotencyKey = idempotencyKey,
-            TenNguoiNhan = dto.TenNguoiNhan?.Trim() ?? string.Empty,
-            SoDienThoai = dto.SoDienThoai?.Trim() ?? string.Empty,
-            EmailNguoiNhan = dto.EmailNguoiNhan?.Trim() ?? string.Empty,
-            DiaChiGiaoHang = dto.DiaChiGiaoHang?.Trim() ?? string.Empty,
-            TinhThanh = dto.TinhThanh?.Trim() ?? string.Empty,
-            PhuongXa = dto.PhuongXa?.Trim() ?? string.Empty,
+            TenNguoiNhan = recipient.TenNguoiNhan,
+            SoDienThoai = recipient.SoDienThoai,
+            EmailNguoiNhan = recipient.EmailNguoiNhan,
+            DiaChiGiaoHang = recipient.DiaChiGiaoHang,
+            TinhThanh = recipient.TinhThanh,
+            PhuongXa = recipient.PhuongXa,
             LoaiDichVu = NormalizeShippingService(dto.LoaiDichVu),
             TrongLuongKg = dto.TrongLuongKg <= 0 ? 1 : dto.TrongLuongKg,
             GhiChu = dto.GhiChu?.Trim() ?? string.Empty
@@ -525,6 +529,43 @@ public class OrderService
         };
     }
 
+    // Xác định thông tin người nhận + địa chỉ giao cho đơn.
+    // Nếu client gửi MaDiaChi (khách tự đặt) thì lấy từ sổ địa chỉ của chính họ;
+    // ngược lại dùng các trường nhập trực tiếp (đơn nội bộ cửa hàng/Facebook).
+    private async Task<OrderRecipient> ResolveRecipientAsync(int userId, CreateOrderDTO dto)
+    {
+        if (dto.MaDiaChi is int addressId && addressId > 0)
+        {
+            var address = await _db.DiaChi
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.MaDiaChi == addressId && x.MaNguoiDung == userId);
+
+            if (address == null)
+                throw new ValidationApiException("Dia chi giao hang khong hop le.", new { dto.MaDiaChi });
+
+            var fullAddress = string.Join(", ", new[]
+            {
+                address.DiaChiChiTiet, address.PhuongXa, address.QuanHuyen, address.TinhThanh
+            }.Where(x => !string.IsNullOrWhiteSpace(x)));
+
+            return new OrderRecipient(
+                address.TenNguoiNhan?.Trim() ?? string.Empty,
+                address.SoDienThoai?.Trim() ?? string.Empty,
+                dto.EmailNguoiNhan?.Trim() ?? string.Empty,
+                fullAddress,
+                address.TinhThanh?.Trim() ?? string.Empty,
+                address.PhuongXa?.Trim() ?? string.Empty);
+        }
+
+        return new OrderRecipient(
+            dto.TenNguoiNhan?.Trim() ?? string.Empty,
+            dto.SoDienThoai?.Trim() ?? string.Empty,
+            dto.EmailNguoiNhan?.Trim() ?? string.Empty,
+            dto.DiaChiGiaoHang?.Trim() ?? string.Empty,
+            dto.TinhThanh?.Trim() ?? string.Empty,
+            dto.PhuongXa?.Trim() ?? string.Empty);
+    }
+
     private static List<RequestedOrderItem> ValidateAndMergeItems(CreateOrderDTO dto)
     {
         if (dto.Items == null || dto.Items.Count == 0)
@@ -616,4 +657,11 @@ public class OrderService
 
     private sealed record RequestedOrderItem(int MaSanPham, int SoLuong);
     private sealed record OrderStatusSnapshot(string Status, int Version, int OwnerId);
+    private sealed record OrderRecipient(
+        string TenNguoiNhan,
+        string SoDienThoai,
+        string EmailNguoiNhan,
+        string DiaChiGiaoHang,
+        string TinhThanh,
+        string PhuongXa);
 }

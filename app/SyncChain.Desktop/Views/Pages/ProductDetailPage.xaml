@@ -104,7 +104,7 @@
                                 <Label Text="GIÁ BÁN" Style="{StaticResource LabelCapsLabel}" />
                                 <Label Text="{Binding Price}" FontSize="24" FontAttributes="Bold" />
                             </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1">
+                            <VerticalStackLayout Grid.Column="1" IsVisible="{Binding CanManageProducts}">
                                 <Label Text="GIÁ NHẬP" Style="{StaticResource LabelCapsLabel}" />
                                 <Label Text="{Binding ImportPrice}" FontSize="24" FontAttributes="Bold" />
                             </VerticalStackLayout>
@@ -121,7 +121,7 @@
                                 <Label Text="ĐÃ BÁN" Style="{StaticResource LabelCapsLabel}" />
                                 <Label Text="{Binding SoldCount}" FontSize="24" FontAttributes="Bold" />
                             </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Row="2" Grid.Column="1">
+                            <VerticalStackLayout Grid.Row="2" Grid.Column="1" IsVisible="{Binding CanManageProducts}">
                                 <Label Text="HIỆU SUẤT THÁNG" Style="{StaticResource LabelCapsLabel}" />
                                 <HorizontalStackLayout Spacing="6">
                                     <Label Text="{Binding PerformanceIcon}" FontSize="22"
@@ -139,6 +139,20 @@
                             <Button Text="{Binding StatusActionText}" Style="{StaticResource PillSecondaryButton}"
                                     Clicked="OnToggleStatusClicked" />
                         </HorizontalStackLayout>
+
+                        <!-- Khu mua hàng cho khách -->
+                        <VerticalStackLayout Spacing="10" Margin="0,8,0,0" IsVisible="{Binding IsCustomer}">
+                            <Label Text="SỐ LƯỢNG" Style="{StaticResource LabelCapsLabel}" />
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Entry x:Name="QtyEntry" Text="1" Keyboard="Numeric"
+                                       WidthRequest="90" HorizontalTextAlignment="Center"
+                                       Style="{StaticResource MinimalistEntry}" />
+                                <Button Grid.Column="1" Text="🛒  THÊM VÀO GIỎ"
+                                        Style="{StaticResource PillPrimaryButton}"
+                                        IsEnabled="{Binding CanBuy}"
+                                        Clicked="OnAddToCartClicked" />
+                            </Grid>
+                        </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
             </Grid>

@@ -32,6 +32,8 @@ public partial class ProfilePage : ContentPage
 			UsernameEntry.Text = profile.TenDangNhap;
 			PhoneEntry.Text = profile.SoDienThoai ?? "";
 			EmailEntry.Text = profile.Email;
+			// Email đăng nhập không đổi được (backend không hỗ trợ) → khoá ô để không gây hiểu nhầm.
+			EmailEntry.IsEnabled = false;
 		}
 		catch (Exception ex)
 		{
@@ -95,9 +97,9 @@ public partial class ProfilePage : ContentPage
 			ErrorBanner.IsVisible = true;
 			return;
 		}
-		if (next.Length < 8)
+		if (next.Length < 6)
 		{
-			ErrorLabel.Text = "Mật khẩu mới phải ít nhất 8 ký tự";
+			ErrorLabel.Text = "Mật khẩu mới phải ít nhất 6 ký tự";
 			ErrorBanner.IsVisible = true;
 			return;
 		}
