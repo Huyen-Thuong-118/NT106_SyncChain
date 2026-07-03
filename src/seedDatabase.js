@@ -52,7 +52,7 @@ async function seed() {
       await client.query(
         `INSERT INTO NguoiDung (TenDangNhap, MatKhauHash, Email, MaVaiTro)
          VALUES ($1, $2, $3, (SELECT MaVaiTro FROM PhanQuyen WHERE TenVaiTro = $4))
-         ON CONFLICT (TenDangNhap) DO NOTHING`,
+         ON CONFLICT DO NOTHING`,
         [tenDangNhap, matKhauHash, email, tenVaiTro]
       );
     }

@@ -169,3 +169,75 @@ CREATE INDEX IF NOT EXISTS idx_kho_sanpham         ON GiaoDichKho(MaSanPham);
 CREATE INDEX IF NOT EXISTS idx_kho_loai_thoigian   ON GiaoDichKho(Loai, ThoiGian DESC);
 CREATE INDEX IF NOT EXISTS idx_lichsu_nguoidung    ON LichSuHoatDong(MaNguoiDung);
 CREATE INDEX IF NOT EXISTS idx_lichsu_thoigian     ON LichSuHoatDong(ThoiGian DESC);
+
+-- ════════════════════════════════════════════════════════════════
+-- Customer Account Module — schema mới
+-- ════════════════════════════════════════════════════════════════
+
+-- NguoiDung: bổ sung thông tin cá nhân
+ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS Ho TEXT;
+ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS Ten TEXT;
+ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS SoDienThoai TEXT;
+ALTER TABLE NguoiDung ADD COLUMN IF NOT EXISTS NgayCapNhat TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Unique constraint cho SoDienThoai (chạy idempotent)
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'nguoidung_sodienthoai_unique'
+  ) THEN
+    ALTER TABLE NguoiDung ADD CONSTRAINT nguoidung_sodienthoai_unique UNIQUE (SoDienThoai);
+  END IF;
+END $$;
+
+-- 10. Địa Chỉ Giao Hàng
+CREATE TABLE IF NOT EXISTS DiaChi (
+    MaDiaChi SERIAL PRIMARY KEY,
+    MaNguoiDung INTEGER NOT NULL,
+    TenNguoiNhan TEXT NOT NULL,
+    SoDienThoai TEXT NOT NULL,
+    TinhThanh TEXT NOT NULL,
+    QuanHuyen TEXT NOT NULL,
+    PhuongXa TEXT NOT NULL,
+    DiaChiChiTiet TEXT NOT NULL,
+    LaMacDinh BOOLEAN NOT NULL DEFAULT FALSE,
+    NgayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung)
+);
+
+-- 11. OTP Quên Mật Khẩu
+CREATE TABLE IF NOT EXISTS OtpReset (
+    MaOtp SERIAL PRIMARY KEY,
+    MaNguoiDung INTEGER NOT NULL,
+    MaOtpHash TEXT NOT NULL,
+    HetHan TIMESTAMP NOT NULL,
+    DaDung BOOLEAN NOT NULL DEFAULT FALSE,
+    NgayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung)
+);
+
+-- 12. Giỏ Hàng (1 giỏ / khách)
+CREATE TABLE IF NOT EXISTS GioHang (
+    MaGioHang SERIAL PRIMARY KEY,
+    MaNguoiDung INTEGER NOT NULL UNIQUE,
+    NgayTao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    NgayCapNhat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung)
+);
+
+-- 13. Chi Tiết Giỏ Hàng
+CREATE TABLE IF NOT EXISTS ChiTietGioHang (
+    MaChiTietGio SERIAL PRIMARY KEY,
+    MaGioHang INTEGER NOT NULL,
+    MaSanPham INTEGER NOT NULL,
+    SoLuong INTEGER NOT NULL CHECK (SoLuong > 0),
+    NgayThem TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (MaGioHang, MaSanPham),
+    FOREIGN KEY (MaGioHang) REFERENCES GioHang(MaGioHang),
+    FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham)
+);
+
+-- Index hỗ trợ
+CREATE INDEX IF NOT EXISTS idx_diachi_nguoidung  ON DiaChi(MaNguoiDung);
+CREATE INDEX IF NOT EXISTS idx_otp_nguoidung     ON OtpReset(MaNguoiDung);
+CREATE INDEX IF NOT EXISTS idx_giohang_nguoidung ON GioHang(MaNguoiDung);
+CREATE INDEX IF NOT EXISTS idx_ctgio_giohang     ON ChiTietGioHang(MaGioHang);
