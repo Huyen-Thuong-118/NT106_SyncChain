@@ -149,7 +149,7 @@
                                                VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                         <!-- Detail button -->
                                         <Button Grid.Column="5" Text="CHI TIẾT" Style="{StaticResource PillSecondaryButton}"
-                                                Padding="14,8" Clicked="OnOpenDetailClicked" />
+                                                Padding="14,8" CommandParameter="{Binding MaDonHang}" Clicked="OnOpenDetailClicked" />
                                     </Grid>
                                 </Border>
                             </DataTemplate>

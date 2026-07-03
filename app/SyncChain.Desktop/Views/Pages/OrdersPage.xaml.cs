@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using Microsoft.Maui.Controls;
 using SyncChain.Desktop.Models;
+using SyncChain.Desktop.Services;
 
 namespace SyncChain.Desktop.Views.Pages;
 
@@ -86,34 +87,43 @@ public partial class OrdersPage : ContentPage
 	{
 		var (statusText, statusColor) = dh.TrangThai switch
 		{
-			"Draft"      => ("Chờ duyệt",      Color.FromArgb("#dae2fd")),
-			"Approved"   => ("Đã duyệt",        Color.FromArgb("#dae2fd")),
-			"Processing" => ("Đang xử lý",      Color.FromArgb("#dbeafe")),
-			"Done"       => ("Hoàn tất",         Color.FromArgb("#d3e5f1")),
-			"Cancelled"  => ("Đã hủy",           Color.FromArgb("#ffdad6")),
+			"Draft"      => ("Chờ duyệt",  Color.FromArgb("#dae2fd")),
+			"Approved"   => ("Đã duyệt",   Color.FromArgb("#dae2fd")),
+			"Processing" => ("Đang xử lý", Color.FromArgb("#dbeafe")),
+			"Done"       => ("Hoàn tất",   Color.FromArgb("#d3e5f1")),
+			"Cancelled"  => ("Đã hủy",     Color.FromArgb("#ffdad6")),
 			_ => (dh.TrangThai, Color.FromArgb("#eef0f2"))
 		};
 
+		var recipientName = dh.NguoiNhan ?? $"Khách hàng #{dh.MaNguoiDung}";
+
 		return new OrderItem
 		{
+			MaDonHang = dh.MaDonHang,
 			Code = $"#ORD-{dh.MaDonHang:0000}",
-			Customer = $"Khách hàng #{dh.MaNguoiDung}",
-			Email = $"kh{dh.MaNguoiDung}@gmail.com",
+			Customer = recipientName,
+			Email = dh.DiaChiGiao ?? "Chưa có địa chỉ",
 			CreatedAt = dh.NgayTao.ToString("dd/MM/yyyy HH:mm"),
 			Total = $"{dh.TongTien:N0} đ",
 			Status = statusText,
 			StatusColor = statusColor,
-			Initials = "KH"
+			Initials = string.Concat(recipientName.Split(' ').TakeLast(2).Select(w => w[0])).ToUpperInvariant()
 		};
 	}
 
 	private async void OnCreateOrderClicked(object? sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync("//create-order");
+		// Khách hàng đặt hàng qua giỏ hàng → điều hướng tới trang sản phẩm để chọn mua.
+		// Route "//create-order" chỉ tồn tại trong AppShell (nhân sự nội bộ).
+		if (TokenStore.Role == "customer")
+			await Shell.Current.GoToAsync("//products");
+		else
+			await Shell.Current.GoToAsync("//create-order");
 	}
 
 	private async void OnOpenDetailClicked(object? sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync(nameof(OrderDetailPage));
+		if (sender is Button btn && btn.CommandParameter is int orderId)
+			await Shell.Current.GoToAsync($"{nameof(OrderDetailPage)}?orderId={orderId}");
 	}
 }

@@ -14,8 +14,8 @@
             <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12" VerticalOptions="Center">
                 <Button Text="← Quay lại" Style="{StaticResource PillSecondaryButton}" Clicked="OnBackClicked" VerticalOptions="Center" />
                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                    <Label Text="ĐƠN HÀNG #ORD-2023-8942" Style="{StaticResource DisplayXlLabel}" LineBreakMode="TailTruncation" />
-                    <Label Text="Được tạo vào 14/10/2023 lúc 10:24 AM" Style="{StaticResource BodyMdLabel}" />
+                    <Label Text="{Binding OrderCode}" Style="{StaticResource DisplayXlLabel}" LineBreakMode="TailTruncation" />
+                    <Label Text="{Binding OrderDate}" Style="{StaticResource BodyMdLabel}" />
                 </VerticalStackLayout>
                 <Button Grid.Column="2" Text="IN HÓA ĐƠN" Style="{StaticResource PillSecondaryButton}" VerticalOptions="Center" />
                 <Button Grid.Column="3" Text="CẬP NHẬT" Style="{StaticResource PillPrimaryButton}" VerticalOptions="Center" />
@@ -39,7 +39,7 @@
                         <VerticalStackLayout Spacing="16">
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Sản phẩm trong đơn" Style="{StaticResource HeadlineLgMobileLabel}" FontSize="24" />
-                                <Label Grid.Column="1" Text="3 sản phẩm" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1" Text="{Binding ProductCount}" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
                             </Grid>
                             <!-- Separator -->
                             <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
@@ -136,23 +136,23 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="14" />
                                     </Border.StrokeShape>
-                                    <Label Text="NL" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
+                                    <Label Text="{Binding CustomerInitials}" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="{DynamicResource Primary}" />
                                 </Border>
                                 <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                    <Label Text="Nguyễn Văn Lâm" Style="{StaticResource DataTabularLabel}" />
-                                    <Label Text="lam.nv@gmail.com" Style="{StaticResource BodyMdLabel}" FontSize="13" />
+                                    <Label Text="{Binding CustomerName}" Style="{StaticResource DataTabularLabel}" />
+                                    <Label Text="{Binding CustomerEmail}" Style="{StaticResource BodyMdLabel}" FontSize="13" />
                                 </VerticalStackLayout>
                             </Grid>
                             <!-- Phone -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Số điện thoại" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="0901 234 567" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1" Text="{Binding CustomerPhone}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                             </Grid>
                             <!-- Address -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Địa chỉ giao hàng" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                                <Label Grid.Column="1" Text="12 Nguyễn Huệ, Quận 1, TP.HCM" Style="{StaticResource DataTabularLabel}"
-                                       HorizontalTextAlignment="End" VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1" Text="{Binding CustomerAddress}" Style="{StaticResource DataTabularLabel}"
+                                       HorizontalTextAlignment="End" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" MaxLines="2" />
                             </Grid>
                         </VerticalStackLayout>
                     </Border>
@@ -169,24 +169,24 @@
                             <!-- Subtotal -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Tạm tính" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="1,450,000 đ" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1" Text="{Binding Subtotal}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                             </Grid>
                             <!-- Shipping -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Phí vận chuyển" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="30,000 đ" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1" Text="{Binding Shipping}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                             </Grid>
-                            <!-- Tax / Discount -->
+                            <!-- Discount -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Giảm giá" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="-30,000 đ" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1" Text="{Binding Discount}" Style="{StaticResource DataTabularLabel}" VerticalTextAlignment="Center" />
                             </Grid>
                             <!-- Total separator -->
                             <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
                             <!-- Total -->
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Text="Tổng cộng" Style="{StaticResource DataTabularLabel}" FontSize="16" VerticalTextAlignment="Center" />
-                                <Label Grid.Column="1" Text="1,450,000 đ" Style="{StaticResource DataTabularLabel}" FontSize="16" VerticalTextAlignment="Center" />
+                                <Label Grid.Column="1" Text="{Binding TotalAmount}" Style="{StaticResource DataTabularLabel}" FontSize="16" VerticalTextAlignment="Center" />
                             </Grid>
                         </VerticalStackLayout>
                     </Border>

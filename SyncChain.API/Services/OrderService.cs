@@ -50,6 +50,11 @@ public class OrderService
                 throw new InvalidOperationException($"{product.TenSanPham} chi con {product.SoLuongTon} trong kho");
         }
 
+        // Đọc địa chỉ giao hàng trước khi mở transaction.
+        var addr = dto.MaDiaChi.HasValue
+            ? _db.DiaChi.FirstOrDefault(x => x.MaDiaChi == dto.MaDiaChi.Value && x.MaNguoiDung == userId)
+            : null;
+
         // Dùng transaction để đơn hàng và tồn kho luôn cập nhật cùng nhau.
         using var transaction = _db.Database.BeginTransaction();
 
@@ -58,7 +63,12 @@ public class OrderService
         {
             MaNguoiDung = userId,
             NgayTao = DateTime.Now,
-            TrangThai = "Draft"
+            TrangThai = "Draft",
+            NguoiNhan = addr?.TenNguoiNhan,
+            SoDienThoaiNhan = addr?.SoDienThoai,
+            DiaChiGiao = addr != null
+                ? $"{addr.DiaChiChiTiet}, {addr.PhuongXa}, {addr.QuanHuyen}, {addr.TinhThanh}"
+                : null
         };
 
         _db.DonHang.Add(order);

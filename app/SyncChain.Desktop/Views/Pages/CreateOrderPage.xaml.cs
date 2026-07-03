@@ -34,12 +34,12 @@ public partial class CreateOrderPage : ContentPage
 	{
 		try
 		{
-			var response = await _http.GetFromJsonAsync<ApiResponse<List<SanPhamApi>>>("api/sanpham");
-			if (response?.success == true && response.data != null)
+			// .NET API trả danh sách trực tiếp (không bọc trong wrapper)
+			var products = await _http.GetFromJsonAsync<List<SanPhamApi>>("api/product");
+			if (products != null)
 			{
-				_allProducts = response.data.Where(p => p.SoLuongTon > 0).ToList();
+				_allProducts = products.Where(p => p.SoLuongTon > 0).ToList();
 
-				// Tạo LineItem từ 2 sản phẩm đầu tiên làm demo
 				Lines = _allProducts.Take(2).Select(p => new LineItem
 				{
 					Name = p.TenSanPham,
