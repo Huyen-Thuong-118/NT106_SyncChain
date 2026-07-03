@@ -11,17 +11,17 @@ public partial class CustomerHomePage : ContentPage
 	private static readonly Color Blue = Color.FromArgb("#50616B");
 	private static readonly Color Mist = Color.FromArgb("#5C647A");
 	private static readonly Color Ice = Color.FromArgb("#B7C9D5");
-	private static readonly Color Critical = Color.FromArgb("#BA1A1A");
 
 	// Thông tin người dùng
 	public string UserName { get; private set; } = "Khách hàng";
 	public string UserEmail { get; private set; } = "";
+	public string UserPhone { get; private set; } = "Chưa cập nhật";
 
 	public IReadOnlyList<CustomerMetric> Metrics { get; private set; } =
 	[
 		new("Đơn đang xử lý", "0", "Đang tải...", "ORD", Blue),
-		new("Điểm tích lũy", "0", "Hạng bạc", "VIP", Mist),
-		new("Voucher", "0", "Đang tải...", "VC", Ice),
+		new("Tổng đơn", "0", "Tất cả đơn của bạn", "ALL", Mist),
+		new("Đã hoàn tất", "0", "Giao thành công", "OK", Ice),
 		new("Hỗ trợ", "24/7", "Phản hồi nhanh", "CS", Sapphire)
 	];
 
@@ -37,11 +37,8 @@ public partial class CustomerHomePage : ContentPage
 		new("Hỗ trợ", "Gửi yêu cầu đổi trả, bảo hành hoặc cập nhật giao hàng.", "03", Mist)
 	];
 
-	public IReadOnlyList<CustomerPromotion> Promotions { get; } =
-	[
-		new("FREESHIP24", "Miễn phí vận chuyển cho đơn từ 500,000 đ", Blue),
-		new("TVT10", "Giảm 10% cho phụ kiện trong tuần này", Critical)
-	];
+	// Chưa có API khuyến mãi — không hiển thị mã ưu đãi giả.
+	public IReadOnlyList<CustomerPromotion> Promotions { get; } = [];
 
 	public IReadOnlyList<ProductItem> SuggestedProducts { get; private set; } = Array.Empty<ProductItem>();
 
@@ -68,10 +65,12 @@ public partial class CustomerHomePage : ContentPage
 				var profile = await _http.GetFromJsonAsync<ProfileApi>("api/auth/profile");
 				if (profile != null)
 				{
-					UserName = profile.TenDangNhap ?? "Khách hàng";
+					UserName = string.IsNullOrWhiteSpace(profile.HoTen) ? profile.TenDangNhap : profile.HoTen;
+						UserPhone = string.IsNullOrWhiteSpace(profile.SoDienThoai) ? "Chưa cập nhật" : profile.SoDienThoai;
 					UserEmail = profile.Email ?? "";
 					OnPropertyChanged(nameof(UserName));
 					OnPropertyChanged(nameof(UserEmail));
+					OnPropertyChanged(nameof(UserPhone));
 				}
 			}
 			catch
@@ -123,8 +122,8 @@ public partial class CustomerHomePage : ContentPage
 				Metrics =
 				[
 					new("Đơn đang xử lý", orders.Count(o => o.TrangThai is "Draft" or "Approved" or "Processing").ToString(), "Đơn cần theo dõi", "ORD", Blue),
-					new("Điểm tích lũy", "1,240", "Hạng bạc", "VIP", Mist),
-					new("Voucher", "05", "2 mã sắp hết hạn", "VC", Ice),
+					new("Tổng đơn", orders.Count.ToString(), "Tất cả đơn của bạn", "ALL", Mist),
+					new("Đã hoàn tất", orders.Count(o => o.TrangThai == "Done").ToString(), "Giao thành công", "OK", Ice),
 					new("Hỗ trợ", "24/7", "Phản hồi nhanh", "CS", Sapphire)
 				];
 
@@ -140,7 +139,7 @@ public partial class CustomerHomePage : ContentPage
 
 	private async void OnTrackOrderClicked(object? sender, EventArgs e)
 	{
-		await Shell.Current.GoToAsync(nameof(OrderDetailPage));
+		await Shell.Current.GoToAsync("//orders");
 	}
 
 	private void OnLogoutClicked(object? sender, EventArgs e)
