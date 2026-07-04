@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#EAF6FF"
              Padding="0">
 
     <Grid ColumnSpacing="14" Padding="20">
@@ -48,19 +49,34 @@
                                         <RoundRectangle CornerRadius="12" />
                                     </Border.StrokeShape>
                                     <Grid ColumnDefinitions="44,*,Auto" ColumnSpacing="10">
-                                        <Border BackgroundColor="{DynamicResource PrimaryContainer}" StrokeThickness="0" WidthRequest="44" HeightRequest="44">
+                                        <Border BackgroundColor="#dff3ff" StrokeThickness="0" WidthRequest="44" HeightRequest="44">
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="22" />
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
+                                            <Label Text="{Binding Initials}"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#0b1c30" />
                                         </Border>
                                         <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="14" LineBreakMode="TailTruncation" />
-                                            <Label Text="{Binding Preview}" FontSize="12" TextColor="{DynamicResource OnSurfaceVariant}" LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Name}"
+                                                   FontAttributes="Bold"
+                                                   FontSize="14"
+                                                   TextColor="#0b1c30"
+                                                   LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding Preview}"
+                                                   FontSize="12"
+                                                   TextColor="#334155"
+                                                   LineBreakMode="TailTruncation" />
                                         </VerticalStackLayout>
                                         <VerticalStackLayout Grid.Column="2" Spacing="2">
-                                            <Label Text="{Binding Time}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
-                                            <Label Text="{Binding UnreadCount}" FontSize="11" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                                            <Label Text="{Binding Time}" FontSize="11" TextColor="#334155" />
+                                            <Label Text="{Binding UnreadCount}"
+                                                   FontSize="11"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#2563eb"
+                                                   HorizontalTextAlignment="End" />
                                         </VerticalStackLayout>
                                     </Grid>
                                 </Border>
@@ -142,7 +158,8 @@
                             <Grid HorizontalOptions="Fill">
                                 <Border HorizontalOptions="{Binding IsOutgoing, Converter={StaticResource BoolToLayoutConverter}}"
                                         BackgroundColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageBubble}"
-                                        StrokeThickness="0"
+                                        Stroke="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageBubbleStroke}"
+                                        StrokeThickness="1"
                                         Padding="14,10"
                                         Margin="0,5"
                                         MaximumWidthRequest="520">
@@ -153,29 +170,34 @@
                                         <RoundRectangle CornerRadius="16" />
                                     </Border.StrokeShape>
                                     <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="10">
-                                        <Label Text="{Binding PinText}" FontSize="11" FontAttributes="Bold" VerticalOptions="Start" />
+                                        <Label Text="{Binding PinText}" FontSize="11" FontAttributes="Bold" TextColor="#f97316" VerticalOptions="Start" />
                                         <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                            <Label Text="{Binding DisplayText}" IsVisible="{Binding IsTextVisible}" FontFamily="Inter" FontSize="14" LineBreakMode="WordWrap" />
+                                            <Label Text="{Binding DisplayText}"
+                                                   IsVisible="{Binding IsTextVisible}"
+                                                   FontFamily="Inter"
+                                                   FontSize="14"
+                                                   LineBreakMode="WordWrap"
+                                                   TextColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageText}" />
                                             <Image Source="{Binding FileUrl}" IsVisible="{Binding IsImage}" MaximumHeightRequest="520" WidthRequest="420" Aspect="AspectFit" />
                                             <WebView Source="{Binding FileUrl}" IsVisible="{Binding IsVideo}" HeightRequest="260" WidthRequest="420" />
-                                            <Border IsVisible="{Binding IsFileCard}" BackgroundColor="#eeeeee" StrokeThickness="0" Padding="16,12">
+                                            <Border IsVisible="{Binding IsFileCard}" BackgroundColor="#f8fafc" Stroke="#d8e3ee" StrokeThickness="1" Padding="16,12">
                                                 <Border.StrokeShape>
                                                     <RoundRectangle CornerRadius="18" />
                                                 </Border.StrokeShape>
                                                 <Grid ColumnDefinitions="42,*" ColumnSpacing="12">
-                                                    <Border BackgroundColor="#f8f8f8" StrokeThickness="0" WidthRequest="38" HeightRequest="38">
+                                                    <Border BackgroundColor="#e8f2ff" StrokeThickness="0" WidthRequest="38" HeightRequest="38">
                                                         <Border.StrokeShape>
                                                             <RoundRectangle CornerRadius="19" />
                                                         </Border.StrokeShape>
-                                                        <Label Text="File" FontSize="9" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+                                                        <Label Text="File" FontSize="9" FontAttributes="Bold" TextColor="#0b1c30" HorizontalOptions="Center" VerticalOptions="Center" />
                                                     </Border>
                                                     <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                                        <Label Text="{Binding DisplayText}" FontAttributes="Bold" FontSize="14" LineBreakMode="TailTruncation" />
-                                                        <Label Text="{Binding FileSizeText}" FontSize="12" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                        <Label Text="{Binding DisplayText}" FontAttributes="Bold" FontSize="14" TextColor="#0b1c30" LineBreakMode="TailTruncation" />
+                                                        <Label Text="{Binding FileSizeText}" FontSize="12" TextColor="#475569" />
                                                     </VerticalStackLayout>
                                                 </Grid>
                                             </Border>
-                                            <Border IsVisible="{Binding IsPoll}" BackgroundColor="#f3f4f6" StrokeThickness="0" Padding="12">
+                                            <Border IsVisible="{Binding IsPoll}" BackgroundColor="#f8fafc" Stroke="#d8e3ee" StrokeThickness="1" Padding="12">
                                                 <Border.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="OnPollDetailsTapped" CommandParameter="{Binding .}" />
                                                 </Border.GestureRecognizers>
@@ -183,8 +205,8 @@
                                                     <RoundRectangle CornerRadius="12" />
                                                 </Border.StrokeShape>
                                                 <VerticalStackLayout Spacing="8">
-                                                    <Label Text="{Binding Poll.Question}" FontAttributes="Bold" />
-                                                    <Label Text="{Binding Poll.ModeText}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                    <Label Text="{Binding Poll.Question}" FontAttributes="Bold" TextColor="#0b1c30" />
+                                                    <Label Text="{Binding Poll.ModeText}" FontSize="11" TextColor="#475569" />
                                                     <CollectionView ItemsSource="{Binding Poll.Options}" SelectionMode="None" MaximumHeightRequest="220">
                                                         <CollectionView.ItemTemplate>
                                                             <DataTemplate x:DataType="models:ChatPollOptionApi">
@@ -192,11 +214,16 @@
                                                             </DataTemplate>
                                                         </CollectionView.ItemTemplate>
                                                     </CollectionView>
-                                                    <Label Text="{Binding Poll.StateText}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                    <Label Text="{Binding Poll.StateText}" FontSize="11" TextColor="#475569" />
                                                 </VerticalStackLayout>
                                             </Border>
-                                            <Label Text="{Binding DetailText}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" />
-                                            <Label Text="{Binding StatusText}" FontSize="11" TextColor="{DynamicResource OnSurfaceVariant}" HorizontalTextAlignment="End" />
+                                            <Label Text="{Binding DetailText}"
+                                                   FontSize="11"
+                                                   TextColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageMeta}" />
+                                            <Label Text="{Binding StatusText}"
+                                                   FontSize="11"
+                                                   TextColor="{Binding IsOutgoing, Converter={StaticResource BoolToColorConverter}, ConverterParameter=MessageMeta}"
+                                                   HorizontalTextAlignment="End" />
                                             <Label Text="{Binding ReactionText}" FontSize="18" HorizontalTextAlignment="End" />
                                         </VerticalStackLayout>
                                     </Grid>

@@ -13,8 +13,10 @@ public sealed class BoolToColorConverter : IValueConverter
 		{
 			"SelectedPayment" => flag ? Color.FromArgb("#e0f2fe") : Colors.White,       // PrimaryContainer
 			"ActiveThread" => flag ? Color.FromArgb("#e0f2fe") : Colors.White,          // PrimaryContainer
-			"MessageBubble" => flag ? Color.FromArgb("#e0f2fe") : Colors.White,              // PrimaryContainer / White
-			"MessageText" => flag ? Color.FromArgb("#0b1c30") : Color.FromArgb("#0b1c30"),  // OnSurface / OnSurface
+			"MessageBubble" => flag ? Color.FromArgb("#dbeafe") : Colors.White,
+			"MessageBubbleStroke" => flag ? Color.FromArgb("#93c5fd") : Color.FromArgb("#d8e3ee"),
+			"MessageText" => Color.FromArgb("#0b1c30"),
+			"MessageMeta" => flag ? Color.FromArgb("#1e3a5f") : Color.FromArgb("#475569"),
 			"SelectedRole" => flag ? Color.FromArgb("#e0f2fe") : Colors.White,          // PrimaryContainer
 			_ => flag ? Color.FromArgb("#e0f2fe") : Colors.White                        // PrimaryContainer
 		};
