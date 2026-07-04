@@ -19,7 +19,7 @@ public class ProductService
         _audit = audit;
     }
 
-    // Láº¥y táº¥t cáº£ sáº£n pháº©m trong kho.
+    // Lấy tất cả sản phẩm trong kho.
     public List<ProductResponseDTO> GetAll(int? categoryId = null)
     {
         if (categoryId.HasValue &&
@@ -70,7 +70,7 @@ public class ProductService
             .ToList();
     }
 
-    // TÃ¬m sáº£n pháº©m theo mÃ£, bÃ¡o lá»—i náº¿u khÃ´ng cÃ³.
+    // Tìm sản phẩm theo mã, báo lỗi nếu không có.
     public ProductResponseDTO GetById(int id)
     {
         var sp = _db.SanPham
@@ -81,7 +81,7 @@ public class ProductService
         return ToProductResponse(sp);
     }
 
-    // Táº¡o sáº£n pháº©m vÃ  tá»± tÃ­nh tráº¡ng thÃ¡i theo tá»“n kho.
+    // Tạo sản phẩm và tự tính trạng thái theo tồn kho.
     public ProductResponseDTO Create(CreateProductDTO dto)
     {
         ValidateProduct(dto.TenSanPham, dto.GiaBan, dto.GiaNhap, dto.SoLuongTon);
@@ -114,7 +114,7 @@ public class ProductService
         return GetById(sp.MaSanPham);
     }
 
-    // Cáº­p nháº­t sáº£n pháº©m, giÃ¡ vÃ  tráº¡ng thÃ¡i bÃ¡n.
+    // Cập nhật sản phẩm, giá và trạng thái bán.
     public ProductResponseDTO Update(int id, UpdateProductDTO dto)
     {
         var sp = _db.SanPham.Find(id);
@@ -149,7 +149,7 @@ public class ProductService
         return GetById(sp.MaSanPham);
     }
 
-    // XÃ³a sáº£n pháº©m khá»i database.
+    // Xóa sản phẩm khỏi database.
     public void Delete(int id)
     {
         var sp = _db.SanPham.Find(id);
@@ -171,7 +171,7 @@ public class ProductService
         _db.SaveChanges();
     }
 
-    // Nháº­p thÃªm hÃ ng vÃ  ghi lá»‹ch sá»­ nháº­p kho.
+    // Nhập thêm hàng và ghi lịch sử nhập kho.
     public async Task<InventoryChangeResultDTO> ImportStockAsync(
         int id,
         int quantity,
@@ -197,7 +197,7 @@ public class ProductService
         return result;
     }
 
-    // Láº¥y cÃ¡c giao dá»‹ch nháº­p kho gáº§n Ä‘Ã¢y cho trang nháº­p hÃ ng.
+    // Lấy các giao dịch nhập kho gần đây cho trang nhập hàng.
     public List<object> GetImportHistory()
     {
         return _db.GiaoDichKho
@@ -222,7 +222,7 @@ public class ProductService
             .ToList<object>();
     }
 
-    // Äá»•i tráº¡ng thÃ¡i sáº£n pháº©m, Ã©p ngá»«ng bÃ¡n náº¿u háº¿t hÃ ng.
+    // Đổi trạng thái sản phẩm, ép ngừng bán nếu hết hàng.
     public SanPham UpdateStatus(int id, string status)
     {
         var sp = _db.SanPham.Find(id);
@@ -246,7 +246,7 @@ public class ProductService
         return sp;
     }
 
-    // Tá»•ng há»£p chi tiáº¿t sáº£n pháº©m, doanh thu vÃ  lá»‹ch sá»­ kho/bÃ¡n.
+    // Tổng hợp chi tiết sản phẩm, doanh thu và lịch sử kho/bán.
     // Chi tiet san pham cho KHACH HANG: chi tra du lieu an toan (khong lo gia nhap /
     // doanh thu / phan tich noi bo). Dung cho ProductDetailPage o CustomerShell;
     // endpoint /detail van giu quyen StaffOrAbove.
@@ -344,7 +344,7 @@ public class ProductService
         };
     }
 
-    // TÃ­nh tráº¡ng thÃ¡i sáº£n pháº©m theo sá»‘ lÆ°á»£ng tá»“n.
+    // Tính trạng thái sản phẩm theo số lượng tồn.
     private static string BuildStatus(int stockQuantity, string? requestedStatus = null)
     {
         if (stockQuantity <= 0)
@@ -353,7 +353,7 @@ public class ProductService
         return requestedStatus == "Ngung ban" ? "Ngung ban" : "Hoat dong";
     }
 
-    // Kiá»ƒm tra giÃ¡ bÃ¡n vÃ  giÃ¡ nháº­p há»£p lá»‡.
+    // Kiểm tra giá bán và giá nhập hợp lệ.
     private static void ValidateProduct(
         string productName,
         decimal salePrice,

@@ -214,8 +214,8 @@ using (var scope = app.Services.CreateScope())
 
     app.Logger.LogInformation("[Startup] Đang kết nối PostgreSQL và khởi tạo schema...");
 
-    // EnsureCreated() tá»± táº¡o toÃ n bá»™ schema (ká»ƒ cáº£ GiaoDichKho vÃ  cÃ¡c cá»™t
-    // má»›i cá»§a SanPham) theo Ä‘Ãºng cÃº phÃ¡p PostgreSQL tá»« model EF.
+    // EnsureCreated() tự tạo toàn bộ schema (kể cả GiaoDichKho và các cột
+    // mới của SanPham) theo đúng cú pháp PostgreSQL từ model EF.
     db.Database.EnsureCreated();
 
     var hasDonHangTable = db.Database.SqlQueryRaw<int>(

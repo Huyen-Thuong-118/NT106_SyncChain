@@ -83,13 +83,10 @@ public class PaymentController : ControllerBase
         {
             payment.TrangThaiThanhToan = "Completed";
             payment.NgayCapNhat        = DateTime.UtcNow;
-            // COD: giữ nguyên trạng thái đơn (pending) để nhân sự xử lý; chỉ ghi nhận thanh toán.
 
             _db.ThanhToan.Add(payment);
             await _db.SaveChangesAsync();
 
-            // COD khong can cho thanh toan → xac nhan dat hang thanh cong ngay,
-            // gio moi duoc xoa cac san pham cua don nay.
             await _orders.ClearPurchasedItemsAsync(order.MaDonHang);
 
             var owner = await _db.NguoiDung.FindAsync(order.MaNguoiDung);
@@ -107,6 +104,7 @@ public class PaymentController : ControllerBase
             return Ok(new { message = "Đặt hàng COD thành công", orderId = order.MaDonHang });
         }
 
+        //vnpay
         if (method == "vnpay")
         {
             var ip      = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";

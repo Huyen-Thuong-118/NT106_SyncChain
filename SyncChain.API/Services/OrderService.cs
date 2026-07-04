@@ -663,7 +663,7 @@ public class OrderService
         var value = service?.Trim().ToLowerInvariant() ?? string.Empty;
         return value switch
         {
-            "hoa toc" or "há»a tá»‘c" => "Hoa toc",
+            "hoa toc" or "hỏa tốc" => "Hoa toc",
             "nhanh" => "Nhanh",
             _ => "Tieu chuan"
         };

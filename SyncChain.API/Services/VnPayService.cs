@@ -17,9 +17,8 @@ public class VnPayService
         var baseUrl = vnp["BaseUrl"]!;
         var returnUrl = vnp["ReturnUrl"]!;
 
-        // txnRef = "{orderId}-{epoch}" để parse lại orderId khi callback
         var txnRef = $"{orderId}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
-        var now = DateTime.Now; // VNPay yêu cầu giờ Việt Nam
+        var now = DateTime.Now; 
 
         var @params = new SortedDictionary<string, string>
         {

@@ -59,8 +59,7 @@ public class MoMoService
             signature
         };
 
-        // Canh bao som neu con dung credential mau → nguyen nhan pho bien nhat khien
-        // MoMo tu choi (sai chu ky / partner khong ton tai).
+
         if (partnerCode.Contains("SANDBOX", StringComparison.OrdinalIgnoreCase) ||
             accessKey.Contains("SANDBOX", StringComparison.OrdinalIgnoreCase) ||
             secretKey.Contains("SANDBOX", StringComparison.OrdinalIgnoreCase))
