@@ -15,8 +15,15 @@ public class NotificationController : ControllerBase
 
     public NotificationController(AppDbContext db) => _db = db;
 
-    private int GetUserId() =>
-        int.Parse(User.FindFirst("user_id")!.Value);
+    private int GetUserId()
+    {
+        // Đọc user_id an toàn từ JWT — tránh NullReferenceException/FormatException
+        // nếu token thiếu hoặc sai claim.
+        var value = User.FindFirst("user_id")?.Value;
+        if (!int.TryParse(value, out var id))
+            throw new UnauthorizedAccessException("Token không hợp lệ");
+        return id;
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()

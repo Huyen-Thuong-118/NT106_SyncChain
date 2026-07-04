@@ -247,12 +247,39 @@ public class ProductService
     }
 
     // Tá»•ng há»£p chi tiáº¿t sáº£n pháº©m, doanh thu vÃ  lá»‹ch sá»­ kho/bÃ¡n.
+    // Chi tiet san pham cho KHACH HANG: chi tra du lieu an toan (khong lo gia nhap /
+    // doanh thu / phan tich noi bo). Dung cho ProductDetailPage o CustomerShell;
+    // endpoint /detail van giu quyen StaffOrAbove.
+    public object GetPublicDetail(int id)
+    {
+        var sp = GetById(id);
+        sp.GiaNhap = 0; // an gia von voi khach hang
+
+        var soldCount = _db.ChiTietDonHang
+            .Include(x => x.DonHang)
+            .Where(x => x.MaSanPham == id && x.DonHang != null && x.DonHang.TrangThai != "cancel")
+            .Sum(x => (int?)x.SoLuong) ?? 0;
+
+        return new
+        {
+            Product = sp,
+            SoldCount = soldCount,
+            Revenue = 0m,
+            CurrentMonthSold = 0,
+            PreviousMonthSold = 0,
+            PerformancePercent = 0m,
+            ReviewCount = 0,
+            AverageRating = 0m,
+            StockHistory = new List<object>()
+        };
+    }
+
     public object GetDetail(int id)
     {
         var sp = GetById(id);
         var soldLines = _db.ChiTietDonHang
             .Include(x => x.DonHang)
-            .Where(x => x.MaSanPham == id && x.DonHang != null && x.DonHang.TrangThai != "Cancelled");
+            .Where(x => x.MaSanPham == id && x.DonHang != null && x.DonHang.TrangThai != "cancel");
         var soldCount = soldLines.Sum(x => (int?)x.SoLuong) ?? 0;
         var revenue = soldLines.Sum(x => (decimal?)(x.SoLuong * x.DonGia)) ?? 0;
         var now = DateTime.UtcNow;
@@ -287,7 +314,7 @@ public class ProductService
 
         var salesHistory = _db.ChiTietDonHang
             .Include(x => x.DonHang)
-            .Where(x => x.MaSanPham == id && x.DonHang != null && x.DonHang.TrangThai != "Cancelled")
+            .Where(x => x.MaSanPham == id && x.DonHang != null && x.DonHang.TrangThai != "cancel")
             .OrderByDescending(x => x.DonHang!.NgayTao)
             .Take(20)
             .Select(x => new

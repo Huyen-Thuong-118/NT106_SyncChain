@@ -68,7 +68,17 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 			if (_productId <= 0)
 				throw new InvalidOperationException("Thiếu mã sản phẩm.");
 
-			var detail = await _http.GetFromJsonAsync<ProductDetailApi>($"api/product/{_productId}/detail");
+			// Khách hàng dùng endpoint public-detail (không lộ giá nhập/doanh thu);
+			// nhân sự nội bộ (staff/manager/admin) mới được gọi /detail đầy đủ.
+			// Trước đây khách gọi /detail (StaffOrAbove) nên luôn bị 403 → không xem
+			// được sản phẩm và không thêm được vào giỏ.
+			var role = ApiClientProvider.Role?.Trim().ToLowerInvariant();
+			var isInternal = role is "staff" or "manager" or "admin";
+			var endpoint = isInternal
+				? $"api/product/{_productId}/detail"
+				: $"api/product/{_productId}/public-detail";
+
+			var detail = await _http.GetFromJsonAsync<ProductDetailApi>(endpoint);
 			if (detail?.Product == null)
 				throw new InvalidOperationException("API không trả dữ liệu sản phẩm.");
 
