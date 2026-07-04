@@ -122,7 +122,9 @@ public partial class CartPage : ContentPage
 			}
 
 			await Shell.Current.GoToAsync(
-				$"{nameof(PaymentPage)}?orderId={result.MaDonHang}&amount={result.TongTien}&orderCode=ORD-{result.MaDonHang:0000}");
+				$"{nameof(PaymentPage)}?orderId={result.MaDonHang}&amount={result.TongTien}" +
+				$"&subtotal={result.Subtotal}&shippingFee={result.ShippingFee}" +
+				$"&orderCode=ORD-{result.MaDonHang:0000}");
 		}
 		catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
 		{
@@ -185,5 +187,6 @@ public partial class CartPage : ContentPage
 
 	private sealed record ErrorResponse(string message);
 
-	private sealed record OrderCreationResult(int MaDonHang, decimal TongTien);
+	private sealed record OrderCreationResult(int MaDonHang, decimal TongTien,
+		decimal Subtotal, decimal ShippingFee);
 }

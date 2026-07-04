@@ -27,18 +27,41 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="16" />
                 </Border.StrokeShape>
-                <Grid ColumnDefinitions="*,Auto">
-                    <Label Text="Tổng tiền cần thanh toán"
-                           Style="{StaticResource DataTabularLabel}"
-                           FontSize="16"
-                           VerticalTextAlignment="Center" />
-                    <Label x:Name="TotalLabel"
-                           Grid.Column="1"
-                           Style="{StaticResource DataTabularLabel}"
-                           FontSize="24"
-                           TextColor="#F0442E"
-                           VerticalTextAlignment="Center" />
-                </Grid>
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Tạm tính"
+                               Style="{StaticResource BodyMdLabel}"
+                               VerticalTextAlignment="Center" />
+                        <Label x:Name="SubtotalLabel"
+                               Grid.Column="1"
+                               Style="{StaticResource DataTabularLabel}"
+                               FontSize="16"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Phí vận chuyển"
+                               Style="{StaticResource BodyMdLabel}"
+                               VerticalTextAlignment="Center" />
+                        <Label x:Name="ShippingLabel"
+                               Grid.Column="1"
+                               Style="{StaticResource DataTabularLabel}"
+                               FontSize="16"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="#D8E1EB" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Tổng tiền cần thanh toán"
+                               Style="{StaticResource DataTabularLabel}"
+                               FontSize="16"
+                               VerticalTextAlignment="Center" />
+                        <Label x:Name="TotalLabel"
+                               Grid.Column="1"
+                               Style="{StaticResource DataTabularLabel}"
+                               FontSize="24"
+                               TextColor="#F0442E"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+                </VerticalStackLayout>
             </Border>
 
             <Border BackgroundColor="White"
