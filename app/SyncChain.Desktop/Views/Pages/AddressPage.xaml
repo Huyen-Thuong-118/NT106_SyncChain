@@ -3,45 +3,73 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="Địa chỉ giao hàng"
+             BackgroundColor="#EAF6FF"
              NavigationPage.HasNavigationBar="False">
-    <Grid RowDefinitions="Auto,*,Auto" Padding="32,24">
+    <Grid RowDefinitions="Auto,*,Auto" Padding="48,30">
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="16" Margin="0,0,0,22">
+            <Button Text="← GIỎ HÀNG"
+                    Style="{StaticResource PillSecondaryButton}"
+                    Clicked="OnBackClicked" />
+            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                <Label Text="Địa chỉ giao hàng"
+                       Style="{StaticResource DisplayXlLabel}" />
+                <Label Text="Chọn hoặc thêm địa chỉ nhận hàng cho đơn."
+                       Style="{StaticResource BodyMdLabel}" />
+            </VerticalStackLayout>
+        </Grid>
 
-        <Label Grid.Row="0" Text="Địa Chỉ Giao Hàng"
-               Style="{StaticResource HeadlineLgMobileLabel}"
-               TextColor="{DynamicResource OnSurface}"
-               Margin="0,0,0,16" />
-
-        <!-- Danh sách địa chỉ -->
-        <CollectionView x:Name="AddressList" Grid.Row="1"
+        <CollectionView x:Name="AddressList"
+                        Grid.Row="1"
                         ItemsSource="{Binding Addresses}"
                         EmptyView="Chưa có địa chỉ nào. Hãy thêm địa chỉ mới.">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border Margin="0,6" Padding="16"
-                            BackgroundColor="#FAFAFA" Stroke="#E0E0E0" StrokeThickness="1">
-                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
-                            <Label Grid.Row="0" Text="{Binding TenNguoiNhan}"
-                                   FontFamily="Inter" FontSize="15" FontAttributes="Bold"
+                    <Border Margin="0,6"
+                            Padding="18"
+                            BackgroundColor="White"
+                            Stroke="#D8E1EB"
+                            StrokeThickness="1">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                            <Label Grid.Row="0"
+                                   Text="{Binding TenNguoiNhan}"
+                                   FontFamily="Inter"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
                                    TextColor="{DynamicResource OnSurface}" />
-                            <Label Grid.Row="1" Text="{Binding SoDienThoai}"
-                                   FontFamily="Inter" FontSize="13"
+                            <Label Grid.Row="1"
+                                   Text="{Binding SoDienThoai}"
+                                   FontFamily="Inter"
+                                   FontSize="13"
                                    TextColor="{DynamicResource OnSurfaceVariant}" />
-                            <Label Grid.Row="2" Text="{Binding DiaChi}"
-                                   FontFamily="Inter" FontSize="13"
+                            <Label Grid.Row="2"
+                                   Text="{Binding DiaChi}"
+                                   FontFamily="Inter"
+                                   FontSize="13"
                                    TextColor="{DynamicResource OnSurfaceVariant}"
                                    LineBreakMode="WordWrap" />
-                            <HorizontalStackLayout Grid.Column="1" Grid.RowSpan="3"
-                                                   VerticalOptions="Center" Spacing="8">
-                                <Button Text="Mặc định"
+                            <HorizontalStackLayout Grid.Column="1"
+                                                   Grid.RowSpan="3"
+                                                   VerticalOptions="Center"
+                                                   Spacing="8">
+                                <Button Text="MẶC ĐỊNH"
                                         Style="{StaticResource PillSecondaryButton}"
-                                        FontSize="11" HeightRequest="32" Padding="8,0"
+                                        FontSize="11"
+                                        HeightRequest="34"
+                                        Padding="10,0"
                                         CommandParameter="{Binding MaDiaChi}"
                                         Clicked="OnSetDefaultClicked" />
-                                <Button Text="Xóa"
-                                        BackgroundColor="#FFCDD5" TextColor="#B00020"
-                                        FontFamily="Inter" FontSize="11"
-                                        HeightRequest="32" Padding="8,0"
+                                <Button Text="XÓA"
+                                        BackgroundColor="#FFE2E0"
+                                        BorderColor="#F0442E"
+                                        BorderWidth="1"
+                                        TextColor="#F0442E"
+                                        FontFamily="Inter"
+                                        FontSize="11"
+                                        HeightRequest="34"
+                                        Padding="10,0"
                                         CommandParameter="{Binding MaDiaChi}"
                                         Clicked="OnDeleteClicked" />
                             </HorizontalStackLayout>
@@ -51,10 +79,15 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- Form thêm địa chỉ -->
-        <Border Grid.Row="2" Margin="0,16,0,0" Padding="20"
-                BackgroundColor="#FAFAFA" Stroke="#E0E0E0" StrokeThickness="1">
-            <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+        <Border Grid.Row="2"
+                Margin="0,18,0,0"
+                Padding="20"
+                BackgroundColor="White"
+                Stroke="#D8E1EB"
+                StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16" />
+            </Border.StrokeShape>
             <VerticalStackLayout Spacing="12">
                 <Label Text="THÊM ĐỊA CHỈ MỚI" Style="{StaticResource LabelCapsLabel}" />
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
@@ -68,14 +101,26 @@
                 </Grid>
                 <Entry x:Name="ChiTietEntry" Style="{StaticResource MinimalistEntry}" Placeholder="Số nhà, tên đường..." />
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                    <CheckBox x:Name="MacDinhCheck" Color="{DynamicResource Primary}" />
-                    <Label Grid.Column="1" Text="Đặt làm địa chỉ mặc định"
-                           Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                    <Button x:Name="AddButton" Grid.Column="2" Text="THÊM"
+                    <CheckBox x:Name="MacDinhCheck" Color="#F0442E" />
+                    <Label Grid.Column="1"
+                           Text="Đặt làm địa chỉ mặc định"
+                           Style="{StaticResource BodyMdLabel}"
+                           VerticalTextAlignment="Center" />
+                    <Button x:Name="AddButton"
+                            Grid.Column="2"
+                            Text="THÊM"
+                            BackgroundColor="#F0442E"
+                            TextColor="White"
+                            BorderColor="#F0442E"
                             Style="{StaticResource PillPrimaryButton}"
-                            Padding="20,0" Clicked="OnAddClicked" />
+                            Padding="20,0"
+                            Clicked="OnAddClicked" />
                 </Grid>
-                <Label x:Name="FormError" IsVisible="False" TextColor="#B00020" FontFamily="Inter" FontSize="12" />
+                <Label x:Name="FormError"
+                       IsVisible="False"
+                       TextColor="#B00020"
+                       FontFamily="Inter"
+                       FontSize="12" />
             </VerticalStackLayout>
         </Border>
     </Grid>

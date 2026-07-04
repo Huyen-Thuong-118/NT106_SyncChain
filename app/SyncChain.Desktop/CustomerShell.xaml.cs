@@ -22,6 +22,8 @@ public partial class CustomerShell : Shell
 		// (đăng xuất rồi đăng nhập lại) → tránh popup thông báo bị lặp.
 		App.SignalR.OnNewNotification -= OnNewNotification;
 		App.SignalR.OnNewNotification += OnNewNotification;
+
+		CurrentItem = ProductsFlyout;
 	}
 
 	private void OnNewNotification(string title, string content)

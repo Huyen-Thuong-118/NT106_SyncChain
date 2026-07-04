@@ -4,180 +4,376 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:SyncChain.Desktop.Models"
              NavigationPage.HasNavigationBar="False">
-    <ScrollView>
-        <VerticalStackLayout Padding="48,30" Spacing="24">
-            <Border StrokeThickness="0" BackgroundColor="{DynamicResource SurfaceContainerHigh}" Padding="42,34">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="24" />
-                </Border.StrokeShape>
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="24">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Quản lý sản phẩm" Style="{StaticResource DisplayXlLabel}" />
-                        <Label Text="Theo dõi danh sách, tồn kho và hiệu suất bán hàng theo tháng."
+    <Grid RowDefinitions="Auto,*">
+        <Border Grid.Row="0"
+                IsVisible="{Binding IsCustomer}"
+                BackgroundColor="#F0442E"
+                StrokeThickness="0"
+                Padding="28,18">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="18">
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        HeightRequest="54"
+                        Padding="18,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12" />
+                    </Border.StrokeShape>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                        <Label Text="&#xe8b6;"
+                               FontFamily="MaterialSymbols"
+                               FontSize="24"
+                               TextColor="#7B818A"
+                               VerticalTextAlignment="Center" />
+                        <Entry Grid.Column="1"
+                               Placeholder="Tìm sản phẩm"
+                               TextChanged="OnCustomerSearchChanged"
+                               BackgroundColor="Transparent"
+                               TextColor="{DynamicResource OnSurface}"
+                               PlaceholderColor="#7B818A"
+                               FontFamily="Inter"
+                               FontSize="17" />
+                        <Label Grid.Column="2"
+                               Text="&#xe3b0;"
+                               FontFamily="MaterialSymbols"
+                               FontSize="24"
+                               TextColor="#7B818A"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Column="1" WidthRequest="132" HeightRequest="58">
+                    <Button Text="Giỏ hàng"
+                            Style="{StaticResource PillSecondaryButton}"
+                            BackgroundColor="White"
+                            TextColor="#F0442E"
+                            BorderColor="White"
+                            Padding="18,10"
+                            HeightRequest="54"
+                            Clicked="OnOpenCartClicked" />
+                    <Border BackgroundColor="#213145"
+                            StrokeThickness="0"
+                            Padding="7,2"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start"
+                            Margin="0,-6,-4,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10" />
+                        </Border.StrokeShape>
+                        <Label Text="{Binding CustomerCartBadge}"
+                               TextColor="White"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" />
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="48,30" Spacing="24">
+                <Border Style="{StaticResource PageHeaderCard}"
+                        IsVisible="{Binding IsManagementView}">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="24">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Quản lý sản phẩm" Style="{StaticResource DisplayXlLabel}" />
+                            <Label Text="Theo dõi danh sách, tồn kho và hiệu suất bán hàng theo tháng."
+                                   Style="{StaticResource BodyMdLabel}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1"
+                                Text="+ THÊM SẢN PHẨM"
+                                Style="{StaticResource PillPrimaryButton}"
+                                VerticalOptions="Center"
+                                IsVisible="{Binding CanManageProducts}"
+                                Clicked="OnAddProductClicked" />
+                    </Grid>
+                </Border>
+
+                <Grid IsVisible="{Binding IsCustomer}"
+                      ColumnDefinitions="*,Auto"
+                      ColumnSpacing="24">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Sản phẩm đang bán"
+                               Style="{StaticResource DisplayXlLabel}" />
+                        <Label Text="{Binding CustomerCartText}"
                                Style="{StaticResource BodyMdLabel}" />
                     </VerticalStackLayout>
-                    <Button Grid.Column="1" Text="+ THÊM SẢN PHẨM"
-                            Style="{StaticResource PillPrimaryButton}"
-                            VerticalOptions="Center"
-                            IsVisible="{Binding CanManageProducts}"
-                            Clicked="OnAddProductClicked" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="6" WidthRequest="300">
+                        <Label Text="LỌC DANH MỤC"
+                               Style="{StaticResource LabelCapsLabel}"
+                               HorizontalTextAlignment="End" />
+                        <Picker HeightRequest="48"
+                                ItemsSource="{Binding CategoryFilters}"
+                                ItemDisplayBinding="{Binding DisplayText}"
+                                SelectedIndex="0"
+                                SelectedIndexChanged="OnCategoryFilterChanged" />
+                    </VerticalStackLayout>
                 </Grid>
-            </Border>
 
-            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16">
-                <Border Style="{StaticResource GlassCardBorder}">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="TỔNG SẢN PHẨM" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="{Binding TotalProducts}" FontSize="30" FontAttributes="Bold" />
-                    </VerticalStackLayout>
-                </Border>
-                <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="ĐANG BÁN" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="{Binding ActiveProducts}" FontSize="30" FontAttributes="Bold" />
-                    </VerticalStackLayout>
-                </Border>
-                <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="SẮP HẾT HÀNG" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Text="{Binding LowStockProducts}" FontSize="30" FontAttributes="Bold" />
-                    </VerticalStackLayout>
-                </Border>
-            </Grid>
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16"
+                      IsVisible="{Binding IsManagementView}">
+                    <Border Style="{StaticResource GlassCardBorder}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="TỔNG SẢN PHẨM" Style="{StaticResource LabelCapsLabel}" />
+                            <Label Text="{Binding TotalProducts}"
+                                   FontSize="30"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource GlassCardBorder}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="ĐANG BÁN" Style="{StaticResource LabelCapsLabel}" />
+                            <Label Text="{Binding ActiveProducts}"
+                                   FontSize="30"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="2" Style="{StaticResource GlassCardBorder}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="SẮP HẾT HÀNG" Style="{StaticResource LabelCapsLabel}" />
+                            <Label Text="{Binding LowStockProducts}"
+                                   FontSize="30"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource OnSurface}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
 
-            <Border Style="{StaticResource GlassCardBorder}">
-                <VerticalStackLayout Spacing="16">
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                        <Label Text="Danh sách sản phẩm"
-                               Style="{StaticResource HeadlineLgMobileLabel}" />
-                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
-                            <Label Text="Hiển thị theo danh mục" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
-                            <Picker x:Name="CategoryFilterPicker"
-                                    WidthRequest="210"
-                                    HeightRequest="48"
-                                    ItemsSource="{Binding CategoryFilters}"
-                                    ItemDisplayBinding="{Binding DisplayText}"
-                                    SelectedIndex="0"
-                                    SelectedIndexChanged="OnCategoryFilterChanged" />
-                            
-                        </HorizontalStackLayout>
-                    </Grid>
+                <Border Style="{StaticResource GlassCardBorder}"
+                        IsVisible="{Binding IsManagementView}">
+                    <VerticalStackLayout Spacing="16">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Label Text="Danh sách sản phẩm"
+                                   Style="{StaticResource HeadlineLgMobileLabel}" />
+                            <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                <Label Text="Hiển thị theo danh mục" Style="{StaticResource BodyMdLabel}" VerticalTextAlignment="Center" />
+                                <Picker WidthRequest="210"
+                                        HeightRequest="48"
+                                        ItemsSource="{Binding CategoryFilters}"
+                                        ItemDisplayBinding="{Binding DisplayText}"
+                                        SelectedIndex="0"
+                                        SelectedIndexChanged="OnCategoryFilterChanged" />
+                            </HorizontalStackLayout>
+                        </Grid>
 
-                    <Grid ColumnDefinitions="2.4*,1.1*,1.4*,0.8*,1.2*,1.2*,120"
-                          ColumnSpacing="14" Padding="10,0">
-                        <Label Text="SẢN PHẨM" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Grid.Column="1" Text="MÃ" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Grid.Column="2" Text="DANH MỤC" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Grid.Column="3" Text="TỒN KHO" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Grid.Column="4" Text="TRẠNG THÁI" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Grid.Column="5" Text="HIỆU SUẤT" Style="{StaticResource LabelCapsLabel}" />
-                        <Label Grid.Column="6" Text="" Style="{StaticResource LabelCapsLabel}" />
-                    </Grid>
-                    <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+                        <Grid ColumnDefinitions="2.4*,1.1*,1.4*,0.8*,1.2*,1.2*,120"
+                              ColumnSpacing="14" Padding="10,0">
+                            <Label Text="SẢN PHẨM" Style="{StaticResource LabelCapsLabel}" />
+                            <Label Grid.Column="1" Text="MÃ" Style="{StaticResource LabelCapsLabel}" />
+                            <Label Grid.Column="2" Text="DANH MỤC" Style="{StaticResource LabelCapsLabel}" />
+                            <Label Grid.Column="3" Text="TỒN KHO" Style="{StaticResource LabelCapsLabel}" />
+                            <Label Grid.Column="4" Text="TRẠNG THÁI" Style="{StaticResource LabelCapsLabel}" />
+                            <Label Grid.Column="5" Text="HIỆU SUẤT" Style="{StaticResource LabelCapsLabel}" />
+                            <Label Grid.Column="6" Text="" Style="{StaticResource LabelCapsLabel}" />
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
 
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Products}" Spacing="6">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="models:ProductItem">
-                                <Border BackgroundColor="{DynamicResource SurfaceContainerLow}"
-                                        StrokeThickness="0" Padding="10,12">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="12" />
-                                    </Border.StrokeShape>
-                                    <Grid ColumnDefinitions="2.4*,1.1*,1.4*,0.8*,1.2*,1.2*,120"
-                                          ColumnSpacing="14">
-                                        <HorizontalStackLayout Spacing="12">
-                                            <Border WidthRequest="52" HeightRequest="52"
-                                                    BackgroundColor="{DynamicResource SurfaceContainerHigh}"
-                                                    StrokeThickness="0">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Products}" Spacing="6">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:ProductItem">
+                                    <Border BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                                            StrokeThickness="0" Padding="10,12">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12" />
+                                        </Border.StrokeShape>
+                                        <Grid ColumnDefinitions="2.4*,1.1*,1.4*,0.8*,1.2*,1.2*,120"
+                                              ColumnSpacing="14">
+                                            <HorizontalStackLayout Spacing="12">
+                                                <Border WidthRequest="52" HeightRequest="52"
+                                                        BackgroundColor="{DynamicResource SurfaceContainerHigh}"
+                                                        StrokeThickness="0">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="10" />
+                                                    </Border.StrokeShape>
+                                                    <Grid>
+                                                        <Label Text="{Binding Initials}" HorizontalOptions="Center"
+                                                               VerticalOptions="Center" FontAttributes="Bold"
+                                                               TextColor="{DynamicResource Primary}" />
+                                                        <Image Source="{Binding ImageUrl}" Aspect="AspectFill" />
+                                                    </Grid>
+                                                </Border>
+                                                <VerticalStackLayout VerticalOptions="Center" Spacing="2">
+                                                    <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}"
+                                                           LineBreakMode="TailTruncation" />
+                                                    <Label Text="{Binding Price}" FontSize="12"
+                                                           TextColor="{DynamicResource OnSurfaceVariant}" />
+                                                </VerticalStackLayout>
+                                            </HorizontalStackLayout>
+                                            <Label Grid.Column="1" Text="{Binding Code}" Style="{StaticResource DataTabularLabel}"
+                                                   VerticalTextAlignment="Center" />
+                                            <Border Grid.Column="2" BackgroundColor="{DynamicResource PrimaryContainer}"
+                                                    StrokeThickness="0" Padding="10,6"
+                                                    HorizontalOptions="Fill" VerticalOptions="Center"
+                                                    MinimumHeightRequest="38">
                                                 <Border.StrokeShape>
                                                     <RoundRectangle CornerRadius="10" />
                                                 </Border.StrokeShape>
-                                                <Grid>
-                                                    <Label Text="{Binding Initials}" HorizontalOptions="Center"
-                                                           VerticalOptions="Center" FontAttributes="Bold"
-                                                           TextColor="{DynamicResource Primary}" />
-                                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill" />
-                                                </Grid>
+                                                <Label Text="{Binding Category}" FontSize="12"
+                                                       TextColor="{DynamicResource Primary}"
+                                                       FontAttributes="Bold"
+                                                       LineBreakMode="WordWrap"
+                                                       VerticalTextAlignment="Center" />
                                             </Border>
-                                            <VerticalStackLayout VerticalOptions="Center" Spacing="2">
-                                                <Label Text="{Binding Name}" Style="{StaticResource DataTabularLabel}"
-                                                       LineBreakMode="TailTruncation" />
-                                                <Label Text="{Binding Price}" FontSize="12"
-                                                       TextColor="{DynamicResource OnSurfaceVariant}" />
-                                            </VerticalStackLayout>
-                                        </HorizontalStackLayout>
-                                        <Label Grid.Column="1" Text="{Binding Code}" Style="{StaticResource DataTabularLabel}"
-                                               VerticalTextAlignment="Center" />
-                                        <Border Grid.Column="2" BackgroundColor="{DynamicResource PrimaryContainer}"
-                                                StrokeThickness="0" Padding="10,6"
-                                                HorizontalOptions="Fill" VerticalOptions="Center"
-                                                MinimumHeightRequest="38">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="10" />
-                                            </Border.StrokeShape>
-                                            <Label Text="{Binding Category}" FontSize="12"
-                                                   LineBreakMode="WordWrap"
+                                            <Label Grid.Column="3" Text="{Binding Stock}" Style="{StaticResource DataTabularLabel}"
                                                    VerticalTextAlignment="Center" />
+                                            <HorizontalStackLayout Grid.Column="4" Spacing="7" VerticalOptions="Center">
+                                                <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4"
+                                                         Color="{Binding BadgeColor}" />
+                                                <Label Text="{Binding BadgeText}" FontSize="12"
+                                                       TextColor="{DynamicResource OnSurface}"
+                                                       FontAttributes="Bold"
+                                                       VerticalTextAlignment="Center" />
+                                            </HorizontalStackLayout>
+                                            <HorizontalStackLayout Grid.Column="5" Spacing="5" VerticalOptions="Center">
+                                                <Label Text="{Binding PerformanceIcon}" FontSize="16"
+                                                       FontAttributes="Bold" TextColor="{Binding PerformanceColor}" />
+                                                <Label Text="{Binding PerformanceText}" FontSize="13"
+                                                       FontAttributes="Bold" TextColor="{Binding PerformanceColor}" />
+                                            </HorizontalStackLayout>
+                                            <Button Grid.Column="6"
+                                                    WidthRequest="120"
+                                                    Text="{Binding ActionText}"
+                                                    Style="{StaticResource PillSecondaryButton}"
+                                                    Padding="12,7"
+                                                    CommandParameter="{Binding Id}"
+                                                    Clicked="OnOpenDetailClicked" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+
+                        <Label Text="{Binding EmptyProductsText}" Style="{StaticResource BodyMdLabel}"
+                               HorizontalTextAlignment="Center" Margin="0,10" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <VerticalStackLayout IsVisible="{Binding IsCustomer}" Spacing="18">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="1"
+                               Text="{Binding PaginationText}"
+                               Style="{StaticResource BodyMdLabel}"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+
+                    <FlexLayout Wrap="Wrap"
+                                Direction="Row"
+                                AlignItems="Start"
+                                AlignContent="Start"
+                                BindableLayout.ItemsSource="{Binding Products}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:ProductItem">
+                                <Border BackgroundColor="White"
+                                        Stroke="#E2E6EC"
+                                        StrokeThickness="1"
+                                        WidthRequest="220"
+                                        HeightRequest="330"
+                                        Margin="0,0,16,16"
+                                        Padding="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8" />
+                                    </Border.StrokeShape>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer CommandParameter="{Binding Id}"
+                                                              Tapped="OnOpenDetailTapped" />
+                                    </Border.GestureRecognizers>
+                                    <Grid RowDefinitions="170,*,Auto">
+                                        <Border BackgroundColor="{DynamicResource SurfaceContainerLow}"
+                                                StrokeThickness="0">
+                                            <Grid>
+                                                <Label Text="{Binding Initials}"
+                                                       FontSize="42"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{DynamicResource Primary}"
+                                                       Opacity="0.28"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center" />
+                                                <Image Source="{Binding ImageUrl}"
+                                                       Aspect="AspectFill"
+                                                       HorizontalOptions="Fill"
+                                                       VerticalOptions="Fill" />
+                                            </Grid>
                                         </Border>
-                                        <Label Grid.Column="3" Text="{Binding Stock}" Style="{StaticResource DataTabularLabel}"
-                                               VerticalTextAlignment="Center" />
-                                        <HorizontalStackLayout Grid.Column="4" Spacing="7" VerticalOptions="Center">
-                                            <BoxView WidthRequest="8" HeightRequest="8" CornerRadius="4"
-                                                     Color="{Binding BadgeColor}" />
-                                            <Label Text="{Binding BadgeText}" FontSize="12"
-                                                   VerticalTextAlignment="Center" />
-                                        </HorizontalStackLayout>
-                                        <HorizontalStackLayout Grid.Column="5" Spacing="5" VerticalOptions="Center">
-                                            <Label Text="{Binding PerformanceIcon}" FontSize="16"
-                                                   FontAttributes="Bold" TextColor="{Binding PerformanceColor}" />
-                                            <Label Text="{Binding PerformanceText}" FontSize="13"
-                                                   FontAttributes="Bold" TextColor="{Binding PerformanceColor}" />
-                                        </HorizontalStackLayout>
-                                        <Button Grid.Column="6"
-                                                WidthRequest="120"
-                                                Text="CHI TIẾT"
-                                                Style="{StaticResource PillSecondaryButton}"
-                                                Padding="12,7"
+
+                                        <VerticalStackLayout Grid.Row="1" Padding="12,10,12,0" Spacing="6">
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="15"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{DynamicResource OnSurface}"
+                                                   LineBreakMode="TailTruncation"
+                                                   MaxLines="2" />
+                                            <Label Text="{Binding Category}"
+                                                   FontSize="12"
+                                                   TextColor="{DynamicResource OnSurfaceVariant}"
+                                                   LineBreakMode="TailTruncation" />
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <Label Text="{Binding Price}"
+                                                       FontSize="22"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#F0442E"
+                                                       VerticalTextAlignment="Center" />
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding BadgeText}"
+                                                       FontSize="11"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{Binding BadgeColor}"
+                                                       VerticalTextAlignment="Center" />
+                                            </Grid>
+                                        </VerticalStackLayout>
+
+                                        <Button Grid.Row="2"
+                                                Text="XEM CHI TIẾT"
+                                                BackgroundColor="#F0442E"
+                                                TextColor="White"
+                                                CornerRadius="0"
+                                                HeightRequest="46"
+                                                FontFamily="Inter"
+                                                FontAttributes="Bold"
                                                 CommandParameter="{Binding Id}"
                                                 Clicked="OnOpenDetailClicked" />
                                     </Grid>
                                 </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
-                    </VerticalStackLayout>
+                    </FlexLayout>
 
-                    <Label Text="{Binding EmptyProductsText}" Style="{StaticResource BodyMdLabel}"
-                           HorizontalTextAlignment="Center" Margin="0,10" />
+                    <Label Text="{Binding EmptyProductsText}"
+                           IsVisible="{Binding IsProductsEmpty}"
+                           Style="{StaticResource BodyMdLabel}"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,24" />
                 </VerticalStackLayout>
-            </Border>
 
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                <Label Text="{Binding PaginationText}" Style="{StaticResource BodyMdLabel}"
-                       VerticalTextAlignment="Center" />
-                <HorizontalStackLayout Grid.Column="1" Spacing="6">
-                    <Button Text="TRƯỚC" Style="{StaticResource PillSecondaryButton}"
-                            IsEnabled="{Binding CanGoPrevious}"
-                            Clicked="OnPreviousPageClicked" />
-                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding PageButtons}" Spacing="6">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="models:PageButtonItem">
-                                <Button Text="{Binding Text}"
-                                        WidthRequest="44" HeightRequest="42" Padding="4"
-                                        BackgroundColor="{Binding BackgroundColor}"
-                                        TextColor="{Binding TextColor}"
-                                        BorderColor="{DynamicResource Primary}"
-                                        BorderWidth="1"
-                                        CornerRadius="10"
-                                        CommandParameter="{Binding PageNumber}"
-                                        Clicked="OnPageClicked" />
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16"
+                      IsVisible="{Binding IsManagementView}">
+                    <Label Text="{Binding PaginationText}" Style="{StaticResource BodyMdLabel}"
+                           VerticalTextAlignment="Center" />
+                    <HorizontalStackLayout Grid.Column="1" Spacing="6">
+                        <Button Text="TRƯỚC" Style="{StaticResource PillSecondaryButton}"
+                                IsEnabled="{Binding CanGoPrevious}"
+                                Clicked="OnPreviousPageClicked" />
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding PageButtons}" Spacing="6">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:PageButtonItem">
+                                    <Button Text="{Binding Text}"
+                                            WidthRequest="44" HeightRequest="42" Padding="4"
+                                            BackgroundColor="{Binding BackgroundColor}"
+                                            TextColor="{Binding TextColor}"
+                                            BorderColor="{DynamicResource Primary}"
+                                            BorderWidth="1"
+                                            CornerRadius="10"
+                                            CommandParameter="{Binding PageNumber}"
+                                            Clicked="OnPageClicked" />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                        <Button Text="SAU" Style="{StaticResource PillSecondaryButton}"
+                                IsEnabled="{Binding CanGoNext}"
+                                Clicked="OnNextPageClicked" />
                     </HorizontalStackLayout>
-                    <Button Text="SAU" Style="{StaticResource PillSecondaryButton}"
-                            IsEnabled="{Binding CanGoNext}"
-                            Clicked="OnNextPageClicked" />
-                </HorizontalStackLayout>
-            </Grid>
-        </VerticalStackLayout>
-    </ScrollView>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

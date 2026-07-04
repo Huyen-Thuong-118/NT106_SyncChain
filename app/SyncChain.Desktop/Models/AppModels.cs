@@ -87,6 +87,7 @@ public sealed class ProductItem
 	public string PerformanceIcon { get; init; } = string.Empty;
 	public Color PerformanceColor { get; init; } = Colors.Transparent;
 	public double HealthProgress { get; init; }
+	public string ActionText { get; init; } = string.Empty;
 }
 
 public sealed class ProductCategoryFilterItem

@@ -7,6 +7,7 @@
     <Grid>
         <ScrollView>
             <VerticalStackLayout Padding="64,30" Spacing="24">
+                <Border Style="{StaticResource PageHeaderCard}">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
                     <VerticalStackLayout>
                         <Label Text="Nhật ký hoạt động" Style="{StaticResource DisplayXlLabel}" />
@@ -17,6 +18,7 @@
                             Style="{StaticResource PillSecondaryButton}"
                             Clicked="OnReloadClicked" />
                 </Grid>
+                </Border>
 
                 <Border Style="{StaticResource GlassCardBorder}">
                     <Grid ColumnDefinitions="2*,1*,1.2*,1*,Auto"
@@ -128,19 +130,23 @@
                                                 </Border>
                                                 <Label Text="{Binding Title}"
                                                        Style="{StaticResource DataTabularLabel}"
+                                                       TextColor="{DynamicResource OnSurface}"
                                                        VerticalTextAlignment="Center"
                                                        LineBreakMode="TailTruncation" />
                                             </HorizontalStackLayout>
                                             <Label Grid.Column="1" Text="{Binding Description}"
                                                    Style="{StaticResource BodyMdLabel}"
+                                                   TextColor="{DynamicResource OnSurface}"
                                                    VerticalTextAlignment="Center"
                                                    LineBreakMode="TailTruncation" />
                                             <Label Grid.Column="2" Text="{Binding Tag}"
                                                    Style="{StaticResource BodyMdLabel}"
+                                                   TextColor="{DynamicResource OnSurface}"
                                                    VerticalTextAlignment="Center"
                                                    LineBreakMode="TailTruncation" />
                                             <Label Grid.Column="3" Text="{Binding Time}"
                                                    Style="{StaticResource BodyMdLabel}"
+                                                   TextColor="{DynamicResource OnSurfaceVariant}"
                                                    VerticalTextAlignment="Center" />
                                             <Label Grid.Column="4" Text="{Binding ResultText}"
                                                    TextColor="{Binding Accent}"

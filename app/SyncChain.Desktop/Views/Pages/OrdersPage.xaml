@@ -6,6 +6,7 @@
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
         <VerticalStackLayout Padding="64,30" Spacing="24">
+            <Border Style="{StaticResource PageHeaderCard}">
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" VerticalOptions="Center">
                 <Label Text="Quản lý Đơn hàng"
                        Style="{StaticResource DisplayXlLabel}"
@@ -18,6 +19,7 @@
                             Style="{StaticResource PillPrimaryButton}" />
                 </HorizontalStackLayout>
             </Grid>
+            </Border>
 
             <!-- Giữ bố cục hai thẻ giống giao diện cũ -->
             <Grid ColumnDefinitions="1.4*,*" ColumnSpacing="24">

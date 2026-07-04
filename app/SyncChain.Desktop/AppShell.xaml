@@ -7,10 +7,12 @@
     FlyoutBackgroundColor="#CCEFF4FF"
     FlyoutBehavior="Flyout"
     FlyoutWidth="280"
-    Shell.BackgroundColor="#CCFFFFFF"
-    Shell.ForegroundColor="{StaticResource Primary}"
-    Shell.TitleColor="{StaticResource Primary}"
-    Shell.UnselectedColor="{StaticResource OnSurfaceVariant}"
+    Shell.BackgroundColor="{StaticResource Primary}"
+    Shell.ForegroundColor="White"
+    Shell.TitleColor="White"
+    Shell.DisabledColor="#80FFFFFF"
+    Shell.UnselectedColor="#DCE6F5"
+    Shell.NavBarHasShadow="False"
     Shell.NavBarIsVisible="False">
 
     <!-- ═══════════════════════════════════════════════════════════════
