@@ -23,6 +23,9 @@ public partial class AddressPage : ContentPage
 		await LoadAsync();
 	}
 
+	private async void OnBackClicked(object? sender, EventArgs e) =>
+		await Shell.Current.GoToAsync("//cart");
+
 	private async Task LoadAsync()
 	{
 		try

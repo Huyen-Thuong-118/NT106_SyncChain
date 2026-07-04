@@ -2,73 +2,138 @@
 <ContentPage x:Class="SyncChain.Desktop.Views.Pages.OrderTrackingPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:models="clr-namespace:SyncChain.Desktop.Models"
+             BackgroundColor="#EAF6FF"
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
-        <VerticalStackLayout Padding="64,40" Spacing="24" MaximumWidthRequest="680"
+        <VerticalStackLayout Padding="64,40"
+                             Spacing="24"
+                             MaximumWidthRequest="760"
                              HorizontalOptions="Center">
-
-            <!-- Header -->
-            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
-                <Button Text="← Quay lại" Style="{StaticResource PillSecondaryButton}"
-                        Clicked="OnBackClicked" VerticalOptions="Center" />
-                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+            <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="10">
+                <Button Text="☰"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        Padding="0"
+                        Style="{StaticResource PillSecondaryButton}"
+                        Clicked="OnMenuClicked" />
+                <Button Grid.Column="1"
+                        Text="← QUAY LẠI"
+                        Style="{StaticResource PillSecondaryButton}"
+                        Clicked="OnBackClicked" />
+                <Button Grid.Column="2"
+                        Text="TRANG CHỦ"
+                        Style="{StaticResource PillSecondaryButton}"
+                        Clicked="OnHomeClicked" />
+                <VerticalStackLayout Grid.Column="3" Spacing="6">
                     <Label x:Name="OrderCodeLabel" Style="{StaticResource DisplayXlLabel}" />
                     <Label x:Name="OrderDateLabel" Style="{StaticResource BodyMdLabel}" />
                 </VerticalStackLayout>
-                <Button x:Name="PayButton" Grid.Column="2" Text="THANH TOÁN"
+                <Button x:Name="PayButton"
+                        Grid.Column="4"
+                        Text="THANH TOÁN"
+                        BackgroundColor="#F0442E"
+                        BorderColor="#F0442E"
+                        TextColor="White"
                         Style="{StaticResource PillPrimaryButton}"
-                        Clicked="OnPayClicked" IsVisible="False" VerticalOptions="Center" />
+                        Clicked="OnPayClicked"
+                        IsVisible="False"
+                        VerticalOptions="Center" />
             </Grid>
 
-            <!-- Trạng thái & Phương thức -->
-            <Border Style="{StaticResource GlassCardBorder}">
+            <Border BackgroundColor="White"
+                    Stroke="#D8E1EB"
+                    StrokeThickness="1"
+                    Padding="22">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="32">
-                    <VerticalStackLayout Spacing="4">
+                    <VerticalStackLayout Spacing="8">
                         <Label Text="TRẠNG THÁI" Style="{StaticResource LabelCapsLabel}" />
-                        <Border x:Name="StatusBadge" StrokeThickness="0" Padding="14,6" HorizontalOptions="Start">
-                            <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                            <Label x:Name="StatusLabel" Style="{StaticResource StatusBadgePill}" Padding="0" />
+                        <Border x:Name="StatusBadge"
+                                StrokeThickness="0"
+                                Padding="14,6"
+                                HorizontalOptions="Start">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            <Label x:Name="StatusLabel"
+                                   Style="{StaticResource StatusBadgePill}"
+                                   TextColor="White"
+                                   Padding="0" />
                         </Border>
                     </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="1" Spacing="4">
+                    <VerticalStackLayout Grid.Column="1" Spacing="8">
                         <Label Text="THANH TOÁN" Style="{StaticResource LabelCapsLabel}" />
-                        <Label x:Name="PaymentLabel" Style="{StaticResource DataTabularLabel}" />
+                        <Label x:Name="PaymentLabel"
+                               Style="{StaticResource DataTabularLabel}"
+                               TextColor="{DynamicResource OnSurface}" />
                     </VerticalStackLayout>
                 </Grid>
             </Border>
 
-            <!-- Timeline -->
-            <Border Style="{StaticResource GlassCardBorder}">
+            <Border BackgroundColor="White"
+                    Stroke="#D8E1EB"
+                    StrokeThickness="1"
+                    Padding="22">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
                 <VerticalStackLayout Spacing="16">
-                    <Label Text="Tiến trình đơn hàng" Style="{StaticResource HeadlineLgMobileLabel}" FontSize="20" />
-                    <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
-
+                    <Label Text="Tiến trình đơn hàng"
+                           Style="{StaticResource HeadlineLgMobileLabel}"
+                           FontSize="20" />
+                    <BoxView HeightRequest="1" Color="#D8E1EB" />
                     <VerticalStackLayout x:Name="TimelineStack" Spacing="0" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Địa chỉ giao hàng -->
-            <Border Style="{StaticResource GlassCardBorder}">
+            <Border BackgroundColor="White"
+                    Stroke="#D8E1EB"
+                    StrokeThickness="1"
+                    Padding="22">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Địa chỉ giao hàng" Style="{StaticResource HeadlineLgMobileLabel}" FontSize="20" />
-                    <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
-                    <Label x:Name="RecipientLabel" Style="{StaticResource DataTabularLabel}" />
-                    <Label x:Name="AddressLabel" Style="{StaticResource BodyMdLabel}" />
+                    <Label Text="Địa chỉ giao hàng"
+                           Style="{StaticResource HeadlineLgMobileLabel}"
+                           FontSize="20" />
+                    <BoxView HeightRequest="1" Color="#D8E1EB" />
+                    <Label x:Name="RecipientLabel"
+                           Style="{StaticResource DataTabularLabel}"
+                           TextColor="{DynamicResource OnSurface}" />
+                    <Label x:Name="AddressLabel"
+                           Style="{StaticResource BodyMdLabel}"
+                           TextColor="{DynamicResource OnSurfaceVariant}" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Danh sách sản phẩm -->
-            <Border Style="{StaticResource GlassCardBorder}">
+            <Border BackgroundColor="White"
+                    Stroke="#D8E1EB"
+                    StrokeThickness="1"
+                    Padding="22">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
                 <VerticalStackLayout Spacing="16">
-                    <Label Text="Sản phẩm" Style="{StaticResource HeadlineLgMobileLabel}" FontSize="20" />
-                    <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+                    <Label Text="Sản phẩm"
+                           Style="{StaticResource HeadlineLgMobileLabel}"
+                           FontSize="20" />
+                    <BoxView HeightRequest="1" Color="#D8E1EB" />
                     <VerticalStackLayout x:Name="ProductStack" Spacing="10" />
-                    <BoxView HeightRequest="1" Color="{DynamicResource OutlineVariant}" />
+                    <BoxView HeightRequest="1" Color="#D8E1EB" />
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="Tổng cộng" Style="{StaticResource DataTabularLabel}" FontSize="16" VerticalTextAlignment="Center" />
-                        <Label x:Name="TotalLabel" Grid.Column="1" Style="{StaticResource DataTabularLabel}" FontSize="18"
-                               TextColor="{DynamicResource Primary}" VerticalTextAlignment="Center" />
+                        <Label Text="Tổng cộng"
+                               Style="{StaticResource DataTabularLabel}"
+                               FontSize="16"
+                               VerticalTextAlignment="Center" />
+                        <Label x:Name="TotalLabel"
+                               Grid.Column="1"
+                               Style="{StaticResource DataTabularLabel}"
+                               FontSize="20"
+                               TextColor="#F0442E"
+                               VerticalTextAlignment="Center" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>

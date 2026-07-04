@@ -64,6 +64,12 @@ public partial class CustomerOrdersPage : ContentPage
 
 	private async void OnRefreshClicked(object? sender, EventArgs e) => await LoadAsync();
 
+	private async void OnHomeClicked(object? sender, EventArgs e) =>
+		await Shell.Current.GoToAsync("//customer-home");
+
+	private async void OnShopClicked(object? sender, EventArgs e) =>
+		await Shell.Current.GoToAsync("//products");
+
 	private async void OnDetailClicked(object? sender, EventArgs e)
 	{
 		if (sender is Button b && int.TryParse(b.CommandParameter?.ToString(), out var id))
