@@ -59,11 +59,12 @@
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Spacing="6">
-                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                                <CheckBox IsChecked="True" Color="{DynamicResource Primary}" />
+                            <Grid ColumnDefinitions="32,*" ColumnSpacing="6" HorizontalOptions="Start">
+                                <CheckBox IsChecked="True" Color="{DynamicResource Primary}" WidthRequest="24" HeightRequest="24" VerticalOptions="Center" HorizontalOptions="Start" />
                                 <Label Grid.Column="1"
                                        Text="Ghi nhớ đăng nhập"
                                        Style="{StaticResource BodyMdLabel}"
+                                       HorizontalTextAlignment="Start"
                                        VerticalTextAlignment="Center" />
                             </Grid>
                         </VerticalStackLayout>
