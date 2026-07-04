@@ -88,6 +88,10 @@ public class PaymentController : ControllerBase
             _db.ThanhToan.Add(payment);
             await _db.SaveChangesAsync();
 
+            // COD khong can cho thanh toan → xac nhan dat hang thanh cong ngay,
+            // gio moi duoc xoa cac san pham cua don nay.
+            await _orders.ClearPurchasedItemsAsync(order.MaDonHang);
+
             var owner = await _db.NguoiDung.FindAsync(order.MaNguoiDung);
             var name  = $"{owner?.Ho} {owner?.Ten}".Trim();
             if (string.IsNullOrEmpty(name)) name = owner?.TenDangNhap ?? "Khách hàng";
@@ -191,8 +195,10 @@ public class PaymentController : ControllerBase
             await _notify.PushPaymentResultAsync(order.MaNguoiDung, order.MaDonHang, success, "VNPay");
             if (success)
             {
-                // Thanh toan online thanh cong: tu dong chuyen don sang "dang xu ly".
+                // Thanh toan online thanh cong: tu dong chuyen don sang "dang xu ly"
+                // va xoa cac san pham cua don khoi gio hang (chi khi da thanh toan).
                 await _orders.AdvanceToProcessingAfterPaymentAsync(order.MaDonHang);
+                await _orders.ClearPurchasedItemsAsync(order.MaDonHang);
                 if (owner != null)
                 {
                     _email.SendOrderConfirmation(owner.Email, name, order.MaDonHang, order.TongTien, "VNPay");
@@ -263,8 +269,10 @@ public class PaymentController : ControllerBase
             await _notify.PushPaymentResultAsync(order.MaNguoiDung, order.MaDonHang, success, "MoMo");
             if (success)
             {
-                // Thanh toan online thanh cong: tu dong chuyen don sang "dang xu ly".
+                // Thanh toan online thanh cong: tu dong chuyen don sang "dang xu ly"
+                // va xoa cac san pham cua don khoi gio hang (chi khi da thanh toan).
                 await _orders.AdvanceToProcessingAfterPaymentAsync(order.MaDonHang);
+                await _orders.ClearPurchasedItemsAsync(order.MaDonHang);
                 if (owner != null)
                 {
                     _email.SendOrderConfirmation(owner.Email, name, order.MaDonHang, order.TongTien, "MoMo");
