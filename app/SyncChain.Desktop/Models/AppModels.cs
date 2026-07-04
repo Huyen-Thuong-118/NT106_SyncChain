@@ -520,10 +520,24 @@ public sealed class RoleOption
 	public bool IsSelected { get; init; }
 }
 
-public sealed class PaymentOption
+public sealed class PaymentOption : INotifyPropertyChanged
 {
+	private bool _isSelected;
+
 	public string Name { get; init; } = string.Empty;
-	public bool IsSelected { get; init; }
+	public string Value { get; init; } = "cod";
+	public bool IsSelected
+	{
+		get => _isSelected;
+		set
+		{
+			if (_isSelected == value) return;
+			_isSelected = value;
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+		}
+	}
+
+	public event PropertyChangedEventHandler? PropertyChanged;
 }
 
 public sealed class LoginResponseApi

@@ -29,6 +29,7 @@ public partial class CreateOrderPage : ContentPage
 	private DeliveryEstimateApi? _estimate;
 	private bool _isProductPickerOpen;
 	private string _productSearchText = string.Empty;
+	private readonly string _paymentCodeSeed = DateTime.Now.ToString("yyyyMMddHHmmss");
 
 	public ObservableCollection<CreateOrderLine> Lines { get; } = new();
 	public ObservableCollection<ProvinceApi> Provinces { get; } = new();
@@ -84,6 +85,46 @@ public partial class CreateOrderPage : ContentPage
 		? ""
 		: $"{_estimate.DeliveryDays:N0} ngày · dự kiến {_estimate.EarliestDelivery:dd/MM}–{_estimate.LatestDelivery:dd/MM}";
 	public string TotalText => $"{Subtotal + ShippingFee:N0} đ";
+	public string SelectedPaymentMethod
+	{
+		get
+		{
+			var selectedIndex = Payments
+				.Select((payment, index) => new { payment, index })
+				.FirstOrDefault(x => x.payment.IsSelected)?.index ?? 0;
+			return selectedIndex switch
+			{
+				1 => "bank",
+				2 => "momo",
+				_ => "cod"
+			};
+		}
+	}
+	public bool ShowPaymentCode => SelectedPaymentMethod is "bank" or "momo";
+	public string PaymentCodeTitle => SelectedPaymentMethod switch
+	{
+		"bank" => "Ma chuyen khoan",
+		"momo" => "Ma thanh toan MoMo",
+		_ => string.Empty
+	};
+	public string PaymentCode => SelectedPaymentMethod switch
+	{
+		"bank" => $"SC-{_paymentCodeSeed}",
+		"momo" => $"MOMO-{_paymentCodeSeed}",
+		_ => string.Empty
+	};
+	public string PaymentQrImageUrl
+	{
+		get
+		{
+			if (!ShowPaymentCode)
+				return string.Empty;
+
+			var payload = $"SYNCCHAIN|METHOD={SelectedPaymentMethod}|CODE={PaymentCode}|AMOUNT={Subtotal + ShippingFee:0}";
+			return $"https://api.qrserver.com/v1/create-qr-code/?size=180x180&data={Uri.EscapeDataString(payload)}";
+		}
+	}
+	public string PaymentAmountText => TotalText;
 	public IReadOnlyList<PaymentOption> Payments { get; private set; } = new List<PaymentOption>
 	{
 		new() { Name = "Tiền mặt khi nhận hàng", IsSelected = true },
@@ -206,6 +247,22 @@ public partial class CreateOrderPage : ContentPage
 		if (_isAdjustingService)
 			return;
 		await RefreshShippingEstimateAsync();
+	}
+
+	private void OnPaymentMethodTapped(object? sender, TappedEventArgs e)
+	{
+		if ((sender as BindableObject)?.BindingContext is not PaymentOption selected)
+			return;
+
+		foreach (var payment in Payments)
+			payment.IsSelected = payment == selected;
+
+		OnPropertyChanged(nameof(SelectedPaymentMethod));
+		OnPropertyChanged(nameof(ShowPaymentCode));
+		OnPropertyChanged(nameof(PaymentCodeTitle));
+		OnPropertyChanged(nameof(PaymentCode));
+		OnPropertyChanged(nameof(PaymentQrImageUrl));
+		OnPropertyChanged(nameof(PaymentAmountText));
 	}
 
 	private async Task RefreshShippingEstimateAsync()
@@ -613,7 +670,8 @@ public partial class CreateOrderPage : ContentPage
 			nameof(Lines), nameof(IsCartEmpty), nameof(CanCreateOrder),
 			nameof(SalesChannel), nameof(RequiresShipping),
 			nameof(Subtotal), nameof(SubtotalText), nameof(ShippingFee),
-			nameof(ShippingFeeText), nameof(DeliveryEstimateText), nameof(TotalText)
+			nameof(ShippingFeeText), nameof(DeliveryEstimateText), nameof(TotalText),
+			nameof(PaymentAmountText), nameof(PaymentQrImageUrl)
 		})
 			OnPropertyChanged(property);
 	}
@@ -624,7 +682,8 @@ public partial class CreateOrderPage : ContentPage
 		{
 			nameof(Wards), nameof(CanSelectWard), nameof(ShippingFee),
 			nameof(CanUseExpress), nameof(ShippingFeeText),
-			nameof(DeliveryEstimateText), nameof(TotalText)
+			nameof(DeliveryEstimateText), nameof(TotalText),
+			nameof(PaymentAmountText), nameof(PaymentQrImageUrl)
 		})
 			OnPropertyChanged(property);
 	}
