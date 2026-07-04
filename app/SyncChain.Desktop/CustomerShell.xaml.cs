@@ -5,9 +5,12 @@ public partial class CustomerShell : Shell
 	public CustomerShell()
 	{
 		InitializeComponent();
+		// Các route điều hướng chi tiết mở từ cổng khách hàng. ProductDetailPage
+		// bắt buộc phải đăng ký ở đây: CustomerShell không tạo AppShell nên nếu
+		// thiếu, thao tác mở chi tiết sản phẩm từ ProductsPage sẽ ném lỗi và sập app.
+		Routing.RegisterRoute(nameof(Views.Pages.ProductDetailPage), typeof(Views.Pages.ProductDetailPage));
 		Routing.RegisterRoute(nameof(Views.Pages.OrderDetailPage), typeof(Views.Pages.OrderDetailPage));
 		Routing.RegisterRoute(nameof(Views.Pages.OrderTrackingPage), typeof(Views.Pages.OrderTrackingPage));
-		Routing.RegisterRoute(nameof(Views.Pages.ProductDetailPage), typeof(Views.Pages.ProductDetailPage));
 		Routing.RegisterRoute(nameof(Views.Pages.PaymentPage), typeof(Views.Pages.PaymentPage));
 		Navigated += (_, _) => FlyoutIsPresented = false;
 

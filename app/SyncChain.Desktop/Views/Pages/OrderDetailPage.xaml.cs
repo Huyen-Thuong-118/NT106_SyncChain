@@ -60,7 +60,31 @@ public partial class OrderDetailPage : ContentPage, IQueryAttributable
 	private async Task LoadAsync()
 	{
 		if (_orderId <= 0) return;
-		_order = await _http.GetFromJsonAsync<OrderDetailApi>($"api/order/{_orderId}");
+
+		// Bọc toàn bộ luồng tải trong try/catch: OnAppearing là async void nên mọi
+		// exception (401 hết phiên, 403, 500, mất mạng...) nếu không bắt sẽ thoát ra
+		// và làm sập ứng dụng. 401 → điều hướng an toàn về trang đăng nhập.
+		try
+		{
+			_order = await _http.GetFromJsonAsync<OrderDetailApi>($"api/order/{_orderId}");
+			if (_order == null) return;
+
+			await PopulateAsync();
+		}
+		catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+		{
+			await this.HandleUnauthorizedAsync();
+		}
+		catch (Exception ex)
+		{
+			AppLog.Error("OrderDetail", $"Không tải được đơn #{_orderId}", ex);
+			await DisplayAlertAsync("Không tải được đơn hàng",
+				"Đã xảy ra lỗi khi tải chi tiết đơn. Vui lòng thử lại.", "OK");
+		}
+	}
+
+	private async Task PopulateAsync()
+	{
 		if (_order == null) return;
 
 		OrderCode = $"#ORD-{_order.MaDonHang:0000}";
