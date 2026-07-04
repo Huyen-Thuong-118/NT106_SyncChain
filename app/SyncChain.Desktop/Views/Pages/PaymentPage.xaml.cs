@@ -6,18 +6,24 @@ namespace SyncChain.Desktop.Views.Pages;
 
 [QueryProperty(nameof(OrderId),  "orderId")]
 [QueryProperty(nameof(Amount),   "amount")]
+[QueryProperty(nameof(Subtotal), "subtotal")]
+[QueryProperty(nameof(ShippingFee), "shippingFee")]
 [QueryProperty(nameof(OrderCode),"orderCode")]
 public partial class PaymentPage : ContentPage
 {
     private readonly HttpClient _http;
     private int    _orderId;
     private decimal _amount;
+    private decimal _subtotal;
+    private decimal _shippingFee;
     private string  _orderCode = string.Empty;
     private string  _selectedMethod = "cod";
     private bool    _waitingForSignalR;
 
     public int     OrderId   { get => _orderId;   set { _orderId   = value; RefreshLabels(); } }
     public string  Amount    { get => _amount.ToString(); set { _ = decimal.TryParse(value, out _amount); RefreshLabels(); } }
+    public string  Subtotal  { get => _subtotal.ToString(); set { _ = decimal.TryParse(value, out _subtotal); RefreshLabels(); } }
+    public string  ShippingFee { get => _shippingFee.ToString(); set { _ = decimal.TryParse(value, out _shippingFee); RefreshLabels(); } }
     public string  OrderCode { get => _orderCode; set { _orderCode = value; RefreshLabels(); } }
 
     public PaymentPage() : this(Services.ApiClientProvider.Client) { }
@@ -32,7 +38,14 @@ public partial class PaymentPage : ContentPage
     {
         if (OrderInfoLabel == null) return;
         OrderInfoLabel.Text = string.IsNullOrEmpty(_orderCode) ? $"Đơn #{_orderId}" : _orderCode;
-        TotalLabel.Text     = $"{_amount:N0} đ";
+
+        // Có breakdown (đến từ giỏ hàng) → hiện Tạm tính + Phí ship rõ ràng.
+        // Không có breakdown (VD: nút Thanh toán từ trang theo dõi đơn) → tạm tính
+        // hiển thị bằng tổng, phí ship để "—" thay vì "0đ" gây hiểu nhầm.
+        var hasBreakdown = _subtotal > 0;
+        SubtotalLabel.Text = hasBreakdown ? $"{_subtotal:N0} đ" : $"{_amount:N0} đ";
+        ShippingLabel.Text = !hasBreakdown ? "—" : (_shippingFee <= 0 ? "Miễn phí" : $"{_shippingFee:N0} đ");
+        TotalLabel.Text    = $"{_amount:N0} đ";
     }
 
     protected override void OnAppearing()

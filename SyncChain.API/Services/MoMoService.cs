@@ -8,11 +8,13 @@ public class MoMoService
 {
     private readonly HttpClient _http;
     private readonly IConfiguration _config;
+    private readonly ILogger<MoMoService> _logger;
 
-    public MoMoService(HttpClient http, IConfiguration config)
+    public MoMoService(HttpClient http, IConfiguration config, ILogger<MoMoService> logger)
     {
         _http = http;
         _config = config;
+        _logger = logger;
     }
 
     public async Task<(bool success, string payUrl, string momoOrderId, string message)>
@@ -57,15 +59,55 @@ public class MoMoService
             signature
         };
 
-        var resp     = await _http.PostAsync(apiUrl,
-            new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"));
-        var respBody = await resp.Content.ReadAsStringAsync();
+        // Canh bao som neu con dung credential mau → nguyen nhan pho bien nhat khien
+        // MoMo tu choi (sai chu ky / partner khong ton tai).
+        if (partnerCode.Contains("SANDBOX", StringComparison.OrdinalIgnoreCase) ||
+            accessKey.Contains("SANDBOX", StringComparison.OrdinalIgnoreCase) ||
+            secretKey.Contains("SANDBOX", StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogWarning(
+                "[MoMo] Dang dung credential MAU (PartnerCode={PartnerCode}). MoMo se tu choi. " +
+                "Hay dat MoMo:PartnerCode/AccessKey/SecretKey that (sandbox) qua .env hoac user-secrets.",
+                partnerCode);
+        }
+
+        _logger.LogInformation(
+            "[MoMo] Tao thanh toan: orderId={OrderId} momoOrderId={MomoOrderId} amount={Amount} apiUrl={ApiUrl} ipnUrl={IpnUrl}",
+            orderId, momoOrderId, (long)amount, apiUrl, ipnUrl);
+
+        HttpResponseMessage resp;
+        string respBody;
+        try
+        {
+            resp = await _http.PostAsync(apiUrl,
+                new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"));
+            respBody = await resp.Content.ReadAsStringAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "[MoMo] Goi API that bai (khong ket noi duoc {ApiUrl})", apiUrl);
+            return (false, "", momoOrderId, $"Khong ket noi duoc MoMo: {ex.Message}");
+        }
 
         using var doc  = JsonDocument.Parse(respBody);
         var root       = doc.RootElement;
         var resultCode = root.TryGetProperty("resultCode", out var rc) ? rc.GetInt32() : -1;
         var payUrl     = root.TryGetProperty("payUrl",    out var pu) ? pu.GetString() ?? "" : "";
         var msg        = root.TryGetProperty("message",   out var m)  ? m.GetString()  ?? "" : "Unknown";
+
+        if (resultCode == 0)
+        {
+            _logger.LogInformation(
+                "[MoMo] Tao link OK: momoOrderId={MomoOrderId} resultCode=0 payUrl={PayUrl}",
+                momoOrderId, payUrl);
+        }
+        else
+        {
+            // Log ca resultCode + message + raw response de chan doan chinh xac (khong sua mu).
+            _logger.LogWarning(
+                "[MoMo] Tao link THAT BAI: momoOrderId={MomoOrderId} resultCode={ResultCode} message={Message} raw={Raw}",
+                momoOrderId, resultCode, msg, respBody);
+        }
 
         return (resultCode == 0, payUrl, momoOrderId, msg);
     }
@@ -99,8 +141,23 @@ public class MoMoService
             $"&requestId={requestId}&responseTime={responseTime}" +
             $"&resultCode={resultCode}&transId={transId}";
 
-        return string.Equals(HmacSha256(secretKey, rawSignature), receivedSig,
-                             StringComparison.OrdinalIgnoreCase);
+        var expectedSig = HmacSha256(secretKey, rawSignature);
+        var valid = string.Equals(expectedSig, receivedSig, StringComparison.OrdinalIgnoreCase);
+        if (!valid)
+        {
+            _logger.LogWarning(
+                "[MoMo] Callback CHU KY KHONG HOP LE: momoOrderId={MomoOrderId} resultCode={ResultCode}. " +
+                "Kiem tra SecretKey va thu tu field ky.",
+                momoOrderId, resultCode);
+        }
+        else
+        {
+            _logger.LogInformation(
+                "[MoMo] Callback hop le: momoOrderId={MomoOrderId} resultCode={ResultCode}",
+                momoOrderId, resultCode);
+        }
+
+        return valid;
     }
 
     public (string momoOrderId, bool success) ParseCallback(JsonElement body)

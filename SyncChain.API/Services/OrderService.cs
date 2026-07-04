@@ -320,7 +320,32 @@ public class OrderService
         return true;
     }
 
-    // Xoa cac dong gio hang ung voi san pham vua dat (luu cung transaction don).
+    // Xoa cac san pham cua don khoi gio hang — CHI goi khi thanh toan thanh cong
+    // (COD xac nhan hoac VNPay/MoMo bao thanh toan). Idempotent: goi lai khong loi.
+    public async Task ClearPurchasedItemsAsync(int orderId)
+    {
+        var ownerId = await _db.DonHang
+            .AsNoTracking()
+            .Where(x => x.MaDonHang == orderId)
+            .Select(x => (int?)x.MaNguoiDung)
+            .FirstOrDefaultAsync();
+        if (ownerId == null)
+            return;
+
+        var productIds = await _db.ChiTietDonHang
+            .AsNoTracking()
+            .Where(x => x.MaDonHang == orderId)
+            .Select(x => x.MaSanPham)
+            .Distinct()
+            .ToListAsync();
+        if (productIds.Count == 0)
+            return;
+
+        await RemoveOrderedItemsFromCartAsync(ownerId.Value, productIds);
+        await _db.SaveChangesAsync();
+    }
+
+    // Xoa cac dong gio hang ung voi san pham vua dat.
     private async Task RemoveOrderedItemsFromCartAsync(int userId, List<int> productIds)
     {
         var cart = await _db.GioHang.FirstOrDefaultAsync(x => x.MaNguoiDung == userId);
@@ -497,9 +522,11 @@ public class OrderService
         order.TongTien = total + shippingFee;
         _db.ChiTietDonHang.AddRange(details);
 
-        // Don khach tu dat: xoa cac san pham da mua khoi gio hang.
-        if (isOnlineOrder)
-            await RemoveOrderedItemsFromCartAsync(userId, productIds);
+        // KHONG xoa gio hang o buoc tao don. Don online moi tao chi o trang thai
+        // "pending" (cho thanh toan) — neu khach thoat giua chung/huy thanh toan
+        // thi san pham phai con nguyen trong gio de dat lai. Gio chi duoc xoa khi
+        // thanh toan thanh cong (COD xac nhan / VNPay-MoMo IPN) qua
+        // ClearPurchasedItemsAsync.
 
         _audit.AddSuccess(
             AuditActions.Create,
@@ -525,6 +552,8 @@ public class OrderService
         {
             Message = "Tao don thanh cong",
             MaDonHang = order.MaDonHang,
+            Subtotal = total,
+            ShippingFee = shippingFee,
             TongTien = order.TongTien
         };
     }
@@ -608,6 +637,10 @@ public class OrderService
         {
             Message = "Don hang da duoc tao truoc do",
             MaDonHang = order.MaDonHang,
+            // Replay (idempotency) hiem gap: khong tach lai duoc subtotal/ship, giu
+            // tong lam chuan (Subtotal = TongTien, ShippingFee = 0) de tong van dung.
+            Subtotal = order.TongTien,
+            ShippingFee = 0,
             TongTien = order.TongTien,
             IsReplay = true
         };
