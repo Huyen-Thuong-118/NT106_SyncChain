@@ -12,8 +12,8 @@
     Shell.TitleColor="White"
     Shell.DisabledColor="#80FFFFFF"
     Shell.UnselectedColor="#DCE6F5"
-    Shell.NavBarHasShadow="True"
-    Shell.NavBarIsVisible="True">
+    Shell.NavBarHasShadow="False"
+    Shell.NavBarIsVisible="False">
 
     <Shell.FlyoutHeader>
         <Grid Padding="24,32,24,22">
@@ -87,7 +87,7 @@
         <ShellContent ContentTemplate="{DataTemplate pages:CustomerHomePage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Sản phẩm" Route="products">
+    <FlyoutItem x:Name="ProductsFlyout" Title="Sản phẩm" Route="products">
         <FlyoutItem.FlyoutIcon>
             <FontImageSource FontFamily="MaterialSymbols" Glyph="&#xe8f8;" Color="{StaticResource OnSurfaceVariant}" Size="20" />
         </FlyoutItem.FlyoutIcon>

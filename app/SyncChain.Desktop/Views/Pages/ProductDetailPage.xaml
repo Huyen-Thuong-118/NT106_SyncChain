@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage x:Class="SyncChain.Desktop.Views.Pages.ProductDetailPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -6,13 +6,14 @@
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
         <VerticalStackLayout Padding="48,30" Spacing="24">
-            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto" ColumnSpacing="12">
                 <Button Text="← QUAY LẠI" Style="{StaticResource PillSecondaryButton}" Clicked="OnBackClicked" />
-                <Label Grid.Column="1" />
-                <Button Grid.Column="2" Text="CHỈNH SỬA" Style="{StaticResource PillPrimaryButton}"
+                <Button Grid.Column="1" Text="TRANG CHỦ" Style="{StaticResource PillSecondaryButton}" Clicked="OnHomeClicked" />
+                <Label Grid.Column="2" />
+                <Button Grid.Column="3" Text="CHỈNH SỬA" Style="{StaticResource PillPrimaryButton}"
                         IsVisible="{Binding CanManageProducts}"
                         Clicked="OnEditClicked" />
-                <Button Grid.Column="3" Text="XÓA" Style="{StaticResource PillSecondaryButton}"
+                <Button Grid.Column="4" Text="XÓA" Style="{StaticResource PillSecondaryButton}"
                         IsVisible="{Binding CanManageProducts}"
                         Clicked="OnDeleteClicked" />
             </Grid>
@@ -155,14 +156,18 @@
                         <!-- Khu mua hàng cho khách -->
                         <VerticalStackLayout Spacing="10" Margin="0,8,0,0" IsVisible="{Binding IsCustomer}">
                             <Label Text="SỐ LƯỢNG" Style="{StaticResource LabelCapsLabel}" />
-                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="12">
                                 <Entry x:Name="QtyEntry" Text="1" Keyboard="Numeric"
                                        WidthRequest="90" HorizontalTextAlignment="Center"
                                        Style="{StaticResource MinimalistEntry}" />
-                                <Button Grid.Column="1" Text="🛒  THÊM VÀO GIỎ"
+                                <Button Grid.Column="1" Text="THÊM VÀO GIỎ"
                                         Style="{StaticResource PillPrimaryButton}"
                                         IsEnabled="{Binding CanBuy}"
                                         Clicked="OnAddToCartClicked" />
+                                <Button Grid.Column="2" Text="MUA NGAY"
+                                        Style="{StaticResource PillSecondaryButton}"
+                                        IsEnabled="{Binding CanBuy}"
+                                        Clicked="OnBuyNowClicked" />
                             </Grid>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
@@ -225,3 +230,4 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+

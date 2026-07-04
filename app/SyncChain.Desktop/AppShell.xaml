@@ -12,8 +12,8 @@
     Shell.TitleColor="White"
     Shell.DisabledColor="#80FFFFFF"
     Shell.UnselectedColor="#DCE6F5"
-    Shell.NavBarHasShadow="True"
-    Shell.NavBarIsVisible="True">
+    Shell.NavBarHasShadow="False"
+    Shell.NavBarIsVisible="False">
 
     <!-- ═══════════════════════════════════════════════════════════════
          FLYOUT HEADER - Logo + Brand Name

@@ -27,6 +27,9 @@ public partial class CartPage : ContentPage
 		await LoadCartAsync();
 	}
 
+	private async void OnBackClicked(object? sender, EventArgs e) =>
+		await Shell.Current.GoToAsync("//products");
+
 	private async Task LoadCartAsync()
 	{
 		try

@@ -7,6 +7,7 @@ public partial class CustomerShell : Shell
 		InitializeComponent();
 		Routing.RegisterRoute(nameof(Views.Pages.OrderDetailPage), typeof(Views.Pages.OrderDetailPage));
 		Routing.RegisterRoute(nameof(Views.Pages.OrderTrackingPage), typeof(Views.Pages.OrderTrackingPage));
+		Routing.RegisterRoute(nameof(Views.Pages.ProductDetailPage), typeof(Views.Pages.ProductDetailPage));
 		Routing.RegisterRoute(nameof(Views.Pages.PaymentPage), typeof(Views.Pages.PaymentPage));
 		Navigated += (_, _) => FlyoutIsPresented = false;
 
@@ -18,6 +19,8 @@ public partial class CustomerShell : Shell
 		// (đăng xuất rồi đăng nhập lại) → tránh popup thông báo bị lặp.
 		App.SignalR.OnNewNotification -= OnNewNotification;
 		App.SignalR.OnNewNotification += OnNewNotification;
+
+		CurrentItem = ProductsFlyout;
 	}
 
 	private void OnNewNotification(string title, string content)

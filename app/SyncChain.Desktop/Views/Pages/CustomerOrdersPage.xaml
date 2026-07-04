@@ -4,17 +4,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pages="clr-namespace:SyncChain.Desktop.Views.Pages"
              Title="Đơn hàng của tôi"
+             BackgroundColor="#EAF6FF"
              NavigationPage.HasNavigationBar="False">
     <ScrollView>
         <VerticalStackLayout Padding="48,30" Spacing="20">
-            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                <Label Text="Đơn hàng của tôi"
-                       FontSize="28" FontAttributes="Bold"
-                       TextColor="{StaticResource Primary}"
-                       VerticalOptions="Center" />
-                <Button Grid.Column="1" Text="LÀM MỚI"
-                        Style="{StaticResource PillSecondaryButton}"
-                        Clicked="OnRefreshClicked" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Đơn hàng của tôi"
+                           Style="{StaticResource DisplayXlLabel}" />
+                    <Label Text="Theo dõi trạng thái xử lý, vận chuyển và thanh toán."
+                           Style="{StaticResource BodyMdLabel}" />
+                </VerticalStackLayout>
+                <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                    <Button Text="TRANG CHỦ" Style="{StaticResource PillSecondaryButton}" Clicked="OnHomeClicked" />
+                    <Button Text="MUA SẮM" Style="{StaticResource PillSecondaryButton}" Clicked="OnShopClicked" />
+                    <Button Text="LÀM MỚI" Style="{StaticResource PillSecondaryButton}" Clicked="OnRefreshClicked" />
+                </HorizontalStackLayout>
             </Grid>
 
             <Label x:Name="EmptyLabel"
@@ -22,46 +27,58 @@
                    IsVisible="False"
                    TextColor="{StaticResource OnSurfaceVariant}" />
 
-            <!-- BindableLayout (không phải CollectionView) để render an toàn bên trong ScrollView. -->
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Orders}" Spacing="12">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="pages:CustomerOrderRow">
-                        <Border BackgroundColor="#FFFFFF"
-                                Stroke="#22213145"
+                        <Border BackgroundColor="White"
+                                Stroke="#D8E1EB"
                                 StrokeThickness="1"
                                 Padding="18">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="16" />
                             </Border.StrokeShape>
                             <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
-                                <Label Grid.Row="0" Grid.Column="0"
+                                <Label Grid.Row="0"
                                        Text="{Binding Code}"
-                                       FontSize="18" FontAttributes="Bold"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
                                        TextColor="{StaticResource Primary}" />
-                                <Border Grid.Row="0" Grid.Column="1"
+                                <Border Grid.Row="0"
+                                        Grid.Column="1"
                                         BackgroundColor="{Binding StatusColor}"
-                                        StrokeThickness="0" Padding="12,5"
+                                        StrokeThickness="0"
+                                        Padding="12,5"
                                         HorizontalOptions="End">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="12" />
                                     </Border.StrokeShape>
-                                    <Label Text="{Binding StatusText}" FontSize="12" FontAttributes="Bold" />
+                                    <Label Text="{Binding StatusText}"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           TextColor="White" />
                                 </Border>
 
-                                <Label Grid.Row="1" Grid.Column="0"
+                                <Label Grid.Row="1"
                                        Text="{Binding Date}"
-                                       FontSize="13" TextColor="{StaticResource OnSurfaceVariant}" />
-                                <Label Grid.Row="1" Grid.Column="1"
+                                       FontSize="13"
+                                       TextColor="{StaticResource OnSurfaceVariant}" />
+                                <Label Grid.Row="1"
+                                       Grid.Column="1"
                                        Text="{Binding Total}"
-                                       FontSize="16" FontAttributes="Bold"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#F0442E"
                                        HorizontalOptions="End" />
 
                                 <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="10" Margin="0,4,0,0">
-                                    <Button Text="Chi tiết"
+                                    <Button Text="CHI TIẾT"
                                             Style="{StaticResource PillSecondaryButton}"
                                             CommandParameter="{Binding Id}"
                                             Clicked="OnDetailClicked" />
-                                    <Button Text="Theo dõi"
+                                    <Button Text="THEO DÕI"
+                                            BackgroundColor="#F0442E"
+                                            BorderColor="#F0442E"
+                                            TextColor="White"
                                             Style="{StaticResource PillPrimaryButton}"
                                             CommandParameter="{Binding Id}"
                                             Clicked="OnTrackClicked" />

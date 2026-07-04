@@ -14,12 +14,11 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 
 	public bool CanManageProducts =>
 		ApiClientProvider.Role?.Trim().ToLowerInvariant() is "admin" or "manager";
-	// Khách hàng: hiện khu mua hàng thay cho các thao tác quản trị.
 	public bool IsCustomer =>
 		ApiClientProvider.Role?.Trim().ToLowerInvariant() == "customer";
-	// Chỉ cho thêm giỏ khi là khách, sản phẩm đang bán và còn hàng.
 	public bool CanBuy =>
 		IsCustomer && _product != null && _product.TrangThai != "Ngung ban" && _product.SoLuongTon > 0;
+
 	public string ProductCode { get; private set; } = string.Empty;
 	public string ProductName { get; private set; } = string.Empty;
 	public string ProductInitials { get; private set; } = "SP";
@@ -38,7 +37,7 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 	public IReadOnlyList<ProductImageItem> ProductImages { get; private set; } = Array.Empty<ProductImageItem>();
 	public string SelectedImageUrl { get; private set; } = string.Empty;
 	public string ImageCountText { get; private set; } = "Chưa có hình ảnh";
-	public string RatingText { get; private set; } = "—";
+	public string RatingText { get; private set; } = "-";
 	public string RatingStars { get; private set; } = "☆☆☆☆☆";
 	public string ReviewCountText { get; private set; } = "0 đánh giá";
 	public string ReviewEmptyText { get; private set; } = "Sản phẩm chưa có đánh giá.";
@@ -68,66 +67,86 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 			if (_productId <= 0)
 				throw new InvalidOperationException("Thiếu mã sản phẩm.");
 
-			var detail = await _http.GetFromJsonAsync<ProductDetailApi>($"api/product/{_productId}/detail");
-			if (detail?.Product == null)
-				throw new InvalidOperationException("API không trả dữ liệu sản phẩm.");
-
-			_product = detail.Product;
-			var sp = detail.Product;
-			ProductCode = $"SP-{sp.MaSanPham:0000}";
-			ProductName = sp.TenSanPham;
-			ProductInitials = BuildInitials(sp.TenSanPham);
-			ProductDescription = string.IsNullOrWhiteSpace(sp.MoTa) ? "Chưa có mô tả." : sp.MoTa;
-			ProductImages = ParseImageUrls(sp.HinhAnhUrl)
-				.Select(x => new ProductImageItem { Url = x })
-				.ToList();
-			if (ProductImages.Count == 0)
-				ProductImages = [new ProductImageItem()];
-			var firstImage = ProductImages.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Url));
-			SelectedImageUrl = firstImage?.Url ?? string.Empty;
-			ImageCountText = ProductImages.All(x => string.IsNullOrWhiteSpace(x.Url))
-				? "Chưa có hình ảnh"
-				: $"{ProductImages.Count(x => !string.IsNullOrWhiteSpace(x.Url))} hình ảnh";
-
-			(ProductStatus, ProductStatusColor) = sp.TrangThai switch
+			ProductDetailApi? detail = null;
+			SanPhamApi? sp;
+			if (IsCustomer)
 			{
-				"Ngung ban" => ("NGỪNG BÁN", "#C62828"),
-				_ when sp.SoLuongTon <= 0 => ("HẾT HÀNG", "#C62828"),
-				_ when sp.SoLuongTon <= sp.MucTonThap => ("SẮP HẾT HÀNG", "#F57C00"),
-				_ => ("ĐANG BÁN", "#2E7D32")
-			};
-			StatusActionText = sp.TrangThai == "Ngung ban" ? "MỞ BÁN" : "NGỪNG BÁN";
-			Price = $"{sp.GiaBan:N0} đ";
-			ImportPrice = $"{sp.GiaNhap:N0} đ";
-			Stock = sp.SoLuongTon.ToString("N0");
-			SoldCount = detail.SoldCount.ToString("N0");
-			Category = sp.DanhMuc?.TenDanhMuc ?? "Chưa phân loại";
-
-			var performance = detail.PerformancePercent;
-			PerformanceIcon = performance > 0 ? "↑" : performance < 0 ? "↓" : "→";
-			PerformanceText = $"{Math.Abs(performance):0.#}%";
-			PerformanceColor = performance > 0 ? Colors.Green : performance < 0 ? Colors.Red : Colors.Gray;
-
-			if (detail.ReviewCount > 0)
-			{
-				RatingText = detail.AverageRating.ToString("0.0");
-				RatingStars = BuildStars(detail.AverageRating);
-				ReviewCountText = $"{detail.ReviewCount:N0} đánh giá";
-				ReviewEmptyText = string.Empty;
+				sp = await _http.GetFromJsonAsync<SanPhamApi>($"api/product/{_productId}");
 			}
 			else
 			{
-				RatingText = "—";
-				RatingStars = "☆☆☆☆☆";
-				ReviewCountText = "0 đánh giá";
-				ReviewEmptyText = "Sản phẩm chưa có đánh giá. Hệ thống hiện chưa lưu dữ liệu đánh giá khách hàng.";
+				detail = await _http.GetFromJsonAsync<ProductDetailApi>($"api/product/{_productId}/detail");
+				sp = detail?.Product;
 			}
+
+			if (sp == null)
+				throw new InvalidOperationException("API không trả dữ liệu sản phẩm.");
+
+			_product = sp;
+			ApplyProduct(sp, detail);
 			NotifyAll();
-			ProductImageGallery.SelectedItem = firstImage;
+			ProductImageGallery.SelectedItem = ProductImages.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Url));
+		}
+		catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+		{
+			await this.HandleUnauthorizedAsync();
 		}
 		catch (Exception ex)
 		{
 			await DisplayAlertAsync("Không tải được chi tiết", ex.Message, "OK");
+		}
+	}
+
+	private void ApplyProduct(SanPhamApi sp, ProductDetailApi? detail)
+	{
+		ProductCode = $"SP-{sp.MaSanPham:0000}";
+		ProductName = sp.TenSanPham;
+		ProductInitials = BuildInitials(sp.TenSanPham);
+		ProductDescription = string.IsNullOrWhiteSpace(sp.MoTa) ? "Chưa có mô tả." : sp.MoTa;
+		ProductImages = ParseImageUrls(sp.HinhAnhUrl)
+			.Select(x => new ProductImageItem { Url = x })
+			.ToList();
+		if (ProductImages.Count == 0)
+			ProductImages = [new ProductImageItem()];
+
+		var firstImage = ProductImages.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Url));
+		SelectedImageUrl = firstImage?.Url ?? string.Empty;
+		ImageCountText = ProductImages.All(x => string.IsNullOrWhiteSpace(x.Url))
+			? "Chưa có hình ảnh"
+			: $"{ProductImages.Count(x => !string.IsNullOrWhiteSpace(x.Url))} hình ảnh";
+
+		(ProductStatus, ProductStatusColor) = sp.TrangThai switch
+		{
+			"Ngung ban" => ("NGỪNG BÁN", "#C62828"),
+			_ when sp.SoLuongTon <= 0 => ("HẾT HÀNG", "#C62828"),
+			_ when sp.SoLuongTon <= sp.MucTonThap => ("SẮP HẾT HÀNG", "#F57C00"),
+			_ => ("ĐANG BÁN", "#2E7D32")
+		};
+		StatusActionText = sp.TrangThai == "Ngung ban" ? "MỞ BÁN" : "NGỪNG BÁN";
+		Price = $"{sp.GiaBan:N0} đ";
+		ImportPrice = $"{sp.GiaNhap:N0} đ";
+		Stock = sp.SoLuongTon.ToString("N0");
+		SoldCount = (detail?.SoldCount ?? 0).ToString("N0");
+		Category = sp.DanhMuc?.TenDanhMuc ?? "Chưa phân loại";
+
+		var performance = detail?.PerformancePercent ?? 0;
+		PerformanceIcon = performance > 0 ? "↑" : performance < 0 ? "↓" : "→";
+		PerformanceText = $"{Math.Abs(performance):0.#}%";
+		PerformanceColor = performance > 0 ? Colors.Green : performance < 0 ? Colors.Red : Colors.Gray;
+
+		if ((detail?.ReviewCount ?? 0) > 0)
+		{
+			RatingText = detail!.AverageRating.ToString("0.0");
+			RatingStars = BuildStars(detail.AverageRating);
+			ReviewCountText = $"{detail.ReviewCount:N0} đánh giá";
+			ReviewEmptyText = string.Empty;
+		}
+		else
+		{
+			RatingText = "-";
+			RatingStars = "☆☆☆☆☆";
+			ReviewCountText = "0 đánh giá";
+			ReviewEmptyText = "Sản phẩm chưa có đánh giá.";
 		}
 	}
 
@@ -141,8 +160,7 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 			nameof(SoldCount), nameof(Category), nameof(PerformanceIcon),
 			nameof(PerformanceText), nameof(PerformanceColor), nameof(ProductImages),
 			nameof(SelectedImageUrl), nameof(ImageCountText), nameof(RatingText), nameof(RatingStars),
-			nameof(ReviewCountText), nameof(ReviewEmptyText),
-			nameof(IsCustomer), nameof(CanBuy)
+			nameof(ReviewCountText), nameof(ReviewEmptyText), nameof(IsCustomer), nameof(CanBuy)
 		})
 			OnPropertyChanged(property);
 	}
@@ -159,10 +177,8 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 
 	private async void OnEditClicked(object? sender, EventArgs e)
 	{
-		if (!CanManageProducts)
-			return;
-
-		await Shell.Current.GoToAsync($"{nameof(ProductFormPage)}?productId={_productId}");
+		if (CanManageProducts)
+			await Shell.Current.GoToAsync($"{nameof(ProductFormPage)}?productId={_productId}");
 	}
 
 	private async void OnImportStockClicked(object? sender, EventArgs e)
@@ -171,14 +187,19 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 			return;
 
 		var quantityText = await DisplayPromptAsync(
-			"Nhập thêm hàng", "Nhập số lượng cần cộng vào tồn kho:",
-			"Nhập", "Hủy", keyboard: Keyboard.Numeric);
+			"Nhập thêm hàng",
+			"Nhập số lượng cần cộng vào tồn kho:",
+			"Nhập",
+			"Hủy",
+			keyboard: Keyboard.Numeric);
 		if (!int.TryParse(quantityText, out var quantity) || quantity <= 0)
 			return;
 
 		var note = await DisplayPromptAsync(
-			"Ghi chú", "Nguồn nhập hoặc ghi chú:",
-			"Tiếp tục", "Bỏ qua") ?? "Nhập kho nhanh từ trang sản phẩm";
+			"Ghi chú",
+			"Nguồn nhập hoặc ghi chú:",
+			"Tiếp tục",
+			"Bỏ qua") ?? "Nhập kho nhanh từ trang sản phẩm";
 		var response = await _http.PostAsJsonAsync(
 			$"api/product/{_productId}/import",
 			new { soLuong = quantity, ghiChu = note });
@@ -192,10 +213,9 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 
 	private async void OnToggleStatusClicked(object? sender, EventArgs e)
 	{
-		if (!CanManageProducts)
+		if (!CanManageProducts || _product == null)
 			return;
 
-		if (_product == null) return;
 		var newStatus = _product.TrangThai == "Ngung ban" ? "Hoat dong" : "Ngung ban";
 		var response = await _http.PutAsync(
 			$"api/product/{_productId}/status?status={Uri.EscapeDataString(newStatus)}", null);
@@ -225,7 +245,9 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 
 	private static IEnumerable<string> ParseImageUrls(string? value)
 	{
-		if (string.IsNullOrWhiteSpace(value)) yield break;
+		if (string.IsNullOrWhiteSpace(value))
+			yield break;
+
 		foreach (var item in value.Split([',', ';', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries))
 		{
 			var url = item.Trim();
@@ -254,14 +276,26 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 			if (document.RootElement.TryGetProperty("message", out var message))
 				return message.GetString() ?? text;
 		}
-		catch { }
+		catch
+		{
+		}
 		return string.IsNullOrWhiteSpace(text) ? $"HTTP {(int)response.StatusCode}" : text.Trim('"');
 	}
 
-	// Khách thêm sản phẩm vào giỏ (POST api/cart/items).
 	private async void OnAddToCartClicked(object? sender, EventArgs e)
 	{
 		if (!CanBuy) return;
+		await AddCurrentProductToCartAsync(goToCartAfterSuccess: false);
+	}
+
+	private async void OnBuyNowClicked(object? sender, EventArgs e)
+	{
+		if (!CanBuy) return;
+		await AddCurrentProductToCartAsync(goToCartAfterSuccess: true);
+	}
+
+	private async Task AddCurrentProductToCartAsync(bool goToCartAfterSuccess)
+	{
 		if (!int.TryParse(QtyEntry.Text?.Trim(), out var quantity) || quantity <= 0)
 			quantity = 1;
 
@@ -275,8 +309,17 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 				return;
 			}
 
-			var viewCart = await DisplayAlertAsync("Đã thêm vào giỏ",
-				$"Đã thêm {quantity} sản phẩm vào giỏ hàng.", "Xem giỏ", "Tiếp tục mua");
+			if (goToCartAfterSuccess)
+			{
+				await Shell.Current.GoToAsync("//cart");
+				return;
+			}
+
+			var viewCart = await DisplayAlertAsync(
+				"Đã thêm vào giỏ",
+				$"Đã thêm {quantity} sản phẩm vào giỏ hàng.",
+				"Xem giỏ",
+				"Tiếp tục mua");
 			if (viewCart)
 				await Shell.Current.GoToAsync("//cart");
 		}
@@ -292,4 +335,7 @@ public partial class ProductDetailPage : ContentPage, IQueryAttributable
 
 	private async void OnBackClicked(object? sender, EventArgs e) =>
 		await Shell.Current.GoToAsync("..");
+
+	private async void OnHomeClicked(object? sender, EventArgs e) =>
+		await Shell.Current.GoToAsync(IsCustomer ? "//customer-home" : "//dashboard");
 }

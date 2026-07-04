@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using SyncChain.Desktop.Models;
+using SyncChain.Desktop.Services;
 
 namespace SyncChain.Desktop.Views.Pages;
 
@@ -10,8 +11,10 @@ public partial class ProductsPage : ContentPage
 		?? new Uri(Services.ApiClientProvider.ApiBaseUrl);
 	private List<SanPhamApi> _allProducts = [];
 	private ProductCategoryFilterItem? _selectedCategoryFilter;
+	private string _customerSearchText = string.Empty;
+	private bool _isOpeningProductDetail;
 	private int _currentPage = 1;
-	private int PageSize = 20;
+	private const int PageSize = 20;
 
 	public IReadOnlyList<ProductItem> Products { get; private set; } = Array.Empty<ProductItem>();
 	public IReadOnlyList<ProductCategoryFilterItem> CategoryFilters { get; private set; } = Array.Empty<ProductCategoryFilterItem>();
@@ -21,16 +24,44 @@ public partial class ProductsPage : ContentPage
 	public string LowStockProducts { get; private set; } = "0";
 	public string PaginationText { get; private set; } = "Đang tải...";
 	public string EmptyProductsText { get; private set; } = string.Empty;
+	public string CustomerCartBadge { get; private set; } = "0";
+	public string CustomerCartText { get; private set; } = "Giỏ hàng: 0 sản phẩm";
+	public bool IsCustomer =>
+		Services.ApiClientProvider.Role?.Trim().Equals("customer", StringComparison.OrdinalIgnoreCase) == true;
+	public bool IsManagementView => !IsCustomer;
+	public bool IsProductsEmpty => Products.Count == 0;
 	public bool CanManageProducts =>
 		Services.ApiClientProvider.Role?.Trim().ToLowerInvariant() is "admin" or "manager";
 	public bool CanGoPrevious => _currentPage > 1;
 	public bool CanGoNext => _currentPage < TotalPages;
-	private IReadOnlyList<SanPhamApi> FilteredProducts =>
-		_selectedCategoryFilter == null || _selectedCategoryFilter.IsAll
-			? _allProducts
-			: _selectedCategoryFilter.CategoryId.HasValue
-				? _allProducts.Where(x => x.MaDanhMuc == _selectedCategoryFilter.CategoryId.Value).ToList()
-				: _allProducts.Where(x => x.MaDanhMuc == null).ToList();
+
+	private IReadOnlyList<SanPhamApi> FilteredProducts
+	{
+		get
+		{
+			IEnumerable<SanPhamApi> query = IsCustomer
+				? _allProducts.Where(x => x.TrangThai == "Hoat dong" && x.SoLuongTon > 0)
+				: _allProducts;
+
+			if (_selectedCategoryFilter is { IsAll: false })
+			{
+				query = _selectedCategoryFilter.CategoryId.HasValue
+					? query.Where(x => x.MaDanhMuc == _selectedCategoryFilter.CategoryId.Value)
+					: query.Where(x => x.MaDanhMuc == null);
+			}
+
+			if (IsCustomer && !string.IsNullOrWhiteSpace(_customerSearchText))
+			{
+				var keyword = _customerSearchText.Trim();
+				query = query.Where(x =>
+					x.TenSanPham.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+					(x.DanhMuc?.TenDanhMuc?.Contains(keyword, StringComparison.OrdinalIgnoreCase) ?? false));
+			}
+
+			return query.ToList();
+		}
+	}
+
 	private int TotalPages => Math.Max(1, (int)Math.Ceiling(FilteredProducts.Count / (double)PageSize));
 
 	public ProductsPage() : this(Services.ApiClientProvider.Client)
@@ -48,6 +79,8 @@ public partial class ProductsPage : ContentPage
 	{
 		base.OnAppearing();
 		await LoadProductsAsync();
+		if (IsCustomer)
+			await LoadCartSummaryAsync();
 	}
 
 	private async Task LoadProductsAsync()
@@ -78,6 +111,18 @@ public partial class ProductsPage : ContentPage
 	private void ApplyPagination()
 	{
 		var filteredProducts = FilteredProducts;
+		if (IsCustomer)
+		{
+			Products = filteredProducts.Select(MapToProductItem).ToList();
+			PaginationText = $"{Products.Count:N0} sản phẩm đang bán";
+			EmptyProductsText = Products.Count == 0
+				? "Không tìm thấy sản phẩm phù hợp."
+				: string.Empty;
+			PageButtons = Array.Empty<PageButtonItem>();
+			NotifyPagination();
+			return;
+		}
+
 		var start = (_currentPage - 1) * PageSize;
 		Products = filteredProducts
 			.Skip(start)
@@ -87,8 +132,6 @@ public partial class ProductsPage : ContentPage
 
 		var firstItem = filteredProducts.Count == 0 ? 0 : start + 1;
 		var lastItem = Math.Min(start + PageSize, filteredProducts.Count);
-		PaginationText = $"Hiển thị {firstItem} - {lastItem} trong số {_allProducts.Count} sản phẩm";
-		EmptyProductsText = _allProducts.Count == 0 ? "Chưa có sản phẩm nào." : string.Empty;
 		PaginationText = $"Hiển thị {firstItem} - {lastItem} trong số {filteredProducts.Count} sản phẩm";
 		EmptyProductsText = filteredProducts.Count == 0 ? "Không có sản phẩm trong danh mục này." : string.Empty;
 		PageButtons = BuildPageButtons();
@@ -110,7 +153,7 @@ public partial class ProductsPage : ContentPage
 		foreach (var page in pages)
 		{
 			if (previous > 0 && page - previous > 1)
-				result.Add(new PageButtonItem { PageNumber = 0, Text = "…" });
+				result.Add(new PageButtonItem { PageNumber = 0, Text = "..." });
 			result.Add(CreatePageButton(page));
 			previous = page;
 		}
@@ -119,6 +162,9 @@ public partial class ProductsPage : ContentPage
 
 	private void BuildCategoryFilters()
 	{
+		var categorySource = IsCustomer
+			? _allProducts.Where(x => x.TrangThai == "Hoat dong" && x.SoLuongTon > 0).ToList()
+			: _allProducts;
 		var filters = new List<ProductCategoryFilterItem>
 		{
 			new()
@@ -126,11 +172,11 @@ public partial class ProductsPage : ContentPage
 				CategoryId = null,
 				IsAll = true,
 				Name = "Tất cả",
-				DisplayText = $"Tất cả ({_allProducts.Count:N0})"
+				DisplayText = $"Tất cả ({categorySource.Count:N0})"
 			}
 		};
 
-		filters.AddRange(_allProducts
+		filters.AddRange(categorySource
 			.GroupBy(x => new
 			{
 				x.MaDanhMuc,
@@ -155,7 +201,7 @@ public partial class ProductsPage : ContentPage
 		IsCurrent = page == _currentPage
 	};
 
-	private static ProductItem MapToProductItem(SanPhamApi sp)
+	private ProductItem MapToProductItem(SanPhamApi sp)
 	{
 		var initials = string.Join("", sp.TenSanPham
 			.Split(' ', StringSplitOptions.RemoveEmptyEntries)
@@ -187,7 +233,8 @@ public partial class ProductsPage : ContentPage
 			Initials = initials,
 			PerformanceIcon = performanceIcon,
 			PerformanceText = $"{Math.Abs(performance):0.#}%",
-			PerformanceColor = performanceColor
+			PerformanceColor = performanceColor,
+			ActionText = IsCustomer ? "XEM CHI TIẾT" : "CHI TIẾT"
 		};
 	}
 
@@ -211,6 +258,9 @@ public partial class ProductsPage : ContentPage
 		OnPropertyChanged(nameof(TotalProducts));
 		OnPropertyChanged(nameof(ActiveProducts));
 		OnPropertyChanged(nameof(LowStockProducts));
+		OnPropertyChanged(nameof(CanManageProducts));
+		OnPropertyChanged(nameof(IsCustomer));
+		OnPropertyChanged(nameof(IsManagementView));
 	}
 
 	private void NotifyPagination()
@@ -222,12 +272,21 @@ public partial class ProductsPage : ContentPage
 		OnPropertyChanged(nameof(EmptyProductsText));
 		OnPropertyChanged(nameof(CanGoPrevious));
 		OnPropertyChanged(nameof(CanGoNext));
+		OnPropertyChanged(nameof(IsProductsEmpty));
 	}
-
 
 	private void OnCategoryFilterChanged(object? sender, EventArgs e)
 	{
-		_selectedCategoryFilter = CategoryFilterPicker.SelectedItem as ProductCategoryFilterItem;
+		_selectedCategoryFilter = sender is Picker picker
+			? picker.SelectedItem as ProductCategoryFilterItem
+			: _selectedCategoryFilter;
+		_currentPage = 1;
+		ApplyPagination();
+	}
+
+	private void OnCustomerSearchChanged(object? sender, TextChangedEventArgs e)
+	{
+		_customerSearchText = e.NewTextValue ?? string.Empty;
 		_currentPage = 1;
 		ApplyPagination();
 	}
@@ -258,10 +317,107 @@ public partial class ProductsPage : ContentPage
 
 	private async void OnOpenDetailClicked(object? sender, EventArgs e)
 	{
-		if (sender is Button button && int.TryParse(button.CommandParameter?.ToString(), out var productId))
+		if (sender is not Button button || !int.TryParse(button.CommandParameter?.ToString(), out var productId))
+			return;
+
+		await OpenProductDetailAsync(productId);
+	}
+
+	private async void OnOpenDetailTapped(object? sender, TappedEventArgs e)
+	{
+		if (!int.TryParse(e.Parameter?.ToString(), out var productId))
+			return;
+
+		await OpenProductDetailAsync(productId);
+	}
+
+	private async Task OpenProductDetailAsync(int productId)
+	{
+		if (_isOpeningProductDetail)
+			return;
+
+		_isOpeningProductDetail = true;
+		try
+		{
 			await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?productId={productId}");
+		}
+		finally
+		{
+			_isOpeningProductDetail = false;
+		}
 	}
 
 	private async void OnAddProductClicked(object? sender, EventArgs e) =>
 		await Shell.Current.GoToAsync(nameof(ProductFormPage));
+
+	private async Task AddToCartAsync(int productId)
+	{
+		try
+		{
+			var response = await _http.PostAsJsonAsync("api/cart/items",
+				new { MaSanPham = productId, SoLuong = 1 });
+			if (!response.IsSuccessStatusCode)
+			{
+				await DisplayAlertAsync("Không thêm được vào giỏ", await ReadErrorAsync(response), "OK");
+				return;
+			}
+
+			await LoadCartSummaryAsync();
+			var viewCart = await DisplayAlertAsync(
+				"Đã thêm vào giỏ",
+				"Đã thêm 1 sản phẩm vào giỏ hàng.",
+				"Xem giỏ",
+				"Tiếp tục mua");
+			if (viewCart)
+				await Shell.Current.GoToAsync("//cart");
+		}
+		catch (HttpRequestException ex) when (ex.IsUnauthorized())
+		{
+			await this.HandleUnauthorizedAsync();
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlertAsync("Lỗi kết nối", ex.Message, "OK");
+		}
+	}
+
+	private async Task LoadCartSummaryAsync()
+	{
+		try
+		{
+			var cart = await _http.GetFromJsonAsync<CartSummaryApi>("api/cart");
+			var count = cart?.Items.Sum(x => x.SoLuong) ?? 0;
+			CustomerCartBadge = count > 99 ? "99+" : count.ToString("N0");
+			CustomerCartText = $"Giỏ hàng: {count:N0} sản phẩm";
+		}
+		catch
+		{
+			CustomerCartBadge = "0";
+			CustomerCartText = "Giỏ hàng: chưa tải được";
+		}
+
+		OnPropertyChanged(nameof(CustomerCartBadge));
+		OnPropertyChanged(nameof(CustomerCartText));
+	}
+
+	private async void OnOpenCartClicked(object? sender, EventArgs e) =>
+		await Shell.Current.GoToAsync("//cart");
+
+	private static async Task<string> ReadErrorAsync(HttpResponseMessage response)
+	{
+		var text = await response.Content.ReadAsStringAsync();
+		return string.IsNullOrWhiteSpace(text)
+			? $"HTTP {(int)response.StatusCode}"
+			: text.Trim('"');
+	}
+
+	private sealed class CartSummaryApi
+	{
+		public List<CartSummaryItemApi> Items { get; set; } = [];
+	}
+
+	private sealed class CartSummaryItemApi
+	{
+		public int SoLuong { get; set; }
+	}
 }
