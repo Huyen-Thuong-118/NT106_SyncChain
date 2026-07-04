@@ -55,7 +55,9 @@ public partial class ProfilePage : ContentPage
 			{
 				Ho = HoEntry.Text?.Trim() ?? "",
 				Ten = TenEntry.Text?.Trim() ?? "",
-				TenDangNhap = UsernameEntry.Text?.Trim().ToLowerInvariant() ?? "",
+				// DTO backend là UpdateProfileDTO.Username — trước đây gửi "TenDangNhap"
+				// nên server bỏ qua, tên đăng nhập không bao giờ được lưu.
+				Username = UsernameEntry.Text?.Trim().ToLowerInvariant() ?? "",
 				SoDienThoai = PhoneEntry.Text?.Trim() ?? "",
 				Email = EmailEntry.Text?.Trim().ToLowerInvariant() ?? ""
 			});

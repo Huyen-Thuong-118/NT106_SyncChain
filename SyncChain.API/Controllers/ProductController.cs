@@ -52,7 +52,7 @@ public class ProductController : ControllerBase
         }
     }
 
-    // Lấy chi tiết sản phẩm.
+    // Lấy chi tiết sản phẩm (nội bộ — gồm giá nhập, doanh thu, phân tích).
     [Authorize(Policy = "StaffOrAbove")]
     [HttpGet("{id}/detail")]
     public IActionResult GetDetail(int id)
@@ -60,6 +60,22 @@ public class ProductController : ControllerBase
         try
         {
             return Ok(_service.GetDetail(id));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    // Chi tiết sản phẩm cho KHÁCH HÀNG (không lộ giá nhập/doanh thu nội bộ).
+    // Dùng cho trang chi tiết ở cổng khách hàng — customer được phép đọc.
+    [Authorize(Policy = "ProductRead")]
+    [HttpGet("{id}/public-detail")]
+    public IActionResult GetPublicDetail(int id)
+    {
+        try
+        {
+            return Ok(_service.GetPublicDetail(id));
         }
         catch (KeyNotFoundException ex)
         {
