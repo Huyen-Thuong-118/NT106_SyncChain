@@ -69,11 +69,12 @@
                             </VerticalStackLayout>
                         </Grid>
 
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,4,0,0">
-                            <CheckBox x:Name="TermsCheckBox" IsChecked="True" Color="{DynamicResource Primary}" />
+                        <Grid ColumnDefinitions="32,*" ColumnSpacing="6" Margin="0,4,0,0" HorizontalOptions="Start">
+                            <CheckBox x:Name="TermsCheckBox" IsChecked="True" Color="{DynamicResource Primary}" WidthRequest="24" HeightRequest="24" VerticalOptions="Center" HorizontalOptions="Start" />
                             <Label Grid.Column="1"
                                    Text="Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của hệ thống."
                                    Style="{StaticResource BodyMdLabel}"
+                                   HorizontalTextAlignment="Start"
                                    VerticalTextAlignment="Center" />
                         </Grid>
 
