@@ -12,8 +12,8 @@
 | Họ tên | MSSV | Vai trò |
 |--------|------|---------|
 | Nguyễn Đỗ Ngọc Huyền Thương | 24521750 | |
-| Tăng Thanh Thư | 245217xx | |
-| Mai Lương Khánh Vy | 24521xxx | |
+| Tăng Thanh Thư | 24521731 | |
+| Mai Lương Khánh Vy | 24522057 | |
 
 ---
 
